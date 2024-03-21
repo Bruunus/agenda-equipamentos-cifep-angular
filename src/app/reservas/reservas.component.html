@@ -1,0 +1,39 @@
+<!-- reservas.component.html -->
+<table>
+    <thead>
+      <tr>
+        <th>Responsavel</th>
+        <th>Setor</th>
+        <th>Tipo</th>
+        <th>Data empréstimo</th>
+        <th>Hora do empréstimo</th>
+        <th>Data devolução</th>
+        <th>Hora devolução</th>
+        <th>Recorrência</th>
+        <th>Equipamentos</th>
+        <!-- Adicione mais cabeçalhos conforme necessário -->
+      </tr>
+    </thead> 
+    <tbody>
+      <tr *ngFor="let reserva of reservas">
+        <td>{{ reserva.responsavel }}</td>
+        <td>{{ reserva.setor }}</td>
+        <td>{{ reserva.tipoReserva }}</td>
+        <td>{{ reserva.dataRetirada }}</td>
+        <td>{{ reserva.horaRetirada }}</td>
+        <td>{{ reserva.dataDevolucao }}</td>
+        <td>{{ reserva.horaDevolucao }}</td>
+        <td>{{ reserva.recorrenciaDeToda }}</td>
+        <td>
+            <ul>
+              <li *ngFor="let equipamento of reserva.equipamentos">
+                {{ equipamento.descricao }} - {{ equipamento.quantidade }}
+              </li>
+            </ul>
+          </td>
+
+        <!-- Exiba mais dados conforme necessário -->
+      </tr>
+    </tbody>
+  </table>
+  
