@@ -1,0 +1,9 @@
+@import '../../styles.scss';
+
+
+table, th, tr, td {
+    @extend .t_table;
+}
+
+
+

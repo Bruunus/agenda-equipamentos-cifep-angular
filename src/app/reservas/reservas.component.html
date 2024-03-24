@@ -19,19 +19,26 @@
         <td>{{ reserva.responsavel }}</td>
         <td>{{ reserva.setor }}</td>
         <td>{{ reserva.tipoReserva }}</td>
-        <td>{{ reserva.dataRetirada }}</td>
-        <td>{{ reserva.horaRetirada }}</td>
-        <td>{{ reserva.dataDevolucao }}</td>
-        <td>{{ reserva.horaDevolucao }}</td>
-        <td>{{ reserva.recorrenciaDeToda }}</td>
-        <td></td>
+
+        <td *ngFor="let data of reserva.agenda">{{ data.dataRetirada }}</td>
+
+        <td *ngFor="let data of reserva.agenda">{{ data.horaRetirada }}</td>
+
+        <td *ngFor="let data of reserva.agenda">{{ data.dataDevolucao }}</td>
+
+        <td *ngFor="let data of reserva.agenda">{{ data.horaDevolucao }}</td>
+
+        <!-- para campo vazio -->
         <td>
-            <ul>
-              <li *ngFor="let equipamento of reserva.equipamentos">
-                {{ equipamento.descricao }} - {{ equipamento.quantidade }}
-              </li>
-            </ul>
-          </td>
+          <ng-container *ngIf="reserva.recorrenciaDeToda; else emptyData">
+            {{ reserva.recorrenciaDeToda }}
+          </ng-container>
+          <ng-template #emptyData>*</ng-template>
+        </td>
+
+        <td *ngFor="let equipamento of reserva.equipamentos">
+          {{ equipamento.descricao }} - {{ equipamento.quantidade }}   
+        </td>
 
         <!-- Exiba mais dados conforme necessário -->
       </tr>
