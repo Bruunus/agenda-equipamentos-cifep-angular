@@ -1,0 +1,63 @@
+1. Crie o componente genérico CalendarioComponent:
+
+// calendario.component.ts
+
+import { Component, Input } from '@angular/core';
+
+@Component({
+  selector: 'app-calendario',
+  templateUrl: './calendario.component.html',
+  styleUrls: ['./calendario.component.css']
+})
+export class CalendarioComponent {
+  @Input() dadosDoMes: any;
+
+  constructor() { }
+}
+
+
+
+2. Crie o template para o componente genérico CalendarioComponent:
+
+<!-- calendario.component.html -->
+
+<div class="calendario">
+  <!-- Aqui vai o layout do calendário -->
+  <h2>Calendário</h2>
+  <!-- Exemplo de exibição dos dados do mês -->
+  <p>{{ dadosDoMes }}</p>
+</div>
+
+
+
+3. Crie os componentes dos meses:  Importe e use o componente genérico CalendarioComponent dentro do componente JaneiroComponent:
+
+// janeiro.component.ts
+
+import { Component, OnInit } from '@angular/core';
+
+@Component({
+  selector: 'app-janeiro',
+  templateUrl: './janeiro.component.html',
+  styleUrls: ['./janeiro.component.css']
+})
+export class JaneiroComponent implements OnInit {
+  dadosJaneiro = {
+    // Dados específicos para o mês de janeiro
+  };
+
+  constructor() { }
+
+  ngOnInit(): void {
+  }
+}
+
+
+<!-- janeiro.component.html -->
+
+<div>
+  <h1>Janeiro</h1>
+  <!-- Importe e use o componente de calendário genérico -->
+  <app-calendario [dadosDoMes]="dadosJaneiro"></app-calendario>
+</div>
+

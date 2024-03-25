@@ -1,0 +1,176 @@
+
+Claro, você pode adicionar botões ao componente CalendarioComponent para permitir a navegação entre os meses. Aqui está um exemplo de como você pode fazer isso:
+
+1. Adicione botões de navegação ao template do componente CalendarioComponent:
+
+<!-- calendario.component.html -->
+
+<div class="calendario">
+  <div>
+    <button (click)="mesAnterior()">Anterior</button>
+    <h2>{{ nomeMes }}</h2>
+    <button (click)="proxMes()">Próximo</button>
+  </div>
+  <!-- Aqui vai o layout do calendário -->
+  <h2>Calendário</h2>
+  <!-- Exemplo de exibição dos dados do mês -->
+  <p>{{ dadosDoMes }}</p>
+</div>
+
+
+
+
+2. Adicione métodos para controlar a navegação entre os meses no componente CalendarioComponent:
+
+// calendario.component.ts
+
+import { Component, Input } from '@angular/core';
+
+@Component({
+  selector: 'app-calendario',
+  templateUrl: './calendario.component.html',
+  styleUrls: ['./calendario.component.css']
+})
+export class CalendarioComponent {
+  @Input() dadosDoMes: any;
+
+  // Array com os nomes dos meses
+  meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+  nomeMes: string;
+  indiceMes: number = new Date().getMonth();
+
+  constructor() { 
+    this.nomeMes = this.meses[this.indiceMes];
+  }
+
+  // Método para avançar para o próximo mês
+  proxMes() {
+    this.indiceMes = (this.indiceMes + 1) % 12;
+    this.nomeMes = this.meses[this.indiceMes];
+  }
+
+  // Método para retroceder para o mês anterior
+  mesAnterior() {
+    this.indiceMes = (this.indiceMes - 1 + 12) % 12;
+    this.nomeMes = this.meses[this.indiceMes];
+  }
+}
+
+
+
+Eu
+certo porém na array meses=[] ele precisa carregar o componente do mes respectivo, e que o component calendario a
+penas venha fornecer a div como um container mas os "quadradinhos" do dia do mes que representa um dia fica por 
+conta de cada componente do mes respectivo, será uma div cada dia, e que quando ao passar por cada posição do array 
+ele venha carregar todos os dias desse mes e incluir dentro do container de calendario
+
+
+Chat
+Entendi, você deseja que o componente CalendarioComponent seja responsável por fornecer a estrutura geral do calendário, 
+incluindo os botões para avançar e retroceder entre os meses, enquanto os detalhes específicos de cada mês sejam 
+tratados em componentes separados para cada mês.
+
+Aqui está uma abordagem de como você pode fazer isso:
+
+
+1. CalendarioComponent: Este componente contém a estrutura geral do calendário, incluindo os botões para navegar entre os meses.
+
+// calendario.component.ts
+
+import { Component, OnInit } from '@angular/core';
+
+@Component({
+  selector: 'app-calendario',
+  templateUrl: './calendario.component.html',
+  styleUrls: ['./calendario.component.css']
+})
+export class CalendarioComponent implements OnInit {
+
+  // Array de meses para representar os meses do ano
+  meses: any[] = [
+    { nome: 'Janeiro', dias: [1, 2, 3, ..., 31] },
+    { nome: 'Fevereiro', dias: [1, 2, 3, ..., 28] },
+    // Adicione os outros meses aqui
+  ];
+
+  // Índice do mês atual
+  mesAtualIndex: number = 0;
+
+  constructor() { }
+
+  ngOnInit(): void {
+  }
+
+  // Função para avançar para o próximo mês
+  proximoMes() {
+    this.mesAtualIndex++;
+    if (this.mesAtualIndex >= this.meses.length) {
+      this.mesAtualIndex = 0;
+    }
+  }
+
+  // Função para retroceder para o mês anterior
+  mesAnterior() {
+    this.mesAtualIndex--;
+    if (this.mesAtualIndex < 0) {
+      this.mesAtualIndex = this.meses.length - 1;
+    }
+  }
+
+}
+
+----
+
+<!-- calendario.component.html -->
+
+<div class="calendario">
+  <button (click)="mesAnterior()">Anterior</button>
+  <h2>{{ meses[mesAtualIndex].nome }}</h2>
+  <button (click)="proximoMes()">Próximo</button>
+  <div>
+    <!-- Aqui será incluído o componente específico do mês atual -->
+    <app-janeiro *ngIf="meses[mesAtualIndex].nome === 'Janeiro'"></app-janeiro>
+    <!-- Inclua outros componentes de meses semelhantemente -->
+  </div>
+</div>
+
+
+
+
+2. Componentes específicos para cada mês: Por exemplo, JaneiroComponent, FevereiroComponent, etc., que serão responsáveis por renderizar os detalhes específicos de cada mês.
+
+// janeiro.component.ts
+
+import { Component, OnInit } from '@angular/core';
+
+@Component({
+  selector: 'app-janeiro',
+  templateUrl: './janeiro.component.html',
+  styleUrls: ['./janeiro.component.css']
+})
+export class JaneiroComponent implements OnInit {
+
+  constructor() { }
+
+  ngOnInit(): void {
+  }
+
+}
+
+----
+
+<!-- janeiro.component.html -->
+
+<div>
+  <!-- Renderize os detalhes específicos de janeiro aqui -->
+</div>
+
+
+Você pode replicar o mesmo padrão para os outros meses, criando um componente específico para cada mês e incluindo-o 
+dinamicamente dentro do CalendarioComponent com base no mês atual selecionado.
+
+
+
+
+
+
