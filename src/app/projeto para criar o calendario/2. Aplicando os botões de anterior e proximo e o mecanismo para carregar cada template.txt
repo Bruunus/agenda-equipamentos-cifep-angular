@@ -32,6 +32,7 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['./calendario.component.css']
 })
 export class CalendarioComponent {
+  
   @Input() dadosDoMes: any;
 
   // Array com os nomes dos meses
