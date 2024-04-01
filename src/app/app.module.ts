@@ -18,6 +18,9 @@ import { SetembroComponent } from './calendario/meses/setembro/setembro.componen
 import { OutubroComponent } from './calendario/meses/outubro/outubro.component';
 import { NovembroComponent } from './calendario/meses/novembro/novembro.component';
 import { DezembroComponent } from './calendario/meses/dezembro/dezembro.component';
+import { CriarComponent } from './reservas/criar/criar.component';
+import { EditarComponent } from './reservas/editar/editar.component';
+import { HistoricoComponent } from './reservas/historico/historico.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +39,9 @@ import { DezembroComponent } from './calendario/meses/dezembro/dezembro.componen
     OutubroComponent,
     NovembroComponent,
     DezembroComponent,
+    CriarComponent,
+    EditarComponent,
+    HistoricoComponent,
   ],
   imports: [
     BrowserModule,

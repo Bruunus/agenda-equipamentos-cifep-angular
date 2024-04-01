@@ -1,0 +1,106 @@
+<div>
+    <h3>Nova Reserva</h3>
+
+    <form action="">
+        
+        <label for="setor">Setor</label> &nbsp;
+        <input type="text" name="setor" id="">
+    
+        <br>
+    
+        <label for="responsavel">Responsável</label> &nbsp;
+        <input type="text" name="responsavel" id="">
+    
+        <br><br>
+
+        <button>+ Adicionar</button> &nbsp; <!-- Evento para adicionar uma linha nova -->
+        <button>Outro Equipamento</button>  <!-- abre input para digitar um novo equipamento que não consta na lista -->
+    
+        <br><br>
+
+        <label for="equipamento">Equipamento</label> &nbsp;
+        <input type="text" name="equipamento" id=""> &nbsp;
+
+        <label for="quantidade">Quantidade</label> &nbsp;
+        <input type="number" name="" id="">
+
+
+        <br><hr><br>
+
+        <div style="border: 1px solid lightgrey; padding: 5px;">
+            <span>Retirada - Devolução</span>
+            &nbsp;
+            <button>Multiplas</button>  <!-- multiplas até 8x - a partir daí a reserva é anual -->
+            &nbsp;
+
+            <label for="anual">Recorrência anual</label> &nbsp;
+            <input type="checkbox" name="anual" id="">
+
+            <br><br>
+
+
+            <label for="dt-agendamento">Data:</label> &nbsp;
+            <input type="date" name="dt-agendamento" id=""> &nbsp;
+
+            <label for="hr-agendamento">Hora retirada:</label> &nbsp;
+            <input type="time" name="hr-agendamento" id=""> &nbsp;
+
+
+            <label for="dt-agendamento">Data:</label> &nbsp;
+            <input type="date" name="dt-agendamento" id=""> &nbsp;
+
+            <label for="hr-agendamento">Hora devolução:</label> &nbsp;
+            <input type="time" name="hr-agendamento" id=""> &nbsp;
+
+            <br><br>
+
+            <div style="border: 1px solid lightgrey; padding: 5px;">
+
+                <span style="font-size: 18px; color: lightgray;">Formulário para Anual</span> 
+
+                <br><br>
+
+                
+                <!-- Anual -->
+
+                <label for="recorrencia">Recorrência</label> &nbsp;
+                <select name="recorrencia" id="">
+                    <option value=""></option>
+                    <option value="">Segunda-feira</option>
+                    <option value="">Terça-feira</option>
+                    <option value="">Quarta-feira</option>
+                    <option value="">Quinta-feira</option>
+                    <option value="">Sexta-feira</option>
+                </select>
+
+                &nbsp;
+
+                <!-- 
+                    Ao seleciona o select o sistema deve pegar e preencher automaticamente as datas de agendamento
+                    e devolução automaticamente 
+                 -->
+                <label for="dt-agendamento">Data:</label> &nbsp;
+                <input type="date" name="dt-agendamento" id=""> &nbsp;
+
+                <label for="hr-agendamento">Hora retirada:</label> &nbsp;
+                <input type="time" name="hr-agendamento" id=""> &nbsp;
+
+
+                <label for="dt-agendamento">Data:</label> &nbsp;
+                <input type="date" name="dt-agendamento" id=""> &nbsp;
+
+                <label for="hr-agendamento">Hora devolução:</label> &nbsp;
+                <input type="time" name="hr-agendamento" id=""> &nbsp;
+            
+            </div>
+
+        </div>
+
+
+
+
+        
+    </form>
+
+
+</div>

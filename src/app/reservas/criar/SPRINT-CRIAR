@@ -1,0 +1,26 @@
+
+[Botão adicionar]
+    *   A cada click gera uma nova linha de [equipamento] e [quantidade]
+    *   Será permitido até 4 enquamentos por reserva
+
+
+[Botão Outro Equipamento]
+    *   Faz desaparecer os inputs [equipamento] e [quantidade] e apresenta um novo input "Outro equipamento" e [quantidade]
+
+
+[Botão Multiplas]
+    *   A cada click gera uma nova linha de agendamento
+    *   É permitido até 8 agendamentos múltiplos
+
+
+[Checkbox Recorrência anual]
+    *   Ao ser habilitado desabilita imediatamente os campos de agendamento normal e, habilita o formulário para anual (O anual
+    deve estar desabilitado ao carregar a página)
+
+[Select recorrencia]
+    *   Ao selecionar o dia da recorrência (segunda-feira-, terça-feira...) o front-end deve auto preenher
+        -   O campo Data retirada calculando o primeiro dia da primeira semana escolhida o mês de janeiro
+        -   O campo Data devolução calculando o último dia do semana escolhida o mês de dezembro
+        -   O sistema também precisa gerar um quadro com a lista dessa recorrência (dia) com a data para exibição final do 
+        agendamento 
+        
