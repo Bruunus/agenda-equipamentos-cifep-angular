@@ -5,7 +5,7 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './editar.component.html',
   styleUrls: ['./editar.component.scss']
 })
-export class EditarComponent implements OnInit {
+export class EditarViewComponent implements OnInit {
 
   constructor() { }
 
