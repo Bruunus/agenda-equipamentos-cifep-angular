@@ -1,47 +1,51 @@
-<!-- reservas.component.html -->
-<table>
-    <thead>
-      <tr>
-        <th>Responsavel</th>
-        <th>Setor</th>
-        <th>Tipo</th>
-        <th>Data empréstimo</th>
-        <th>Hora do empréstimo</th>
-        <th>Data devolução</th>
-        <th>Hora devolução</th>
-        <th>Recorrência</th>
-        <th>Equipamentos</th>
-        <!-- Adicione mais cabeçalhos conforme necessário -->
-      </tr>
-    </thead> 
-    <tbody>
-      <tr *ngFor="let reserva of reservas">
-        <td>{{ reserva.responsavel }}</td>
-        <td>{{ reserva.setor }}</td>
-        <td>{{ reserva.tipoReserva }}</td>
 
-        <td *ngFor="let data of reserva.agenda">{{ data.dataRetirada }}</td>
 
-        <td *ngFor="let data of reserva.agenda">{{ data.horaRetirada }}</td>
+ <div *ngFor="let reserva of reservas">
 
-        <td *ngFor="let data of reserva.agenda">{{ data.dataDevolucao }}</td>
+  <div class="row reserva-item" style="background-color: #f7f7e3; margin: 0 20px 30px 20px;">
 
-        <td *ngFor="let data of reserva.agenda">{{ data.horaDevolucao }}</td>
+    <div *ngFor="let data of reserva.agenda" class="col-12" style="background-color: rgb(231, 229, 229); padding: 10px;">
+      <div>
+        <span style="font-size: 15pt; font-weight: bold;">
+          {{ horaRetiradaFormatter }}
+        </span>  &nbsp;&nbsp;&nbsp;&nbsp;   
 
-        <!-- para campo vazio -->
-        <td>
-          <ng-container *ngIf="reserva.recorrenciaDeToda; else emptyData">
-            {{ reserva.recorrenciaDeToda }}
-          </ng-container>
-          <ng-template #emptyData>*</ng-template>
-        </td>
+        <span style="font-weight: bold; color: rgb(13, 179, 13);">
+          {{ data.dataDevolucao | date:'dd/MM' }} - {{ horaDevolucaoFormatter }}
+        </span>
+    </div>
+ 
+      
+    </div>
 
-        <td *ngFor="let equipamento of reserva.equipamentos">
-          {{ equipamento.descricao }} - {{ equipamento.quantidade }}   
-        </td>
+    <div style="padding: 10px;" class="col-4">
+      <span>{{ reserva.responsavel }}</span>&nbsp;&nbsp;
+      <span>{{ reserva.setor }}</span>
+      
+    </div>
 
-        <!-- Exiba mais dados conforme necessário -->
-      </tr>
-    </tbody>
-  </table>
-  
+    
+
+    <div  style="padding: 10px;" class="col-3">
+      <span>&nbsp;&nbsp;&nbsp;&nbsp;Tipo: {{ reserva.tipoReserva }}</span>
+      <ng-container *ngIf="reserva.recorrenciaDeToda; else emptyData">
+        <span>Recorrência: {{ reserva.recorrenciaDeToda }}</span>
+      </ng-container>
+      <ng-template #emptyData><span>Recorrência: *</span></ng-template>
+    </div>
+
+      <div class="col-5">
+        <div *ngFor="let equipamento of reserva.equipamentos" style="padding: 10px; " class="row">
+          <div class="col-12">
+            <span class="d-inline-block">Equipamento: {{ equipamento.descricao }}</span>
+            <span class="d-inline-block">Quantidade: {{ equipamento.quantidade }}</span>
+          </div>
+        </div>
+      </div>
+
+  </div>
+
+   
+</div>
+
+<p>precisa fazer refresh na página a cada nova reserva adicionada</p>
