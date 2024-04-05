@@ -22,6 +22,7 @@ import { CriarComponent } from './reservas/criar/criar.component';
 import { EditarViewComponent } from './reservas/editar-view/editar.component';
 import { HistoricoComponent } from './reservas/historico/historico.component';
 import { EditarChangeComponent } from './reservas/editar-change/editar-change.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -40,15 +41,18 @@ import { EditarChangeComponent } from './reservas/editar-change/editar-change.co
     OutubroComponent,
     NovembroComponent,
     DezembroComponent,
+
     CriarComponent,
     EditarViewComponent,
     HistoricoComponent,
     EditarChangeComponent,
+
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent],

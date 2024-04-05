@@ -1,29 +1,28 @@
 <div>
     <h3>Nova Reserva</h3>
 
-    <form action="">
+    <form (ngSubmit)="processForm()">
         
         <label for="setor">Setor</label> &nbsp;
-        <input type="text" name="setor" id="setor">
+        <input type="text" name="setor" id="setor" [(ngModel)]="reservaDTO.setor">
     
         <br>
     
         <label for="responsavel">Responsável</label> &nbsp;
-        <input type="text" name="responsavel" id="responsavel">
+        <input type="text" name="responsavel" id="responsavel" [(ngModel)]="reservaDTO.responsavel">
 
         <br><br>
 
         <div style="border: 1px solid lightgrey; padding: 5px;">
             <span>Retirada - Devolução</span>
             &nbsp;
-            <button>Multiplas</button>  <!-- multiplas até 8x - a partir daí a reserva é anual -->
+            <button (click)="listeningMulipleReservationButton()">Multiplas</button>  <!-- multiplas até 8x - a partir daí a reserva é anual -->
             &nbsp;
 
             <label for="anual">Recorrência anual</label> &nbsp;
             <input type="checkbox" name="anual" id="anual">
 
             <br><br>
-
 
             <label for="dt-agendamento">Data:</label> &nbsp;
             <input type="date" name="dt-agendamento" id=""> &nbsp;
