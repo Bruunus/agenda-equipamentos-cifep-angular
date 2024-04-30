@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { CreateTags } from 'src/app/model/createTags';
+import { HorasService } from 'src/app/model/horasService';
 
 
 @Component({
@@ -9,7 +9,8 @@ import { CreateTags } from 'src/app/model/createTags';
 })
 export class EventualComponent implements OnInit {
 
-   
+  selectedHour: string = ''; // Esta propriedade vai armazenar o valor selecionado do select
+  hours: string[]; // O array de horas
    
   
   
@@ -32,13 +33,14 @@ export class EventualComponent implements OnInit {
   }
 
    
-
-  constructor() {
-     
+  // dando erro 
+  constructor(private horasService: HorasService) {
+    this.hours = this.horasService.getHours();
   }
+  
 
   ngOnInit(): void {
-     
+     console.log('Antes do submit', this.reservaDTO)
   }
 
 
@@ -47,7 +49,7 @@ export class EventualComponent implements OnInit {
 
   processForm() {
     
-    console.log(this.reservaDTO)
+    console.log('submit: ',this.reservaDTO)
     
     
 

@@ -27,6 +27,7 @@ import { EventualComponent } from './reservas/criar/eventual/eventual.component'
 import { MultiplaComponent } from './reservas/criar/multipla/multipla.component';
 import { AnualComponent } from './reservas/criar/anual/anual.component';
 
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -51,7 +52,7 @@ import { AnualComponent } from './reservas/criar/anual/anual.component';
     EditarChangeComponent,
     EventualComponent,
     MultiplaComponent,
-    AnualComponent,
+    AnualComponent
 
   ],
   imports: [
