@@ -23,6 +23,9 @@ import { EditarViewComponent } from './reservas/editar-view/editar.component';
 import { HistoricoComponent } from './reservas/historico/historico.component';
 import { EditarChangeComponent } from './reservas/editar-change/editar-change.component';
 import { FormsModule } from '@angular/forms';
+import { EventualComponent } from './reservas/criar/eventual/eventual.component';
+import { MultiplaComponent } from './reservas/criar/multipla/multipla.component';
+import { AnualComponent } from './reservas/criar/anual/anual.component';
 
 @NgModule({
   declarations: [
@@ -46,6 +49,9 @@ import { FormsModule } from '@angular/forms';
     EditarViewComponent,
     HistoricoComponent,
     EditarChangeComponent,
+    EventualComponent,
+    MultiplaComponent,
+    AnualComponent,
 
   ],
   imports: [
