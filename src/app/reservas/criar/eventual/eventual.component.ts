@@ -1,5 +1,6 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { HorasService } from 'src/app/model/horasService';
+import { Input, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { HorasService } from "../../../service/model/horasService";
+
 
 
 @Component({
@@ -9,11 +10,17 @@ import { HorasService } from 'src/app/model/horasService';
 })
 export class EventualComponent implements OnInit {
 
-  selectedHour: string = ''; // Esta propriedade vai armazenar o valor selecionado do select
-  hours: string[]; // O array de horas
-   
-  
-  
+
+
+
+  options: { descricao: string, valor: string }[] = [] as { descricao: string, valor: string }[];
+  opcaoSelecionada: string = '';
+
+
+  constructor(private horasService: HorasService) {
+
+  }
+
 
   reservaDTO = {
     setor: '',
@@ -25,39 +32,44 @@ export class EventualComponent implements OnInit {
     agenda: [{
       dataRetirada: '',
       horaRetirada: '',
-      dataDevolucao: '',
+      dataDevolucao: this.opcaoSelecionada,
       horaDevolucao: ''
 
     }]
-    
+
   }
 
-   
-  // dando erro 
-  constructor(private horasService: HorasService) {
-    this.hours = this.horasService.getHours();
-  }
-  
+
+
+
+
 
   ngOnInit(): void {
-     console.log('Antes do submit', this.reservaDTO)
+    this.options = this.horasService.getHours();
+
+    //  console.log('Antes do submit', this.reservaDTO)
   }
 
 
 
+  onClickOpcaoSelecionada(event: Event) {
+    this.opcaoSelecionada = this.horasService.getOptionSelecionado(event);
+  }
 
 
   processForm() {
-    
-    console.log('submit: ',this.reservaDTO)
-    
-    
 
-    
+
+
+    console.log('submit: ',this.reservaDTO)
+
+
+
+
 
   }
 
- 
+
 
 
 

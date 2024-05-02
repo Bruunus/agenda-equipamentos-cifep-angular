@@ -26,6 +26,11 @@ import { FormsModule } from '@angular/forms';
 import { EventualComponent } from './reservas/criar/eventual/eventual.component';
 import { MultiplaComponent } from './reservas/criar/multipla/multipla.component';
 import { AnualComponent } from './reservas/criar/anual/anual.component';
+import { HorasService } from './service/model/horasService';
+import { DadosDoUsuarioComponent } from './reservas/componentes/dados-do-usuario/dados-do-usuario.component';
+import { AgendaComponent } from './reservas/componentes/agenda/agenda.component';
+import { EquipamentosComponent } from './reservas/componentes/equipamentos/equipamentos.component';
+import { TesteComponent } from './reservas/teste/teste.component';
 
 
 @NgModule({
@@ -52,7 +57,11 @@ import { AnualComponent } from './reservas/criar/anual/anual.component';
     EditarChangeComponent,
     EventualComponent,
     MultiplaComponent,
-    AnualComponent
+    AnualComponent,
+    DadosDoUsuarioComponent,
+    AgendaComponent,
+    EquipamentosComponent,
+    TesteComponent
 
   ],
   imports: [
@@ -61,7 +70,7 @@ import { AnualComponent } from './reservas/criar/anual/anual.component';
     HttpClientModule,
     FormsModule
   ],
-  providers: [],
+  providers: [HorasService],
   bootstrap: [AppComponent],
   exports: [HttpClientModule]
 })

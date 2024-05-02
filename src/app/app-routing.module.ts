@@ -9,9 +9,14 @@ import { EditarViewComponent } from './reservas/editar-view/editar.component';
 import { HistoricoComponent } from './reservas/historico/historico.component';
 import { EditarChangeComponent } from './reservas/editar-change/editar-change.component';
 
+import { TesteComponent } from './reservas/teste/teste.component';
+import { DadosDoUsuarioComponent } from './reservas/componentes/dados-do-usuario/dados-do-usuario.component';
+import { AgendaComponent } from './reservas/componentes/agenda/agenda.component';
+import { EquipamentosComponent } from './reservas/componentes/equipamentos/equipamentos.component';
+
 
 const routes: Routes = [
-  { path: 'reservas', component: ReservasComponent },  
+  { path: 'reservas', component: ReservasComponent },
   { path: 'reservas/criar/eventual', component: EventualComponent},
   { path: 'reservas/criar/multipla', component: MultiplaComponent},
   { path: 'reservas/criar/anual', component: AnualComponent},
@@ -19,6 +24,14 @@ const routes: Routes = [
   { path: 'reservas/historico', component: HistoricoComponent},
   { path: 'reservas-calendar', component: CalendarioComponent},
   { path: 'reservas/editar-change', component: EditarChangeComponent},
+// teste dos componentes
+  { path: 'reservas/teste', component: TesteComponent},
+  { path: 'reservas/componentes/dados-do-usuario', component: DadosDoUsuarioComponent},
+  { path: 'reservas/componentes/agenda', component: AgendaComponent},
+  { path: 'reservas/componentes/equipamentos', component: EquipamentosComponent},
+
+
+
   { path: '', redirectTo: '/reservas', pathMatch: 'full'}
 ];
 

@@ -2,67 +2,44 @@
     <h3>Reserva eventual</h3>
 
     <form  (ngSubmit)="processForm()">
-        
+
         <label for="responsavel">Responsável</label> &nbsp;
-        <input type="text" name="responsavel" id="responsavel" [(ngModel)]="reservaDTO.responsavel">
-    
-        <br>    
-        
+        <input type="text" name="responsavel" [(ngModel)]="reservaDTO.responsavel">
+
+        <br>
+
         <label for="setor">Setor</label> &nbsp;
-        <input type="text" name="setor" id="setor" [(ngModel)]="reservaDTO.setor">
-        
+        <input type="text" name="setor" [(ngModel)]="reservaDTO.setor">
+
         <br><br>
 
         <label for="dataRetirada">Data:</label> &nbsp;
-        <input type="date" id="" name="dataRetirada" [(ngModel)]="reservaDTO.agenda[0].dataRetirada"> &nbsp;
+        <input type="date" name="dataRetirada" [(ngModel)]="reservaDTO.agenda[0].dataRetirada"> &nbsp;
 
         <label for="hr-agendamento">Hora retirada:</label>
-        <select name="" id="">
-            <option value=""></option>
-            <option value="07:00">07:00</option>
-            <option value="08:00">08:00</option>
-            <option value="09:00">09:00</option>
-            <option value="10:00">10:00</option>
-            <option value="11:00">11:00</option>
-            <option value="12:00">12:00</option>
-            <option value="13:00">13:00</option>
-            <option value="14:00">14:00</option>
-            <option value="15:00">15:00</option>
-            <option value="16:00">16:00</option>
-            <option value="17:00">17:00</option>
-            <option value="18:00">18:00</option>
+
+        <select name="horaRetirada" [(ngModel)]="reservaDTO.agenda[0].horaRetirada">
+            <option name="horaRetirada" *ngFor="let option of options" [value]="option.valor">{{ option.descricao }}</option>
         </select>
-        
+
         <div id="hora-retirada-eventual"></div>
 
 
         <label for="dt-agendamento">Data:</label> &nbsp;
-        <input  id=""> &nbsp;
+        <input type="date" name="dataDevolucao" [(ngModel)]="reservaDTO.agenda[0].dataDevolucao"> &nbsp;
 
         <label for="hr-agendamento">Hora devolução:</label> &nbsp;
-        <select  name="" id="">
-            <option value=""></option>
-            <option value="07:00">07:00</option>
-            <option value="08:00">08:00</option>
-            <option value="09:00">09:00</option>
-            <option value="10:00">10:00</option>
-            <option value="11:00">11:00</option>
-            <option value="12:00">12:00</option>
-            <option value="13:00">13:00</option>
-            <option value="14:00">14:00</option>
-            <option value="15:00">15:00</option>
-            <option value="16:00">16:00</option>
-            <option value="17:00">17:00</option>
-            <option value="18:00">18:00</option>
+        <select  name="horaDevolucao" [(ngModel)]="reservaDTO.agenda[0].horaDevolucao">
+          <option *ngFor="let option of options" [value]="option.valor">{{ option.descricao }}</option>
         </select>
 
         <br><br>
 
-           
+
 
         <button>+ Adicionar</button> &nbsp; <!-- Evento para adicionar uma linha nova -->
         <button>Outro Equipamento</button>  <!-- abre input para digitar um novo equipamento que não consta na lista -->
-    
+
         <br><br>
 
         <label for="equipamento">Equipamento</label> &nbsp;
@@ -86,7 +63,7 @@
         <br>
     <button type="submit" style="width: 150px; margin-block-start: 50px;">Criar</button>
 
-        
+
     </form>
 
 
