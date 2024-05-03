@@ -1,42 +1,47 @@
 <div class="container-fluid">
     <h2>Agenda de Equipamentos</h2>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light ">
 
-        <div class="collapse navbar-collapse" id="navbarNavDropdown">
-          <ul class="navbar-nav">
+        <div class="collapse navbar-collapse justify-content-between" id="navbarNavDropdown ">
 
-            <li class="nav-item">
-              <a class="nav-link" routerLink="/reservas">Reservas</a>
-            </li>
-
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Criar
-              </a>
-              <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                <a class="dropdown-item" routerLink="/reservas/criar/eventual">Reserva eventual</a>
-                <a class="dropdown-item" routerLink="/reservas/criar/multipla">Reserva Multipla</a>
-                <a class="dropdown-item" routerLink="/reservas/criar/anual">Reserva anual</a>
-
-              </div>
-            </li>
+          <ul class="navbar-nav ">
 
 
-            <li class="nav-item">
-                <a class="nav-link" routerLink="/reservas/editar">Editar</a>
-            </li>
+              <li class="nav-item">
+                <a class="nav-link" routerLink="/reservas">Reservas</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Criar
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                  <a class="dropdown-item" routerLink="/reservas/criar/eventual">Reserva eventual</a>
+                  <a class="dropdown-item" routerLink="/reservas/criar/multipla">Reserva Multipla</a>
+                  <a class="dropdown-item" routerLink="/reservas/criar/anual">Reserva anual</a>
+                </div>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" routerLink="/reservas/editar">Editar</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" routerLink="/reservas/historico">Histórico</a>
+              </li>
+              <li>
+                <a class="nav-link" style="color: blue" routerLink="reservas/teste">Teste dos componentes</a>
+              </li>
 
-            <li class="nav-item">
-                <a class="nav-link" routerLink="/reservas/historico">Histórico</a>
-            </li>
-
-            <li>
-              <a class="nav-link" style="color: blue" routerLink="reservas/teste">Teste dos componentes</a>
-            </li>
 
 
           </ul>
+
+          <!-- Sessão para ADM -->
+          <ul class="navbar-nav ">
+            <li class="nav-item">
+              <a class="nav-link cursor-link" routerLink="reservas/adm/config">Configurações</a>
+            </li>
+          </ul>
         </div>
+
       </nav>
     <div>
 

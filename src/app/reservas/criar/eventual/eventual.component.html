@@ -3,37 +3,31 @@
 
     <form  (ngSubmit)="processForm()">
 
-        <label for="responsavel">Responsável</label> &nbsp;
-        <input type="text" name="responsavel" [(ngModel)]="reservaDTO.responsavel">
-
-        <br>
-
-        <label for="setor">Setor</label> &nbsp;
-        <input type="text" name="setor" [(ngModel)]="reservaDTO.setor">
-
-        <br><br>
-
-        <label for="dataRetirada">Data:</label> &nbsp;
-        <input type="date" name="dataRetirada" [(ngModel)]="reservaDTO.agenda[0].dataRetirada"> &nbsp;
-
-        <label for="hr-agendamento">Hora retirada:</label>
-
-        <select name="horaRetirada" [(ngModel)]="reservaDTO.agenda[0].horaRetirada">
-            <option name="horaRetirada" *ngFor="let option of options" [value]="option.valor">{{ option.descricao }}</option>
-        </select>
-
-        <div id="hora-retirada-eventual"></div>
+      <app-dados-do-usuario
+        (responsavelChange)="onResponsavel($event)"
+        (setorChange)="onSetor($event)">
+      </app-dados-do-usuario>
 
 
-        <label for="dt-agendamento">Data:</label> &nbsp;
-        <input type="date" name="dataDevolucao" [(ngModel)]="reservaDTO.agenda[0].dataDevolucao"> &nbsp;
+       <label for="dataRetirada">Data:</label> &nbsp;
+      <input type="date" name="dataRetirada" [(ngModel)]="dataRetirada"> &nbsp;
 
-        <label for="hr-agendamento">Hora devolução:</label> &nbsp;
-        <select  name="horaDevolucao" [(ngModel)]="reservaDTO.agenda[0].horaDevolucao">
-          <option *ngFor="let option of options" [value]="option.valor">{{ option.descricao }}</option>
-        </select>
+      <label for="hr-agendamento">Hora retirada:</label>
+      <select name="horaRetirada" [(ngModel)]="horaRetirada">
+          <option name="horaRetirada" *ngFor="let option of options" [value]="option.valor">{{ option.descricao }}</option>
+      </select>
 
-        <br><br>
+      <br>
+
+      <label for="dt-agendamento">Data:</label> &nbsp;
+      <input type="date" name="dataDevolucao" [(ngModel)]="dataDevolucao"> &nbsp;
+
+      <label for="hr-agendamento">Hora devolução:</label> &nbsp;
+      <select  name="horaDevolucao" [(ngModel)]="horaDevolucao">
+        <option *ngFor="let option of options" [value]="option.valor">{{ option.descricao }}</option>
+      </select>
+
+      <br><br>
 
 
 
@@ -42,7 +36,7 @@
 
         <br><br>
 
-        <label for="equipamento">Equipamento</label> &nbsp;
+        <!-- <label for="equipamento">Equipamento</label> &nbsp;
         <select name="" id="">
             <option value=""></option>
             <option value="NOTEBOOK">NOTEBOOK</option>
@@ -56,7 +50,9 @@
             <option value="">1</option>
             <option value="">2</option>
             <option value="">3</option>
-        </select>
+        </select> -->
+
+        <app-equipamentos></app-equipamentos>
 
 
 
@@ -68,3 +64,4 @@
 
 
 </div>
+<!-- <app-equipamentos></app-equipamentos> -->

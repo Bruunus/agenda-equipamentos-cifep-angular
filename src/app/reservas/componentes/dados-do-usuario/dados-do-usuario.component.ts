@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-dados-do-usuario',
@@ -7,9 +7,22 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DadosDoUsuarioComponent implements OnInit {
 
+  @Output() responsavelChange: EventEmitter<string> = new EventEmitter<string>();
+  @Output() setorChange: EventEmitter<string> = new EventEmitter<string>();
+
+
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+
+  getResponsavelChange(event: any): void {
+    this.responsavelChange.emit(event.target.value);
+  }
+
+  getSetorChange(event: any): void {
+    this.setorChange.emit(event.target.value);
   }
 
 }

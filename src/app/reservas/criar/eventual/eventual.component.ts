@@ -10,6 +10,14 @@ import { HorasService } from "../../../service/model/horasService";
 })
 export class EventualComponent implements OnInit {
 
+  reservaDTO = {}
+
+  responsavel: string = '';
+  setor: string = '';
+  dataRetirada: string = '';
+  horaRetirada: string = '';
+  dataDevolucao: string = '';
+  horaDevolucao: string = '';
 
 
 
@@ -22,22 +30,7 @@ export class EventualComponent implements OnInit {
   }
 
 
-  reservaDTO = {
-    setor: '',
-    responsavel : '',
-    equipamento: {
-      equipamento: '',
-      quantidade: ''
-    },
-    agenda: [{
-      dataRetirada: '',
-      horaRetirada: '',
-      dataDevolucao: this.opcaoSelecionada,
-      horaDevolucao: ''
 
-    }]
-
-  }
 
 
 
@@ -46,6 +39,7 @@ export class EventualComponent implements OnInit {
 
   ngOnInit(): void {
     this.options = this.horasService.getHours();
+
 
     //  console.log('Antes do submit', this.reservaDTO)
   }
@@ -59,16 +53,40 @@ export class EventualComponent implements OnInit {
 
   processForm() {
 
+  this.reservaDTO = {
+      setor: this.setor,
+      responsavel : this.responsavel,
+      equipamento: {
+        equipamento: '',
+        quantidade: ''
+      },
+      agenda: [{
+        dataRetirada: this.dataRetirada,
+        horaRetirada: this.horaRetirada,
+        dataDevolucao: this.dataDevolucao,
+        horaDevolucao: this.horaDevolucao
 
+      }]
+
+    }
 
     console.log('submit: ',this.reservaDTO)
-
+    console.log(this.responsavel)
+    console.log(this.setor)
 
 
 
 
   }
 
+
+  onResponsavel(responsavel: string): void {
+    this.responsavel = responsavel;
+  }
+
+  onSetor(setor: string): void {
+    this.setor = setor;
+  }
 
 
 

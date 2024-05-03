@@ -1,0 +1,25 @@
+.config-container {
+  position: relative;
+  display: grid !important;
+  grid-template-columns: 20% 1fr !important; /* Definindo as colunas e defininido o tamanho da 1º */
+  gap: 0.5rem !important;  /* espaçamento entre as colunas do grid */
+  height: 100%;
+}
+
+
+.menu-container {
+  background-color: #ffe4c454;
+  width: 200;
+  height: 100vh;
+
+  padding: 10px;
+}
+
+
+.content-container {
+  background-color: #ffb6c142;
+  width: 200;
+  height: 100vh;
+}
+
+

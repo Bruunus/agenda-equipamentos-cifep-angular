@@ -28,9 +28,10 @@ import { MultiplaComponent } from './reservas/criar/multipla/multipla.component'
 import { AnualComponent } from './reservas/criar/anual/anual.component';
 import { HorasService } from './service/model/horasService';
 import { DadosDoUsuarioComponent } from './reservas/componentes/dados-do-usuario/dados-do-usuario.component';
-import { AgendaComponent } from './reservas/componentes/agenda/agenda.component';
 import { EquipamentosComponent } from './reservas/componentes/equipamentos/equipamentos.component';
 import { TesteComponent } from './reservas/teste/teste.component';
+import { ConfigComponent } from './config/config.component';
+
 
 
 @NgModule({
@@ -59,9 +60,10 @@ import { TesteComponent } from './reservas/teste/teste.component';
     MultiplaComponent,
     AnualComponent,
     DadosDoUsuarioComponent,
-    AgendaComponent,
     EquipamentosComponent,
-    TesteComponent
+    TesteComponent,
+    ConfigComponent,
+
 
   ],
   imports: [

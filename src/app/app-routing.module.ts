@@ -11,8 +11,9 @@ import { EditarChangeComponent } from './reservas/editar-change/editar-change.co
 
 import { TesteComponent } from './reservas/teste/teste.component';
 import { DadosDoUsuarioComponent } from './reservas/componentes/dados-do-usuario/dados-do-usuario.component';
-import { AgendaComponent } from './reservas/componentes/agenda/agenda.component';
 import { EquipamentosComponent } from './reservas/componentes/equipamentos/equipamentos.component';
+import { EquipamentoComponent } from './config/equipamento/equipamento.component';
+import { ConfigComponent } from './config/config.component';
 
 
 const routes: Routes = [
@@ -27,8 +28,10 @@ const routes: Routes = [
 // teste dos componentes
   { path: 'reservas/teste', component: TesteComponent},
   { path: 'reservas/componentes/dados-do-usuario', component: DadosDoUsuarioComponent},
-  { path: 'reservas/componentes/agenda', component: AgendaComponent},
   { path: 'reservas/componentes/equipamentos', component: EquipamentosComponent},
+
+  // sessão adm
+  { path: 'reservas/adm/config', component: ConfigComponent},
 
 
 
