@@ -27,10 +27,15 @@ import { EventualComponent } from './reservas/criar/eventual/eventual.component'
 import { MultiplaComponent } from './reservas/criar/multipla/multipla.component';
 import { AnualComponent } from './reservas/criar/anual/anual.component';
 import { HorasService } from './service/model/horasService';
-import { DadosDoUsuarioComponent } from './reservas/componentes/dados-do-usuario/dados-do-usuario.component';
-import { EquipamentosComponent } from './reservas/componentes/equipamentos/equipamentos.component';
+import { DadosDoUsuarioComponent } from './reservas/componentes-templates/dados-do-usuario/dados-do-usuario.component';
+import { EquipamentosComponent } from './reservas/componentes-templates/equipamentos/equipamentos.component';
 import { TesteComponent } from './reservas/teste/teste.component';
 import { ConfigComponent } from './config/config.component';
+import { ServiceEquipamentos } from './service/service-equipamentos';
+import { ServiceApiRead } from './service/service-api-read';
+import { ServiceApiCreate } from './service/service-api-create';
+import { ServiceApiUpdate } from './service/service-api-update';
+import { ServiceApiDelete } from './service/service-api-delete';
 
 
 
@@ -72,7 +77,7 @@ import { ConfigComponent } from './config/config.component';
     HttpClientModule,
     FormsModule
   ],
-  providers: [HorasService],
+  providers: [HorasService, HorasService, ServiceEquipamentos, ServiceApiRead, ServiceApiCreate, ServiceApiUpdate, ServiceApiDelete],
   bootstrap: [AppComponent],
   exports: [HttpClientModule]
 })

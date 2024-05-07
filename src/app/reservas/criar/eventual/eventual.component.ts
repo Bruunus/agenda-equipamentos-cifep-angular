@@ -1,3 +1,4 @@
+import { ServiceEquipamentos } from './../../../service/service-equipamentos';
 import { Input, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { HorasService } from "../../../service/model/horasService";
 
@@ -19,13 +20,23 @@ export class EventualComponent implements OnInit {
   dataDevolucao: string = '';
   horaDevolucao: string = '';
 
+  opcaoSelecionada: string = '';
+
+  opcaoEquipamentoSelecionado: string = '';
+
+
+
+
+
+
 
 
   options: { descricao: string, valor: string }[] = [] as { descricao: string, valor: string }[];
-  opcaoSelecionada: string = '';
 
 
-  constructor(private horasService: HorasService) {
+
+
+  constructor(private horasService: HorasService, serviceEquipamentos: ServiceEquipamentos) {
 
   }
 
@@ -49,6 +60,8 @@ export class EventualComponent implements OnInit {
   onClickOpcaoSelecionada(event: Event) {
     this.opcaoSelecionada = this.horasService.getOptionSelecionado(event);
   }
+
+
 
 
   processForm() {

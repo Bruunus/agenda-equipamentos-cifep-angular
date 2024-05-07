@@ -10,8 +10,8 @@ import { HistoricoComponent } from './reservas/historico/historico.component';
 import { EditarChangeComponent } from './reservas/editar-change/editar-change.component';
 
 import { TesteComponent } from './reservas/teste/teste.component';
-import { DadosDoUsuarioComponent } from './reservas/componentes/dados-do-usuario/dados-do-usuario.component';
-import { EquipamentosComponent } from './reservas/componentes/equipamentos/equipamentos.component';
+import { DadosDoUsuarioComponent } from './reservas/componentes-templates/dados-do-usuario/dados-do-usuario.component';
+import { EquipamentosComponent } from './reservas/componentes-templates/equipamentos/equipamentos.component';
 import { EquipamentoComponent } from './config/equipamento/equipamento.component';
 import { ConfigComponent } from './config/config.component';
 

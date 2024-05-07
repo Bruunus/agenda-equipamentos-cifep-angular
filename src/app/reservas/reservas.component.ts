@@ -1,20 +1,26 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { ServiceApiRead } from '../service/service-api-read';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-reservas',
   templateUrl: './reservas.component.html',
   styleUrls: ['./reservas.component.scss']
 })
+
 export class ReservasComponent implements OnInit {
 
   horaRetiradaFormatter: any;
   horaDevolucaoFormatter: any;
   reservas: any[] = [];
+  http: any;
+  error: any;
 
- 
 
-  constructor(private http: HttpClient) {}
+
+
+  constructor(private serviceApi: ServiceApiRead) {}
 
 
   ngOnInit(): void {
@@ -25,41 +31,26 @@ export class ReservasComponent implements OnInit {
 
   loadDataOfDay() {
 
-    this.http.get<any[]>('http://localhost:8080/load/current-day/reservas')
-      .subscribe(
-        (reservas: any[]) => {
-          this.reservas = reservas;
-          console.log('Reservas do dia:', this.reservas);
-          
-           this.reservas.forEach(timerFormatter => {
-            
-             
-            //const horaRetirada = timerFormatter.agenda[0].dataDevolucao;
+    this.serviceApi.loadReservasOfDay().subscribe({
+      next: (reservas: any[]) => {
+        this.reservas = reservas;
+        // console.log('Reservas do dia:', this.reservas);
+        this.reservas.forEach(timerFormatter => {
+          timerFormatter.agenda.forEach((timer: any) => {
+            this.horaRetiradaFormatter = timer.horaRetirada.split(':').slice(0, 2).join(':');
+            this.horaDevolucaoFormatter = timer.horaDevolucao.split(':').slice(0, 2).join(':');
+            console.log(this.horaDevolucaoFormatter);
+          });
+        });
+      },
+      error: (error) => {
+        console.error('Erro ao carregar as reservas do dia:', error);
+      }
+    });
 
-            timerFormatter.agenda.forEach((timer:any) => {
-              this.horaRetiradaFormatter = timer.horaRetirada.split(':').slice(0,2).join(':');
-              this.horaDevolucaoFormatter = timer.horaDevolucao.split(':').slice(0, 2).join(':');
-              
 
-
-              console.log(this.horaDevolucaoFormatter)
-            })
-             
-
-            //console.log(horaRetirada)
-
-            
-           })
-
-        },
-        (error) => {
-          console.error('Erro ao carregar as reservas do dia:', error);
-        }
-      )
-
-    
   }
-  
+
 
 
 }

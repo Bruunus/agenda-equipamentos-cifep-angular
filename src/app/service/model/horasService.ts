@@ -5,7 +5,7 @@ export class HorasService {
 
   getHours(): { descricao: string, valor: string }[] {
     return [
-      { descricao: '', valor: '-- select --' },
+      { descricao: '-- select --', valor: '' },
       { descricao: '07:00', valor: '07:00' },
       { descricao: '08:00', valor: '08:00' },
       { descricao: '09:00', valor: '09:00' },

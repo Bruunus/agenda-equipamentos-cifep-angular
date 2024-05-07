@@ -4,7 +4,7 @@
 <div>
   <table style="border: 1px solid lightgray; width: 600px; margin: 30px 0 50px 0;">
     <th colspan="3">Radar</th>
-    
+
     <tbody>
       <th>Notebook</th>
       <th>Datashow</th>
@@ -12,7 +12,7 @@
         <td style="font-size: 25pt; font-weight: bold;">5</td>
         <td style="font-size: 25pt; font-weight: bold;">5</td>
       </tr>
-      <tr>        
+      <tr>
         <td>Disponível</td>
         <td>Disponível</td>
       </tr>
@@ -30,23 +30,23 @@
       <div>
         <span style="font-size: 15pt; font-weight: bold;">
           {{ horaRetiradaFormatter }}
-        </span>  &nbsp;&nbsp;&nbsp;&nbsp;   
+        </span>  &nbsp;&nbsp;&nbsp;&nbsp;
 
         <span style="font-weight: bold; color: rgb(13, 179, 13);">
           {{ data.dataDevolucao | date:'dd/MM' }} - {{ horaDevolucaoFormatter }}
         </span>
     </div>
- 
-      
+
+
     </div>
 
     <div style="padding: 10px;" class="col-4">
       <span>{{ reserva.responsavel }}</span>&nbsp;&nbsp;
       <span>{{ reserva.setor }}</span>
-      
+
     </div>
 
-    
+
 
     <div  style="padding: 10px;" class="col-3">
       <span>&nbsp;&nbsp;&nbsp;&nbsp;Tipo: {{ reserva.tipoReserva }}</span>
@@ -67,7 +67,7 @@
 
   </div>
 
-   
+
 </div>
 
 <p>precisa fazer refresh na página a cada nova reserva adicionada</p>
