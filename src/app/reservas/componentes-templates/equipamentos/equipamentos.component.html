@@ -12,43 +12,52 @@
     <tr>
       <td><label for="equipamento">Equipamento</label></td>
       <td>
-        <select>
-          <!-- <option value="">NOTEBOOK</option> -->
-          <option></option>
-
-        </select>
-      </td>
-      <td><label for="qtd">Quantidade</label></td>
-      <td>
-        <select name="" id="">.
+        <select (change)="onOptionEquipamentoChange($event)" [(ngModel)]="selectedOptionListaEquipamento">
           <option value=""></option>
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
+          <option *ngFor="let item of optionsListaEquipamento" [value]="item.valor">{{ item.descricao }}</option>
+
+        </select>
+      </td>
+      <td><label for="qtd">Qtd.</label></td>
+      <td>
+        <select (change)="onOptionQuantidadeChange($event)" name="selectedOptionListaQuantidade" [(ngModel)]="selectedOptionListaQuantidade">
+          <option name="selectedOptionListaQuantidade" *ngFor="let qtd of optionQuantidade" [value]="qtd.valor">{{ qtd.descricao }}</option>
         </select>
 
       </td>
-      <td><button>Reservar</button></td>
+      <td>
+        <button (click)="adicionarEquipamento()" style="margin-left: 2pt;">Adicionar</button>
+      </td>
     </tr>
   </table>
 
   <br>
 
-  <table class="bordas">
+  <table id="table-lista-equipamento" class="bordas">
 
     <thead>
       <th>Equipamento</th>
       <th>Quantidade</th>
     </thead>
     <tbody>
-      <tr class="bordas">
-        <td>NOTEBOOK</td>
-        <td>1</td>
-      </tr>
-      <tr class="bordas">
-        <td>NOTEBOOK</td>
-        <td>1</td>
-      </tr>
+      <td id="td-data-container" colspan="2">
+        <ul>
+          <!-- template -->
+          <li id="template-li">
+            <td>Notebook</td>
+            <td>1</td>
+          </li>
+          <!-- <li>Teste</li>
+          <li>Teste</li>
+          <li>Teste</li>
+          <li>Teste</li>
+          <li>Teste</li>
+          <li>Teste</li>
+          <li>Teste</li>
+          <li>Teste</li>
+          <li>Teste</li> -->
+        </ul>
+      </td>
     </tbody>
   </table>
 </div>

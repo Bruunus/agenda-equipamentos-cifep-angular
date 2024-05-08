@@ -36,6 +36,7 @@ import { ServiceApiRead } from './service/service-api-read';
 import { ServiceApiCreate } from './service/service-api-create';
 import { ServiceApiUpdate } from './service/service-api-update';
 import { ServiceApiDelete } from './service/service-api-delete';
+import { ServiceModule } from './service/service-module';
 
 
 
@@ -67,7 +68,8 @@ import { ServiceApiDelete } from './service/service-api-delete';
     DadosDoUsuarioComponent,
     EquipamentosComponent,
     TesteComponent,
-    ConfigComponent,
+    ConfigComponent
+
 
 
   ],
@@ -75,9 +77,10 @@ import { ServiceApiDelete } from './service/service-api-delete';
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    ServiceModule
   ],
-  providers: [HorasService, HorasService, ServiceEquipamentos, ServiceApiRead, ServiceApiCreate, ServiceApiUpdate, ServiceApiDelete],
+  providers: [],
   bootstrap: [AppComponent],
   exports: [HttpClientModule]
 })

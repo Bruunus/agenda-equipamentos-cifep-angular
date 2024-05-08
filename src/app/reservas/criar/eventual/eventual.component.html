@@ -1,43 +1,56 @@
 <div>
-    <h3>Reserva eventual</h3>
+  <h3>Reserva eventual</h3>
 
-    <form  (ngSubmit)="processForm()">
+  <form  (ngSubmit)="processForm()">
 
-      <app-dados-do-usuario
-        (responsavelChange)="onResponsavel($event)"
-        (setorChange)="onSetor($event)">
-      </app-dados-do-usuario>
+  <app-dados-do-usuario
+    (responsavelChange)="onResponsavel($event)"
+    (setorChange)="onSetor($event)">
+  </app-dados-do-usuario>
 
-
-       <label for="dataRetirada">Data:</label> &nbsp;
+  <div class="row">
+    <div class="col">
+      <label for="dataRetirada">Data início:</label> &nbsp;
       <input type="date" name="dataRetirada" [(ngModel)]="dataRetirada"> &nbsp;
 
-      <label for="hr-agendamento">Hora retirada:</label>
+      <label for="hr-agendamento">Hora início:</label>
       <select name="horaRetirada" [(ngModel)]="horaRetirada">
           <option name="horaRetirada" *ngFor="let option of options" [value]="option.valor">{{ option.descricao }}</option>
       </select>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <label for="dt-agendamento">Data fim:</label> &nbsp;
+      <input style="margin-left: 1.06em;" type="date" name="dataDevolucao" [(ngModel)]="dataDevolucao"> &nbsp;
 
-      <br>
-
-      <label for="dt-agendamento">Data:</label> &nbsp;
-      <input type="date" name="dataDevolucao" [(ngModel)]="dataDevolucao"> &nbsp;
-
-      <label for="hr-agendamento">Hora devolução:</label> &nbsp;
+      <label for="hr-agendamento">Hora fim:</label> &nbsp;
       <select  name="horaDevolucao" [(ngModel)]="horaDevolucao">
         <option *ngFor="let option of options" [value]="option.valor">{{ option.descricao }}</option>
       </select>
-
-      <br><br>
-
-        <app-equipamentos></app-equipamentos>
+      </div>
+  </div>
 
 
 
-      <br>
-    <button type="submit" style="width: 150px; margin-block-start: 50px;">Criar</button>
 
 
-    </form>
+
+    <br><br>
+
+      <app-equipamentos
+        (selectedOptionEquipamentoChange)="onSelectedOptionEquipamentoChange($event)"
+        (selectedOptionQuantidadeChange)="onSelectedOptionQuantidadeChange($event)">
+      </app-equipamentos>
+
+
+
+    <br>
+  <button type="submit" style="width: 150px; margin-block-start: 50px;">Criar</button>
+
+
+  </form>
+
 
 
 </div>

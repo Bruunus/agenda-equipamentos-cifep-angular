@@ -1,9 +1,15 @@
-<label for="responsavel">Responsável</label> &nbsp;
-<input type="text" name="responsavel" (input)="getResponsavelChange($event)">
+<div class="row">
+  <div class="col">
+    <label for="responsavel">Responsável</label> &nbsp;
+    <input type="text" name="responsavel" (input)="getResponsavelChange($event)">
+  </div>
+</div>
 
-<br>
-
-<label for="setor">Setor</label> &nbsp;
-<input type="text" name="setor" (input)="getSetorChange($event)">
+<div class="row">
+  <div class="col">
+    <label for="setor">Setor</label> &nbsp;
+    <input id="setor" type="text" name="setor" (input)="getSetorChange($event)">
+  </div>
+</div>
 
 <br><br>

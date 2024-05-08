@@ -2,3 +2,41 @@
   border: 1px solid;
   border-collapse: collapse;
 }
+
+
+#table-lista-equipamento {
+  width: 50%;
+  height: 19vh;
+}
+
+#table-lista-equipamento thead th {
+  padding: 6px;
+  background-color: #FAFAFA;
+}
+
+#td-data-container {
+  padding: 0;
+}
+
+#td-data-container ul {
+  // border: 1px solid;
+  border-collapse: collapse;
+  padding: 0;
+  overflow: auto;
+  height: 9em;
+  max-height: 9em;
+  margin-bottom: 2px;
+}
+
+#template-li td:nth-child(1){
+  background-color: blanchedalmond;
+  padding: 7pt;
+  width: 20.6em;
+}
+
+#template-li td:nth-child(2) {
+  background-color: aquamarine;
+  padding: 7pt;
+  width: 18.6em;
+
+}

@@ -1,6 +1,7 @@
+import { OptionQuantidadeService } from './../../../service/model/optionQuantidadeService';
 import { ServiceEquipamentos } from '../../../service/service-equipamentos';
 import { HttpClient } from '@angular/common/http';
-import { Component, EventEmitter, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'app-equipamentos',
@@ -10,10 +11,21 @@ import { Component, EventEmitter, OnInit, Output, SimpleChanges } from '@angular
 export class EquipamentosComponent implements OnInit {
 
   listaDeEquipamentos: any[] = [];
+  optionsListaEquipamento: any[] = [];
+  equipamentos = [] = [{}];
+  objectEquipamentos : {id: number, descricao: string, quantidade: number } = {id:0, descricao:'', quantidade:0}
+  equipamentoId = 0;
+  selectedOptionListaEquipamento: string = '';
+  selectedOptionListaQuantidade: string = '';
+  optionQuantidade: { descricao: string, valor: string } [] = [] as { descricao: string, valor: string }[];
 
-  @Output() opcaoSelecionadaChange: EventEmitter<string> = new EventEmitter<string>();  //parei aqui
+  // events
+  @Output() selectedOptionEquipamentoChange: EventEmitter<string> = new EventEmitter<string>();
+  @Output() selectedOptionQuantidadeChange: EventEmitter<string> = new EventEmitter<string>();
 
-  constructor(private services: ServiceEquipamentos) { }
+
+
+  constructor(private services: ServiceEquipamentos, private optionQuantidadeService: OptionQuantidadeService) { }
 
 
 
@@ -23,7 +35,7 @@ export class EquipamentosComponent implements OnInit {
       next: (listaDeEquipamentos: any[]) => {
 
         this.listaDeEquipamentos = [{ id: null, descricao: '' }, ...listaDeEquipamentos];
-        console.log(this.listaDeEquipamentos)
+        // console.log(this.listaDeEquipamentos)
 
          this.listaDeEquipamentos.sort((a, b) => {
           const descricaoA = a.descricao.toUpperCase();
@@ -42,9 +54,63 @@ export class EquipamentosComponent implements OnInit {
       }
     });
 
+    // this.getListEquipaments()
+    this.optionQuantidade = this.optionQuantidadeService.getQuantidade();
+    this.getListEquipaments()
+
   }
 
 
+
+  getListEquipaments() {
+    this.services.getListEquipaments().subscribe((response) => {
+      this.optionsListaEquipamento = response
+    });
+  }
+
+
+
+
+
+  onOptionQuantidadeChange(event: Event) {
+    const quantidadeSelecionada = this.optionQuantidadeService.getOptionQuantidadeSelecionado(event);
+    const quantidadeSelecionadaString = quantidadeSelecionada.toString();
+    this.selectedOptionQuantidadeChange.emit(quantidadeSelecionadaString);
+  }
+
+  onOptionEquipamentoChange(event: any) {
+    const selectedValue = event.target.value;
+    this.selectedOptionListaEquipamento = selectedValue;
+    this.selectedOptionEquipamentoChange.emit(selectedValue);
+  }
+
+
+  // onOptionChange(event: Event) {
+  //   const selectedValue = (event.target as HTMLSelectElement).value;
+  //   this.selectedOptionListaEquipamento = selectedValue;
+  //   this.selectedOptionEquipamentoChange.emit(selectedValue);
+  // }
+
+
+  adicionarEquipamento() {
+
+    this.equipamentoId++;
+
+
+    this.objectEquipamentos = {
+      id: this.equipamentoId,
+      descricao: this.selectedOptionListaEquipamento, // faz um getter
+      quantidade: 1    // ERRO: Preciesa fazer a conversão  this.selectedOptionListaQuantidade
+    }
+
+    this.equipamentos.push(this.objectEquipamentos);
+
+
+    console.log(this.equipamentos)
+
+
+
+  }
 
 
 

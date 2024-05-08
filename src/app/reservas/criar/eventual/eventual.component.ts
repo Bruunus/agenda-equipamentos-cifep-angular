@@ -23,6 +23,7 @@ export class EventualComponent implements OnInit {
   opcaoSelecionada: string = '';
 
   opcaoEquipamentoSelecionado: string = '';
+  opcaoQuantidadeSelecionado: string = '';
 
 
 
@@ -36,7 +37,7 @@ export class EventualComponent implements OnInit {
 
 
 
-  constructor(private horasService: HorasService, serviceEquipamentos: ServiceEquipamentos) {
+  constructor(private horasService: HorasService ) {
 
   }
 
@@ -61,6 +62,16 @@ export class EventualComponent implements OnInit {
     this.opcaoSelecionada = this.horasService.getOptionSelecionado(event);
   }
 
+  onSelectedOptionEquipamentoChange(value: any) {
+    // console.log('Opção selecionada:', value);
+    this.opcaoEquipamentoSelecionado = value;
+  }
+
+  onSelectedOptionQuantidadeChange(value: any) {
+    // console.log('Quantidade selecionada:', value);
+    this.opcaoQuantidadeSelecionado = value;
+  }
+
 
 
 
@@ -69,10 +80,10 @@ export class EventualComponent implements OnInit {
   this.reservaDTO = {
       setor: this.setor,
       responsavel : this.responsavel,
-      equipamento: {
-        equipamento: '',
-        quantidade: ''
-      },
+      equipamento: [{
+        equipamento: this.opcaoEquipamentoSelecionado,
+        quantidade: this.opcaoQuantidadeSelecionado
+      }],
       agenda: [{
         dataRetirada: this.dataRetirada,
         horaRetirada: this.horaRetirada,
@@ -83,9 +94,9 @@ export class EventualComponent implements OnInit {
 
     }
 
-    console.log('submit: ',this.reservaDTO)
-    console.log(this.responsavel)
-    console.log(this.setor)
+     console.log('submit: ',this.reservaDTO)
+    // console.log(this.responsavel)
+    // console.log(this.setor)
 
 
 
