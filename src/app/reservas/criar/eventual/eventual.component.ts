@@ -1,6 +1,8 @@
-import { ServiceEquipamentos } from './../../../service/service-equipamentos';
+import { EquipamentosComponent } from './../../componentes-templates/equipamentos/equipamentos.component';
+
 import { Input, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { HorasService } from "../../../service/model/horasService";
+import { EquipamentoInterface } from 'src/app/service/model/equipamento-interface';
 
 
 
@@ -12,6 +14,11 @@ import { HorasService } from "../../../service/model/horasService";
 export class EventualComponent implements OnInit {
 
   reservaDTO = {}
+  //equipamentos = [{}]
+  equipamentos: EquipamentoInterface[] = [];
+
+
+  equipamentosInterface: EquipamentoInterface[] = [];
 
   responsavel: string = '';
   setor: string = '';
@@ -37,7 +44,7 @@ export class EventualComponent implements OnInit {
 
 
 
-  constructor(private horasService: HorasService ) {
+  constructor(private horasService: HorasService, private equipamentoComponent: EquipamentosComponent ) {
 
   }
 
@@ -73,6 +80,13 @@ export class EventualComponent implements OnInit {
   }
 
 
+  // teste
+
+  onListaEquipamentosEvent(equipamentos: EquipamentoInterface[]): void {
+    this.equipamentos = equipamentos;
+    console.log('Lista vinda de equipamentos', this.equipamentos)
+  }
+
 
 
   processForm() {
@@ -80,10 +94,7 @@ export class EventualComponent implements OnInit {
   this.reservaDTO = {
       setor: this.setor,
       responsavel : this.responsavel,
-      equipamento: [{
-        equipamento: this.opcaoEquipamentoSelecionado,
-        quantidade: this.opcaoQuantidadeSelecionado
-      }],
+      equipamentos: this.equipamentos,  // aqui
       agenda: [{
         dataRetirada: this.dataRetirada,
         horaRetirada: this.horaRetirada,
@@ -97,6 +108,9 @@ export class EventualComponent implements OnInit {
      console.log('submit: ',this.reservaDTO)
     // console.log(this.responsavel)
     // console.log(this.setor)
+
+    // const teste = this.equipamentoComponent.getEquipamentos()    // teste falhou
+    // console.log('Lista vinda de equipamento component', teste)
 
 
 
@@ -113,6 +127,16 @@ export class EventualComponent implements OnInit {
   }
 
 
+
+  getEquipamentos(equipamentos: EquipamentoInterface[]): void {
+    this.equipamentos = equipamentos;
+  }
+
+
+
+  testeCarregarEquipamentos(event: Array<any>) {
+    console.log('Lista vinda de equipamentos', event)
+  }
 
 
 }

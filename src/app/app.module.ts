@@ -80,7 +80,7 @@ import { ServiceModule } from './service/service-module';
     FormsModule,
     ServiceModule
   ],
-  providers: [],
+  providers: [EquipamentosComponent],
   bootstrap: [AppComponent],
   exports: [HttpClientModule]
 })

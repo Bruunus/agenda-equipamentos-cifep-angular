@@ -26,7 +26,7 @@
 
       </td>
       <td>
-        <button (click)="adicionarEquipamento()" style="margin-left: 2pt;">Adicionar</button>
+        <button (click)="adicionarEquipamento($event)" style="margin-left: 2pt;">Adicionar</button>
       </td>
     </tr>
   </table>
@@ -43,21 +43,23 @@
       <td id="td-data-container" colspan="2">
         <ul>
           <!-- template -->
-          <li id="template-li">
+
+          <!-- <li id="template-li">
             <td>Notebook</td>
             <td>1</td>
+          </li> -->
+
+          <li *ngFor="let equipamento of equipamentos; let i = index" id="lista-template-equipamento"  [attr.data-id]="equipamento.id" >
+            <td>{{ equipamento.descricao }}</td>
+            <td id="qtd">
+              {{ equipamento.quantidade }}
+              <!-- <span class="delete" (click)="removerEquipamento(equipamento.id)">x</span> -->
+            </td>
           </li>
-          <!-- <li>Teste</li>
-          <li>Teste</li>
-          <li>Teste</li>
-          <li>Teste</li>
-          <li>Teste</li>
-          <li>Teste</li>
-          <li>Teste</li>
-          <li>Teste</li>
-          <li>Teste</li> -->
         </ul>
       </td>
     </tbody>
   </table>
 </div>
+
+

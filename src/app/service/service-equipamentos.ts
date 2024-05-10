@@ -16,6 +16,7 @@ export class ServiceEquipamentos {
 
 
   getListEquipaments() {
+
     return this.http.get<any[]>(this.getEstoque);
   }
 

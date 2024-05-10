@@ -40,7 +40,9 @@
 
       <app-equipamentos
         (selectedOptionEquipamentoChange)="onSelectedOptionEquipamentoChange($event)"
-        (selectedOptionQuantidadeChange)="onSelectedOptionQuantidadeChange($event)">
+        (selectedOptionQuantidadeChange)="onSelectedOptionQuantidadeChange($event)"
+        (userEmitter)="testeCarregarEquipamentos($event)">
+        <!-- colocar mais um evento para compartilhar a lista de equipamentos   -->
       </app-equipamentos>
 
 

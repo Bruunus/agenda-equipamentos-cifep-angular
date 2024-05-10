@@ -5,7 +5,7 @@
 
 
 #table-lista-equipamento {
-  width: 50%;
+  width: 600px;
   height: 19vh;
 }
 
@@ -16,6 +16,7 @@
 
 #td-data-container {
   padding: 0;
+
 }
 
 #td-data-container ul {
@@ -28,15 +29,22 @@
   margin-bottom: 2px;
 }
 
-#template-li td:nth-child(1){
+.template-li {
+  padding: 7pt;
+  width: 20.6em;
+}
+
+.template-li td:nth-child(1){
   background-color: blanchedalmond;
   padding: 7pt;
   width: 20.6em;
 }
 
-#template-li td:nth-child(2) {
+.template-li td:nth-child(2) {
   background-color: aquamarine;
   padding: 7pt;
   width: 18.6em;
 
 }
+
+

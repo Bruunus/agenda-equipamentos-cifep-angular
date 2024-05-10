@@ -1,7 +1,9 @@
 import { OptionQuantidadeService } from './../../../service/model/optionQuantidadeService';
 import { ServiceEquipamentos } from '../../../service/service-equipamentos';
 import { HttpClient } from '@angular/common/http';
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { EquipamentoInterface } from 'src/app/service/model/equipamento-interface';
 
 @Component({
   selector: 'app-equipamentos',
@@ -10,9 +12,9 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 })
 export class EquipamentosComponent implements OnInit {
 
-  listaDeEquipamentos: any[] = [];
+  // listaDeEquipamentos: any[] = [];
   optionsListaEquipamento: any[] = [];
-  equipamentos = [] = [{}];
+
   objectEquipamentos : {id: number, descricao: string, quantidade: number } = {id:0, descricao:'', quantidade:0}
   equipamentoId = 0;
   selectedOptionListaEquipamento: string = '';
@@ -22,22 +24,52 @@ export class EquipamentosComponent implements OnInit {
   // events
   @Output() selectedOptionEquipamentoChange: EventEmitter<string> = new EventEmitter<string>();
   @Output() selectedOptionQuantidadeChange: EventEmitter<string> = new EventEmitter<string>();
+  @Output() listaEquipamentosEvent: EventEmitter<EquipamentoInterface[]>
+      = new EventEmitter<EquipamentoInterface[]>();
+
+
+    // teste do youtube
+    @Output() userEmitter: EventEmitter<any> = new EventEmitter()
 
 
 
-  constructor(private services: ServiceEquipamentos, private optionQuantidadeService: OptionQuantidadeService) { }
+
+  equipamentos: EquipamentoInterface[] = [];
+
+
+  constructor(
+    private services: ServiceEquipamentos, private optionQuantidadeService: OptionQuantidadeService,
+
+
+  ) { }
 
 
 
   ngOnInit(): void {
 
-    this.services.getListEquipaments().subscribe({
+    // teste do youtube
+    this.userEmitter.emit(this.equipamentos)
+
+    // carregamento dos selects's
+    this.getListEquipaments()
+    this.getListQuantidade()
+  }
+
+
+  getListQuantidade() {
+    return this.optionQuantidade = this.optionQuantidadeService.getQuantidade();
+  }
+
+  getListEquipaments() {
+
+    const subscription = this.services.getListEquipaments().subscribe({
       next: (listaDeEquipamentos: any[]) => {
 
-        this.listaDeEquipamentos = [{ id: null, descricao: '' }, ...listaDeEquipamentos];
+        this.optionsListaEquipamento = listaDeEquipamentos;
+
         // console.log(this.listaDeEquipamentos)
 
-         this.listaDeEquipamentos.sort((a, b) => {
+         this.optionsListaEquipamento.sort((a, b) => {
           const descricaoA = a.descricao.toUpperCase();
           const descricaoB = b.descricao.toUpperCase();
           if (descricaoA < descricaoB) {
@@ -48,24 +80,14 @@ export class EquipamentosComponent implements OnInit {
           }
           return 0;
         });
+
+        subscription.unsubscribe();
       },
       error: (error) => {
         console.error('Erro ao carregar lista de equipamentos', error);
       }
     });
 
-    // this.getListEquipaments()
-    this.optionQuantidade = this.optionQuantidadeService.getQuantidade();
-    this.getListEquipaments()
-
-  }
-
-
-
-  getListEquipaments() {
-    this.services.getListEquipaments().subscribe((response) => {
-      this.optionsListaEquipamento = response
-    });
   }
 
 
@@ -85,33 +107,34 @@ export class EquipamentosComponent implements OnInit {
   }
 
 
-  // onOptionChange(event: Event) {
-  //   const selectedValue = (event.target as HTMLSelectElement).value;
-  //   this.selectedOptionListaEquipamento = selectedValue;
-  //   this.selectedOptionEquipamentoChange.emit(selectedValue);
-  // }
 
 
-  adicionarEquipamento() {
 
+  adicionarEquipamento(event: Event) {
+     event.preventDefault()
+
+    const quantidade = parseInt(this.selectedOptionListaQuantidade, 10)
     this.equipamentoId++;
 
 
     this.objectEquipamentos = {
       id: this.equipamentoId,
       descricao: this.selectedOptionListaEquipamento, // faz um getter
-      quantidade: 1    // ERRO: Preciesa fazer a conversão  this.selectedOptionListaQuantidade
+      quantidade: quantidade
     }
 
     this.equipamentos.push(this.objectEquipamentos);
 
-
-    console.log(this.equipamentos)
-
-
+    console.log(this.equipamentos);
 
   }
 
+
+
+
+  // removerEquipamento(id: number) {
+
+  // }
 
 
 
