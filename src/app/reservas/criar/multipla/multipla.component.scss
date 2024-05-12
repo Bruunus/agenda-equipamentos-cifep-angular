@@ -1,0 +1,78 @@
+
+
+/* Styles table list of equipament */
+
+#table-equipamento {
+    border: 1px solid;
+    width: 370pt;
+    height: 174px;
+    max-height: 174px;
+}
+
+
+#table-equipamento thead {
+    border-bottom: 1px solid;
+}
+
+
+#table-equipamento thead th {
+    padding: 5px;
+    background-color: #f7f5f5;
+}
+
+#table-equipamento tbody tr td {
+    padding: 0;
+}
+
+
+// <ul>
+#table-equipamento tbody tr td ul {
+    height: 138px;  // age em conjunto com a altura da table
+    max-height: 163px;
+    margin: 0 !important;
+    padding: 0;
+    overflow: auto;
+
+}
+
+
+
+// stilo do template
+
+#template-li {
+    padding: 5px;
+    margin: 0;
+    list-style-type: none;
+    border-bottom: 1px solid;
+    // background-color: #c4eee5;
+
+}
+#template-li:hover {
+    background-color: #fcfafa;
+}
+
+
+#template-li td:nth-child(2) {
+    // background-color: #6894e7;
+    // para col-6
+    flex: 0 0 45% !important;
+    max-width: 50% !important;
+}
+
+
+// div row
+#template-li td:nth-child(2) div {
+    margin: 0;
+}
+
+// span 2
+#template-li td:nth-child(2) div span:nth-child(2) {    
+    padding-left: 6px;
+    padding-right: 5px;
+    border-radius: 3%;
+}
+#template-li td:nth-child(2) div span:nth-child(2):hover {
+    cursor: pointer;
+    background-color: tomato;
+    color: #fff;
+}

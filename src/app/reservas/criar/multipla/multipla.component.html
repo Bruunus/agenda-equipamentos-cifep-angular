@@ -1,1 +1,108 @@
-<p>multipla works!</p>
+
+<div>
+    <h3>Reservas Múltiplas</h3>
+
+    <form>
+
+        <label for="responsavel">Responsável</label> &nbsp;
+        <input type="text" name="responsavel">
+
+        <br>
+
+        <label for="setor">Setor</label> &nbsp;
+        <input type="text" name="setor">
+
+        <br><br>
+
+        <label for="dataRetirada">Data início:</label> &nbsp;
+        <input type="date" name="dataRetirada" > &nbsp;
+
+        <label for="hr-agendamento">Hora início:</label>
+        <select name="horaRetirada">
+            <option value="-- select --">-- select --</option>
+        </select>
+
+        <br>
+
+        <label for="dt-agendamento">Data fim:</label> &nbsp;
+        <input style="margin-left: 1.06em;" type="date" name="dataDevolucao"> &nbsp;
+
+        <label for="hr-agendamento">Hora fim:</label> &nbsp;
+        <select  name="horaDevolucao">
+            <option value="-- select --">-- select --</option>
+        </select>
+
+
+        <table>
+
+            <thead style="background-color: #f7f5f5;">
+                <th>Horas Múltiplas</th>
+            </thead>
+
+        </table>
+
+
+
+
+
+
+        <br><br><br>
+
+        <table id="table-adicionar">
+            <tr>
+              <td>
+                <label for="equipamento">Equipamento</label>
+                <select name="equipamento">
+                  <option value=""></option>
+                  <option value="-- select --">-- select --</option>
+                </select>
+              </td>
+              <td>
+                <label for="quantidade">Quantidade</label>
+                <select  name="selectedOptionListaQuantidade">
+                    <option value="-- select --">-- select --</option>
+                </select>
+              </td>
+              <td>
+                <button>Adicionar</button>
+              </td>
+    
+            </tr>
+       
+        </table>
+
+        <br>
+
+
+        <table id="table-equipamento">
+            <thead>
+              <th>Equipamento</th>
+              <th>Quantidade</th>
+            </thead>
+            <tbody>
+              <tr>
+                <td colspan="2">
+                  <ul>
+                    <!-- template -->
+                    <li id="template-li" class="row">
+                      <td class="col"></td>
+                      <td class="col-6">
+                        <div class="row justify-content-between">  
+                            <span></span>
+                            <span class="delete">x</span>
+                        </div>
+                      </td>    
+                    </li>
+                    <!-- template -->
+                  </ul>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          
+    </form>
+
+
+
+</div>

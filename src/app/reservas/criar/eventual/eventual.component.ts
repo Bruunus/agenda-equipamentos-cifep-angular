@@ -1,5 +1,5 @@
 
-import {  Component, EventEmitter, OnInit, } from '@angular/core';
+import {  Component, ElementRef, EventEmitter, OnInit, QueryList, ViewChildren, } from '@angular/core';
 import { HorasService } from "../../../service/model/horasService";
 import { EquipamentoInterface } from 'src/app/service/model/equipamento-interface';
 import { ServiceApiReadEquipament } from 'src/app/service/api/equipamentos/service-api-read-equipament';
@@ -22,16 +22,16 @@ export class EventualComponent implements OnInit {
   //equipamentos = [{}]
   equipamentos: EquipamentoInterface[] = [];
   equipamentosInterface: EquipamentoInterface[] = [];
-
   listaEquipamento: Array<any> = [];
-
   optionsListaEquipamento: any[] = []; 
   optionsHours: { descricao: string, valor: string }[] = [] as { descricao: string, valor: string }[];
   optionQuantidade: { descricao: string, valor: string } [] = [] as { descricao: string, valor: string }[];
+  options: { descricao: string, valor: string }[] = [] as { descricao: string, valor: string }[];
   objectEquipamentos : {id: number, descricao: string, quantidade: number } = {id:0, descricao:'', quantidade:0}
   selectedOptionListaEquipamento: string = '';
   selectedOptionListaQuantidade: string = '';
   equipamentoContId = 0;
+  isEmpty = false;
   
   // data-biding form
   responsavel: string = '';
@@ -40,28 +40,26 @@ export class EventualComponent implements OnInit {
   horaRetirada: string = '';
   dataDevolucao: string = '';
   horaDevolucao: string = '';
-
-
   opcaoSelecionada: string = '';
-
   opcaoEquipamentoSelecionado: string = '';
   opcaoQuantidadeSelecionado: string = '';
 
-
-
-
-
-
-
-
-  options: { descricao: string, valor: string }[] = [] as { descricao: string, valor: string }[];
-
-
-
-
   // data share
   selectedOptionQuantidadeChange: EventEmitter<string> = new EventEmitter<string>();
-  selectedOptionEquipamentoChange: EventEmitter<string> = new EventEmitter<string>();
+  selectedOptionEquipamentoChange: EventEmitter<string> = new EventEmitter<string>()
+
+  // valid form
+  @ViewChildren('valid') valid!: QueryList<ElementRef>; 
+  @ViewChildren('equipamentoValid') equipamentoValid!: QueryList<ElementRef>; 
+  // @ViewChildren('equipamentoValid') equipamentoValid!: QueryList<ElementRef>; 
+
+
+  
+
+
+
+
+  ;
  
 
 
@@ -143,7 +141,15 @@ export class EventualComponent implements OnInit {
   }
 
   adicionarEquipamento(event: Event) {
-    event.preventDefault()
+
+  event.preventDefault()
+
+ 
+  if(this.selectedOptionListaEquipamento === '' || this.selectedOptionListaEquipamento === null) {
+    alert('Selecione um equipamento para reservar')  // future response personality
+  } else if(this.selectedOptionListaQuantidade === '' || this.selectedOptionListaQuantidade === null) {
+    alert('Selecione uma quantidade')
+  } else {
 
     this.equipamentoContId++
 
@@ -156,6 +162,21 @@ export class EventualComponent implements OnInit {
     }
 
     this.listaEquipamento.push(this.objectEquipamentos)
+
+    this.selectedOptionListaEquipamento = ''
+    this.selectedOptionListaQuantidade = ''
+
+  }
+ 
+
+
+
+    
+
+
+    
+
+    
 
 
   }
@@ -204,34 +225,84 @@ export class EventualComponent implements OnInit {
 
   processForm() {
 
+    this.isEmpty = false;
+
+
+    this.valid.forEach(input => {
+      if (input.nativeElement.value === '' || input.nativeElement.value === null) {
+        this.isEmpty = true;
+      }  
+     
+    })
+
+    if (this.isEmpty) {
+
+      alert('Preencha todos os campos.');
+
+
+    } else {
+
+
+      validar aqui
+
+      if (this.selectedOptionListaEquipamento === '' || this.selectedOptionListaEquipamento === null && 
+      this.selectedOptionListaQuantidade === '' || this.selectedOptionListaQuantidade === null) {   
+        alert('Selecione um equipamento e uma quantidade')
+      } else if(this.selectedOptionListaEquipamento === '' || this.selectedOptionListaEquipamento === null) { 
+        alert('Selecione um equipamento para reservar')  // future response personality
+      } else if(this.selectedOptionListaQuantidade === '' || this.selectedOptionListaQuantidade === null) {   
+        alert('Selecione uma quantidade')
+      } else {
+
+        this.reservaDTO = {
+          setor: this.setor,
+          responsavel : this.responsavel,
+          equipamentos: this.getListaEquipamento(),
+          agenda: [{
+            dataRetirada: this.dataRetirada,
+            horaRetirada: this.horaRetirada,
+            dataDevolucao: this.dataDevolucao,
+            horaDevolucao: this.horaDevolucao
+          }]
+        }
+    
+    
+        console.log(this.reservaDTO)
+    
+        this.responsavel = ''
+        this.setor = ''
+        this.dataRetirada = ''
+        this.dataDevolucao = ''
+        this.horaRetirada = ''
+        this.horaDevolucao = ''
+    
+    
+        //  console.log('submit: ',this.reservaDTO)  //{Debug}\\
+        //  console.log('submit: ',this.reservaDTO)  //{Debug}\\
+    
+        // try {
+        //   this.serviceApiCreateReservation.createEventualReservation(this.reservaDTO)
+        //     .then((response) => {
+        //       // Lógica para lidar com a resposta do servidor, se necessário
+        //       console.log('Resposta do servidor:', response);
+        //     })        
+        // } catch (error) {
+        //   // Lógica para lidar com exceções caso ocorram
+        //   console.error('Erro ao tentar criar reserva:', error);
+        // }
+
+      }
+
+
+
+      
+
+      
+    }
+
   
 
-  this.reservaDTO = {
-      setor: this.setor,
-      responsavel : this.responsavel,
-      equipamentos: this.getListaEquipamento(),
-      agenda: [{
-        dataRetirada: this.dataRetirada,
-        horaRetirada: this.horaRetirada,
-        dataDevolucao: this.dataDevolucao,
-        horaDevolucao: this.horaDevolucao
-      }]
-    }
-
-
-    //  console.log('submit: ',this.reservaDTO)  //{Debug}\\
-    //  console.log('submit: ',this.reservaDTO)  //{Debug}\\
-
-    try {
-      this.serviceApiCreateReservation.createEventualReservation(this.reservaDTO)
-        .then((response) => {
-          // Lógica para lidar com a resposta do servidor, se necessário
-          console.log('Resposta do servidor:', response);
-        })        
-    } catch (error) {
-      // Lógica para lidar com exceções caso ocorram
-      console.error('Erro ao tentar criar reserva:', error);
-    }
+  
 
 
 
