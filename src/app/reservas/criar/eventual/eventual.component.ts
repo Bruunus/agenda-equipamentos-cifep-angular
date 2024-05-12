@@ -1,16 +1,11 @@
-<<<<<<< HEAD
-import { EquipamentosComponent } from './../../componentes-templates/equipamentos/equipamentos.component';
 
-import { Input, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import {  Component, EventEmitter, OnInit, } from '@angular/core';
 import { HorasService } from "../../../service/model/horasService";
 import { EquipamentoInterface } from 'src/app/service/model/equipamento-interface';
-=======
-import { Component, OnInit, EventEmitter } from '@angular/core';
-import { HorasService } from "../../../service/model/horasService";
 import { ServiceApiReadEquipament } from 'src/app/service/api/equipamentos/service-api-read-equipament';
 import { OptionQtdService } from 'src/app/service/model/optionQtdService';
 import { ServiceApiCreateReservation } from 'src/app/service/api/reservas/service-api-create-reservation';
->>>>>>> bea3652 (Finalizado spring: Criar reserva eventual completa)
+
 
 
 
@@ -23,15 +18,12 @@ export class EventualComponent implements OnInit {
 
   // data class
   reservaDTO = {}
-<<<<<<< HEAD
+
   //equipamentos = [{}]
   equipamentos: EquipamentoInterface[] = [];
-
-
   equipamentosInterface: EquipamentoInterface[] = [];
-=======
+
   listaEquipamento: Array<any> = [];
->>>>>>> bea3652 (Finalizado spring: Criar reserva eventual completa)
 
   optionsListaEquipamento: any[] = []; 
   optionsHours: { descricao: string, valor: string }[] = [] as { descricao: string, valor: string }[];
@@ -48,7 +40,7 @@ export class EventualComponent implements OnInit {
   horaRetirada: string = '';
   dataDevolucao: string = '';
   horaDevolucao: string = '';
-<<<<<<< HEAD
+
 
   opcaoSelecionada: string = '';
 
@@ -67,23 +59,11 @@ export class EventualComponent implements OnInit {
 
 
 
-  constructor(private horasService: HorasService, private equipamentoComponent: EquipamentosComponent ) {
-
-  }
-
-
-
-
-
-
-=======
-  opcaoSelecionada: string = '';
-
   // data share
   selectedOptionQuantidadeChange: EventEmitter<string> = new EventEmitter<string>();
   selectedOptionEquipamentoChange: EventEmitter<string> = new EventEmitter<string>();
  
->>>>>>> bea3652 (Finalizado spring: Criar reserva eventual completa)
+
 
 
   constructor(
@@ -129,7 +109,7 @@ export class EventualComponent implements OnInit {
     this.opcaoSelecionada = this.horasService.getOptionSelecionado(event);
   }
 
-<<<<<<< HEAD
+
   onSelectedOptionEquipamentoChange(value: any) {
     // console.log('Opção selecionada:', value);
     this.opcaoEquipamentoSelecionado = value;
@@ -149,7 +129,7 @@ export class EventualComponent implements OnInit {
   }
 
 
-=======
+
   onOptionEquipamentoChange(event: any) {
     const selectedValue = event.target.value;
     this.selectedOptionListaEquipamento = selectedValue;
@@ -220,7 +200,7 @@ export class EventualComponent implements OnInit {
 
 
   // submit
->>>>>>> bea3652 (Finalizado spring: Criar reserva eventual completa)
+
 
   processForm() {
 
@@ -229,11 +209,7 @@ export class EventualComponent implements OnInit {
   this.reservaDTO = {
       setor: this.setor,
       responsavel : this.responsavel,
-<<<<<<< HEAD
-      equipamentos: this.equipamentos,  // aqui
-=======
       equipamentos: this.getListaEquipamento(),
->>>>>>> bea3652 (Finalizado spring: Criar reserva eventual completa)
       agenda: [{
         dataRetirada: this.dataRetirada,
         horaRetirada: this.horaRetirada,
@@ -242,15 +218,9 @@ export class EventualComponent implements OnInit {
       }]
     }
 
-<<<<<<< HEAD
-     console.log('submit: ',this.reservaDTO)
-    // console.log(this.responsavel)
-    // console.log(this.setor)
 
-    // const teste = this.equipamentoComponent.getEquipamentos()    // teste falhou
-    // console.log('Lista vinda de equipamento component', teste)
-=======
-    console.log('submit: ',this.reservaDTO)  //{Debug}\\
+    //  console.log('submit: ',this.reservaDTO)  //{Debug}\\
+    //  console.log('submit: ',this.reservaDTO)  //{Debug}\\
 
     try {
       this.serviceApiCreateReservation.createEventualReservation(this.reservaDTO)
@@ -262,8 +232,7 @@ export class EventualComponent implements OnInit {
       // Lógica para lidar com exceções caso ocorram
       console.error('Erro ao tentar criar reserva:', error);
     }
-    
->>>>>>> bea3652 (Finalizado spring: Criar reserva eventual completa)
+
 
 
 
@@ -284,17 +253,6 @@ getListaEquipamento() {
    
   return this.listaEquipamento;
 }
-
-
-  getEquipamentos(equipamentos: EquipamentoInterface[]): void {
-    this.equipamentos = equipamentos;
-  }
-
-
-
-  testeCarregarEquipamentos(event: Array<any>) {
-    console.log('Lista vinda de equipamentos', event)
-  }
-
+ 
 
 }

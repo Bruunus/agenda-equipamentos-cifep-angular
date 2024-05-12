@@ -1,11 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-<<<<<<< HEAD
 import { ServiceApiRead } from '../service/service-api-read';
-import { CommonModule } from '@angular/common';
-=======
-import { CommonModule, DatePipe } from '@angular/common';
->>>>>>> bea3652 (Finalizado spring: Criar reserva eventual completa)
+ 
+
 
 @Component({
   selector: 'app-reservas',
@@ -18,17 +15,11 @@ export class ReservasComponent implements OnInit {
   horaRetiradaFormatter: any;
   horaDevolucaoFormatter: any;
   reservas: any[] = [];
-  http: any;
+ 
   error: any;
 
 
-<<<<<<< HEAD
-
-
-  constructor(private serviceApi: ServiceApiRead) {}
-=======
-  constructor(private http: HttpClient, ) {}
->>>>>>> bea3652 (Finalizado spring: Criar reserva eventual completa)
+  constructor(private http: HttpClient, private serviceApi: ServiceApiRead ) {}
 
 
   ngOnInit(): void {

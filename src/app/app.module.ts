@@ -13,21 +13,9 @@ import { FormsModule } from '@angular/forms';
 import { EventualComponent } from './reservas/criar/eventual/eventual.component';
 import { MultiplaComponent } from './reservas/criar/multipla/multipla.component';
 import { AnualComponent } from './reservas/criar/anual/anual.component';
-import { HorasService } from './service/model/horasService';
-<<<<<<< HEAD
-import { DadosDoUsuarioComponent } from './reservas/componentes-templates/dados-do-usuario/dados-do-usuario.component';
-import { EquipamentosComponent } from './reservas/componentes-templates/equipamentos/equipamentos.component';
+
 import { TesteComponent } from './reservas/teste/teste.component';
 import { ConfigComponent } from './config/config.component';
-import { ServiceEquipamentos } from './service/service-equipamentos';
-import { ServiceApiRead } from './service/service-api-read';
-import { ServiceApiCreate } from './service/service-api-create';
-import { ServiceApiUpdate } from './service/service-api-update';
-import { ServiceApiDelete } from './service/service-api-delete';
-=======
-import { TesteComponent } from './reservas/teste/teste.component';
-import { ConfigComponent } from './config/config.component';
->>>>>>> bea3652 (Finalizado spring: Criar reserva eventual completa)
 import { ServiceModule } from './service/service-module';
 
 
@@ -55,16 +43,10 @@ import { ServiceModule } from './service/service-module';
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
-<<<<<<< HEAD
     ServiceModule
   ],
-  providers: [EquipamentosComponent],
-=======
-    ServiceModule,
-    ServiceModule
-  ],
+ 
   providers: [ServiceModule],
->>>>>>> bea3652 (Finalizado spring: Criar reserva eventual completa)
   bootstrap: [AppComponent],
   exports: [HttpClientModule]
 })

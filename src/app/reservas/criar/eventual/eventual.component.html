@@ -3,16 +3,10 @@
 
   <form  (ngSubmit)="processForm()">
 
-<<<<<<< HEAD
-  <app-dados-do-usuario
-    (responsavelChange)="onResponsavel($event)"
-    (setorChange)="onSetor($event)">
-  </app-dados-do-usuario>
-
   <div class="row">
     <div class="col">
       <label for="dataRetirada">Data início:</label> &nbsp;
-=======
+
       <label for="responsavel">Responsável</label> &nbsp;
       <input type="text" name="responsavel" [(ngModel)]="responsavel">
 
@@ -24,7 +18,7 @@
       <br><br>
 
       <label for="dataRetirada">Data:</label> &nbsp;
->>>>>>> bea3652 (Finalizado spring: Criar reserva eventual completa)
+
       <input type="date" name="dataRetirada" [(ngModel)]="dataRetirada"> &nbsp;
 
       <label for="hr-agendamento">Hora início:</label>
@@ -67,10 +61,10 @@
         </tr>
       </table>
 
-<<<<<<< HEAD
 
 
-=======
+
+
       <table id="table-equipamento">
         <thead>
           <th>Equipamento</th>
@@ -97,21 +91,11 @@
           </tr>
         </tbody>
       </table>
->>>>>>> bea3652 (Finalizado spring: Criar reserva eventual completa)
+
 
     <br><br>
 
-      <app-equipamentos
-        (selectedOptionEquipamentoChange)="onSelectedOptionEquipamentoChange($event)"
-        (selectedOptionQuantidadeChange)="onSelectedOptionQuantidadeChange($event)"
-        (userEmitter)="testeCarregarEquipamentos($event)">
-        <!-- colocar mais um evento para compartilhar a lista de equipamentos   -->
-      </app-equipamentos>
-
-
-
-    <br>
-  <button type="submit" style="width: 150px; margin-block-start: 50px;">Criar</button>
+   <button type="submit" style="width: 150px; margin-block-start: 50px;">Criar</button>
 
 
   </form>
