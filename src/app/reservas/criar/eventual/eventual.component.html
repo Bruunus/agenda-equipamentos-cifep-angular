@@ -3,6 +3,7 @@
 
   <form  (ngSubmit)="processForm()">
 
+<<<<<<< HEAD
   <app-dados-do-usuario
     (responsavelChange)="onResponsavel($event)"
     (setorChange)="onSetor($event)">
@@ -11,11 +12,24 @@
   <div class="row">
     <div class="col">
       <label for="dataRetirada">Data início:</label> &nbsp;
+=======
+      <label for="responsavel">Responsável</label> &nbsp;
+      <input type="text" name="responsavel" [(ngModel)]="responsavel">
+
+      <br>
+
+      <label for="setor">Setor</label> &nbsp;
+      <input type="text" name="setor" [(ngModel)]="setor">
+
+      <br><br>
+
+      <label for="dataRetirada">Data:</label> &nbsp;
+>>>>>>> bea3652 (Finalizado spring: Criar reserva eventual completa)
       <input type="date" name="dataRetirada" [(ngModel)]="dataRetirada"> &nbsp;
 
       <label for="hr-agendamento">Hora início:</label>
       <select name="horaRetirada" [(ngModel)]="horaRetirada">
-          <option name="horaRetirada" *ngFor="let option of options" [value]="option.valor">{{ option.descricao }}</option>
+          <option name="horaRetirada" *ngFor="let option of optionsHours" [value]="option.valor">{{ option.descricao }}</option>
       </select>
     </div>
   </div>
@@ -26,15 +40,64 @@
 
       <label for="hr-agendamento">Hora fim:</label> &nbsp;
       <select  name="horaDevolucao" [(ngModel)]="horaDevolucao">
-        <option *ngFor="let option of options" [value]="option.valor">{{ option.descricao }}</option>
+        <option *ngFor="let option of optionsHours" [value]="option.valor">{{ option.descricao }}</option>
       </select>
       </div>
   </div>
 
+      <table id="table-adicionar">
+        <tr>
+          <td>
+            <label for="equipamento">Equipamento</label>
+            <select name="equipamento" (change)="onOptionEquipamentoChange($event)" [(ngModel)]="selectedOptionListaEquipamento">
+              <option value=""></option>
+              <option *ngFor="let item of optionsListaEquipamento" [value]="item.valor">{{ item.descricao }}</option>
+            </select>
+          </td>
+          <td>
+            <label for="quantidade">Quantidade</label>
+            <select  (change)="onOptionQuantidadeChange($event)" name="selectedOptionListaQuantidade" [(ngModel)]="selectedOptionListaQuantidade">
+              <option name="selectedOptionListaQuantidade" *ngFor="let qtd of optionQuantidade" [value]="qtd.valor">{{ qtd.descricao }}</option>
+            </select>
+          </td>
+          <td>
+            <button (click)="adicionarEquipamento($event)">Adicionar</button>
+          </td>
+
+        </tr>
+      </table>
+
+<<<<<<< HEAD
 
 
-
-
+=======
+      <table id="table-equipamento">
+        <thead>
+          <th>Equipamento</th>
+          <th>Quantidade</th>
+        </thead>
+        <tbody>
+          <tr>
+            <td colspan="2">
+              <ul>
+                <!-- template -->
+                <li id="template-li" class="row" 
+                *ngFor="let equipamento of listaEquipamento; let i = index" [attr.data-id]="equipamento.id">
+                  <td class="col">{{ equipamento.descricao }}</td>
+                  <td class="col-6">
+                    <div class="row justify-content-between">  
+                        <span>{{ equipamento.quantidade }}</span>
+                        <span (click)="removerEquipamento($event)" class="delete">x</span>
+                    </div>
+                  </td>    
+                </li>
+                <!-- template -->
+              </ul>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+>>>>>>> bea3652 (Finalizado spring: Criar reserva eventual completa)
 
     <br><br>
 
@@ -56,4 +119,4 @@
 
 
 </div>
-<!-- <app-equipamentos></app-equipamentos> -->
+ 
