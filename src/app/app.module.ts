@@ -17,6 +17,8 @@ import { AnualComponent } from './reservas/criar/anual/anual.component';
 import { TesteComponent } from './reservas/teste/teste.component';
 import { ConfigComponent } from './config/config.component';
 import { ServiceModule } from './service/service-module';
+import { FinalizarComponent } from './reservas/finalizar/finalizar.component';
+import { AgendaComponent } from './reservas/agenda/agenda.component';
 
 
 
@@ -33,7 +35,9 @@ import { ServiceModule } from './service/service-module';
     MultiplaComponent,
     AnualComponent,
     TesteComponent,
-    ConfigComponent
+    ConfigComponent,
+    FinalizarComponent,
+    AgendaComponent
 
 
 

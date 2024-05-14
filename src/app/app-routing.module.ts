@@ -11,10 +11,11 @@ import { EditarChangeComponent } from './reservas/editar-change/editar-change.co
 
 import { TesteComponent } from './reservas/teste/teste.component';
 import { ConfigComponent } from './config/config.component';
+import { FinalizarComponent } from './reservas/finalizar/finalizar.component';
 
 
 const routes: Routes = [
-  { path: 'reservas', component: ReservasComponent },
+  { path: 'reservas', component: ReservasComponent, data: { loading: true } },
   { path: 'reservas/criar/eventual', component: EventualComponent},
   { path: 'reservas/criar/multipla', component: MultiplaComponent},
   { path: 'reservas/criar/anual', component: AnualComponent},
@@ -22,15 +23,16 @@ const routes: Routes = [
   { path: 'reservas/historico', component: HistoricoComponent},
   { path: 'reservas-calendar', component: CalendarioComponent},
   { path: 'reservas/editar-change', component: EditarChangeComponent},
+  { path: 'reservas/finalizar', component: FinalizarComponent },
 // teste dos componentes
-  { path: 'reservas/teste', component: TesteComponent},
+  { path: 'reservas/teste-redirect', component: TesteComponent},
 
   // sessão adm
   { path: 'reservas/adm/config', component: ConfigComponent},
 
 
-
   { path: '', redirectTo: '/reservas', pathMatch: 'full'}
+
 ];
 
 @NgModule({

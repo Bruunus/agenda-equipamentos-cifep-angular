@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ServiceApiRead } from '../service/service-api-read';
- 
+import { ActivatedRoute } from '@angular/router';
+
 
 
 @Component({
@@ -12,18 +13,21 @@ import { ServiceApiRead } from '../service/service-api-read';
 
 export class ReservasComponent implements OnInit {
 
+
   horaRetiradaFormatter: any;
   horaDevolucaoFormatter: any;
   reservas: any[] = [];
- 
+
   error: any;
 
 
-  constructor(private http: HttpClient, private serviceApi: ServiceApiRead ) {}
+  constructor(private http: HttpClient, private serviceApi: ServiceApiRead, private route: ActivatedRoute ) {}
 
 
   ngOnInit(): void {
     this.loadDataOfDay();
+
+
   }
 
   data: any;

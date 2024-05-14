@@ -5,6 +5,7 @@ import { EquipamentoInterface } from 'src/app/service/model/equipamento-interfac
 import { ServiceApiReadEquipament } from 'src/app/service/api/equipamentos/service-api-read-equipament';
 import { OptionQtdService } from 'src/app/service/model/optionQtdService';
 import { ServiceApiCreateReservation } from 'src/app/service/api/reservas/service-api-create-reservation';
+import { Router } from '@angular/router';
 
 
 
@@ -21,9 +22,8 @@ export class EventualComponent implements OnInit {
 
   //equipamentos = [{}]
   equipamentos: EquipamentoInterface[] = [];
-  equipamentosInterface: EquipamentoInterface[] = [];
   listaEquipamento: Array<any> = [];
-  optionsListaEquipamento: any[] = []; 
+  optionsListaEquipamento: any[] = [];
   optionsHours: { descricao: string, valor: string }[] = [] as { descricao: string, valor: string }[];
   optionQuantidade: { descricao: string, valor: string } [] = [] as { descricao: string, valor: string }[];
   options: { descricao: string, valor: string }[] = [] as { descricao: string, valor: string }[];
@@ -32,9 +32,10 @@ export class EventualComponent implements OnInit {
   selectedOptionListaQuantidade: string = '';
   equipamentoContId = 0;
   isEmpty = false;
-  
+
   // data-biding form
-  responsavel: string = '';
+  nome: string = '';
+  sobrenome: string = '';
   setor: string = '';
   dataRetirada: string = '';
   horaRetirada: string = '';
@@ -49,24 +50,25 @@ export class EventualComponent implements OnInit {
   selectedOptionEquipamentoChange: EventEmitter<string> = new EventEmitter<string>()
 
   // valid form
-  @ViewChildren('valid') valid!: QueryList<ElementRef>; 
-  @ViewChildren('equipamentoValid') equipamentoValid!: QueryList<ElementRef>; 
-  // @ViewChildren('equipamentoValid') equipamentoValid!: QueryList<ElementRef>; 
+  @ViewChildren('valid') valid!: QueryList<ElementRef>;
+  @ViewChildren('equipamentoValid') equipamentoValid!: QueryList<ElementRef>;
+  // @ViewChildren('equipamentoValid') equipamentoValid!: QueryList<ElementRef>;
 
 
-  
+
 
 
 
 
   ;
- 
+
 
 
 
   constructor(
     private horasService: HorasService, private serviceApiReadEquipament: ServiceApiReadEquipament,
-    private optionQtdService: OptionQtdService, private serviceApiCreateReservation: ServiceApiCreateReservation
+    private optionQtdService: OptionQtdService, private serviceApiCreateReservation: ServiceApiCreateReservation,
+    private router: Router
     ) { }
 
   ngOnInit(): void {
@@ -97,10 +99,10 @@ export class EventualComponent implements OnInit {
     return this.optionQuantidade = this.optionQtdService.getQuantidade();
   }
 
-   
 
-  
-  
+
+
+
   // events
 
   onClickOpcaoSelecionada(event: Event) {
@@ -140,11 +142,14 @@ export class EventualComponent implements OnInit {
     this.selectedOptionQuantidadeChange.emit(quantidadeSelecionadaString);
   }
 
+
+
+
   adicionarEquipamento(event: Event) {
 
   event.preventDefault()
 
- 
+
   if(this.selectedOptionListaEquipamento === '' || this.selectedOptionListaEquipamento === null) {
     alert('Selecione um equipamento para reservar')  // future response personality
   } else if(this.selectedOptionListaQuantidade === '' || this.selectedOptionListaQuantidade === null) {
@@ -157,26 +162,30 @@ export class EventualComponent implements OnInit {
 
     this.objectEquipamentos = {
       id: this.equipamentoContId,
-      descricao: this.selectedOptionListaEquipamento,  
+      descricao: this.selectedOptionListaEquipamento,
       quantidade: quantidade
     }
 
     this.listaEquipamento.push(this.objectEquipamentos)
 
+
+      console.log(this.listaEquipamento);  //{Debug}\\
+
+
     this.selectedOptionListaEquipamento = ''
     this.selectedOptionListaQuantidade = ''
 
   }
- 
 
 
 
-    
 
 
-    
 
-    
+
+
+
+
 
 
   }
@@ -197,7 +206,7 @@ export class EventualComponent implements OnInit {
       console.log(liElement)
 
       if (liElement) {
-            
+
             const idLi = liElement.dataset['id'];   // get id for remove
 
             if (idLi !== undefined) {
@@ -208,10 +217,10 @@ export class EventualComponent implements OnInit {
                     this.listaEquipamento.splice(item, 1);
                 }
               })
-              
+
               console.log(this.listaEquipamento)  //{Debug}\\
-            }  
-            
+            }
+
         }
     }
 
@@ -225,38 +234,32 @@ export class EventualComponent implements OnInit {
 
   processForm() {
 
-    this.isEmpty = false;
+    const isEmpty = false;
 
 
+    // first validation
     this.valid.forEach(input => {
       if (input.nativeElement.value === '' || input.nativeElement.value === null) {
         this.isEmpty = true;
-      }  
-     
+      }
+
     })
 
-    if (this.isEmpty) {
-
+    if (this.isEmpty && this.listaEquipamento.length === 0) {
       alert('Preencha todos os campos.');
-
-
+      console.error('A lista de equipamentos está vazia')
     } else {
 
-
-      validar aqui
-
-      if (this.selectedOptionListaEquipamento === '' || this.selectedOptionListaEquipamento === null && 
-      this.selectedOptionListaQuantidade === '' || this.selectedOptionListaQuantidade === null) {   
-        alert('Selecione um equipamento e uma quantidade')
-      } else if(this.selectedOptionListaEquipamento === '' || this.selectedOptionListaEquipamento === null) { 
-        alert('Selecione um equipamento para reservar')  // future response personality
-      } else if(this.selectedOptionListaQuantidade === '' || this.selectedOptionListaQuantidade === null) {   
-        alert('Selecione uma quantidade')
+      if(this.listaEquipamento.length === 0) {
+        alert('Criação de reserva incorreta, verifique os dados. Obrigatório adicionar equipamento')
+        console.log('A lista está vazia, é necessário um equipamento para reservar')
+        console.error('Prencha todos so campos para adicionar um equipamento')
       } else {
 
         this.reservaDTO = {
           setor: this.setor,
-          responsavel : this.responsavel,
+          responsavel : this.nome,  // alterar de responsavel => nome (quando alterar no backend)
+          // sobrenome: this.sobrenome    // liberar campo quando alterar no backend
           equipamentos: this.getListaEquipamento(),
           agenda: [{
             dataRetirada: this.dataRetirada,
@@ -265,65 +268,96 @@ export class EventualComponent implements OnInit {
             horaDevolucao: this.horaDevolucao
           }]
         }
-    
-    
+
+
         console.log(this.reservaDTO)
-    
-        this.responsavel = ''
+
+        this.nome = ''
+        // this.sobrenome   // liberar campo quando o backend estiver ajustado para receber
         this.setor = ''
         this.dataRetirada = ''
         this.dataDevolucao = ''
         this.horaRetirada = ''
         this.horaDevolucao = ''
-    
-    
-        //  console.log('submit: ',this.reservaDTO)  //{Debug}\\
-        //  console.log('submit: ',this.reservaDTO)  //{Debug}\\
-    
-        // try {
-        //   this.serviceApiCreateReservation.createEventualReservation(this.reservaDTO)
-        //     .then((response) => {
-        //       // Lógica para lidar com a resposta do servidor, se necessário
-        //       console.log('Resposta do servidor:', response);
-        //     })        
-        // } catch (error) {
-        //   // Lógica para lidar com exceções caso ocorram
-        //   console.error('Erro ao tentar criar reserva:', error);
-        // }
-
-      }
+        this.selectedOptionListaEquipamento = ''
+        this.selectedOptionListaQuantidade  = ''
 
 
+        console.log('submit: ',this.reservaDTO)  //{Debug}\\
+        console.log('submit: ',this.reservaDTO)  //{Debug}\\
 
-      
+        try {
+          this.serviceApiCreateReservation.createEventualReservation(this.reservaDTO)
+            .then((response) => {
+              // Lógica para lidar com a resposta do servidor, se necessário
+            console.log('Resposta do servidor:', response);
+            //alert('Testando...')
 
-      
-    }
+            //  this.router.navigateByUrl('/reservas/teste-redirect');
+            // window.location.reload();
 
-  
-
-  
+            window.location.reload();
+            this.router.navigate(['/reservas/teste-redirect']).then(() => {
+              window.location.reload();
+            });
 
 
 
+            })
+        } catch (error) {
+          // Lógica para lidar com exceções caso ocorram
+          console.error('Erro ao tentar criar reserva:', error);
+        }
 
 
-    
+
+
+
+
+
+
+
+
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+  }
+
+
+
+
+
+
+
+
+
+
 
   }
 
 
 
 // getters
- 
+
 getListaEquipamento() {
 
   this.listaEquipamento.forEach(deleteId => {
     delete deleteId.id;
   })
-   
+
   return this.listaEquipamento;
 }
- 
+
 
 }

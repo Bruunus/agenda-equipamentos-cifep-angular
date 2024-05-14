@@ -40,30 +40,51 @@
 
     </div>
 
-    <div style="padding: 10px;" class="col-4">
-      <span>{{ reserva.responsavel }}</span>&nbsp;&nbsp;
-      <span>{{ reserva.setor }}</span>
+    <!-- 1° column -->
 
+    <div style="padding: 10px;" class="col-3">
+
+      <span><b>{{ reserva.responsavel }}</b></span>&nbsp;&nbsp;
+      <div *ngFor="let equipamento of reserva.equipamentos" class="row">
+        <div class="col-12">
+          <span class="d-inline-block"><b>{{ equipamento.descricao }}</b></span>;
+        </div>
+      </div>
     </div>
 
 
+    <!-- 2° Column -->
+    <div  style="padding: 10px; /*background-color: tomato;*/" class="col-2">
+      <span *ngFor="let equipamento of reserva.equipamentos">
+        <span class="d-inline-block">Quantidade:</span> <br>
+        <span><b>{{ equipamento.quantidade }}</b></span>
+      </span>
+    </div>
 
-    <div  style="padding: 10px;" class="col-3">
-      <span>&nbsp;&nbsp;&nbsp;&nbsp;Tipo: {{ reserva.tipoReserva }}</span>
+    <!-- 3° Column -->
+
+    <div  style="padding: 10px;" class="col-2">
+      <span>Tipo de reserva:</span> <br>
+      <span><b>{{ reserva.tipoReserva }}</b></span>
+
+
+    </div>
+
+    <div style="padding: 10px; /*background-color: aquamarine;*/" class="col-2">
       <ng-container *ngIf="reserva.recorrenciaDeToda; else emptyData">
-        <span>Recorrência: {{ reserva.recorrenciaDeToda }}</span>
+        <span>Recorrência:</span> <br>
+        <!-- <span>Toda segunda-feira</span> -->
+        <span><b>{{ reserva.recorrenciaDeToda }}</b></span>
       </ng-container>
       <ng-template #emptyData><span>Recorrência: *</span></ng-template>
     </div>
 
-      <div class="col-5">
-        <div *ngFor="let equipamento of reserva.equipamentos" style="padding: 10px; " class="row">
-          <div class="col-12">
-            <span class="d-inline-block">Equipamento: {{ equipamento.descricao }}</span>
-            <span class="d-inline-block">Quantidade: {{ equipamento.quantidade }}</span>
-          </div>
-        </div>
-      </div>
+    <div class="col-3" style="padding: 10px;">
+      <span>Setor</span>  <br>
+      <span><b>{{ reserva.setor }}</b></span>
+    </div>
+
+
 
   </div>
 

@@ -3,11 +3,11 @@
 
   <form  (ngSubmit)="processForm()">
 
-  
 
 
-  <label for="responsavel">Responsável</label> &nbsp;
-  <input #valid type="text" name="responsavel" [(ngModel)]="responsavel">
+
+  <label for="responsavel">Nome</label> &nbsp;
+  <input #valid type="text" name="nome" [(ngModel)]="nome">
 
   <br>
 
@@ -23,7 +23,7 @@
   <select #valid name="horaRetirada" [(ngModel)]="horaRetirada">
       <option name="horaRetirada" *ngFor="let option of optionsHours" [value]="option.valor">{{ option.descricao }}</option>
   </select>
- 
+
   <div class="row">
     <div class="col">
       <label for="dt-agendamento">Data fim:</label> &nbsp;
@@ -72,15 +72,15 @@
             <td colspan="2">
               <ul>
                 <!-- template -->
-                <li id="template-li" class="row" 
+                <li id="template-li" class="row"
                 *ngFor="let equipamento of listaEquipamento; let i = index" [attr.data-id]="equipamento.id">
                   <td class="col">{{ equipamento.descricao }}</td>
                   <td class="col-6">
-                    <div class="row justify-content-between">  
+                    <div class="row justify-content-between">
                         <span>{{ equipamento.quantidade }}</span>
                         <span (click)="removerEquipamento($event)" class="delete">x</span>
                     </div>
-                  </td>    
+                  </td>
                 </li>
                 <!-- template -->
               </ul>
@@ -107,7 +107,7 @@
 <h4>Sprint</h4>
 <ul style="color: tomato;">
   <li style="color: green;"><s>Limpar todos os campos após clicar no botão "Criar"</s></li>
-  <li>Criar validação: Nenhum campo pode estar vazio</li>
+  <li style="color: green;"><s>Criar validação: Nenhum campo pode estar vazio</s></li>
   <li>Criar validação para <b>adicionar data agendada</b>
     <ul><br>
 
@@ -130,10 +130,19 @@
         <li>Não pode adicionar uma quantidade sem equipamento</li>
         <li>Não pode adicionar o mesmo equipamento 2x</li>
         <li>
-          Validade a quantidade solicitada ao adicionar com o estoque disponível, caso não tiver disponível emita o aviso 
+          Validade a quantidade solicitada ao adicionar com o estoque disponível, caso não tiver disponível emita o aviso
           e não deixa passar o formulário
         </li>
       </ul>
   </li>
+  <li>
+    Liberar o campo 'sobrenome' na classe eventual.compoent.ts quando o backend estiver ajustado
+  </li>
+  <li>
+    Tratar do [option] 'Outros' => Ao ser selecionado junto com a quantidade, dentro da tabela de equipamentos
+    deve aparecer um input para o usuário fornecer a descrição do equipamento. <br>
+    Salve este valor no banco e forneça um aviso "Este equipamento não será monitorado no painel de estoque.
+    para isso adicione esse novo equipamentos em Configurações > Adicionar novo equipamento"
+  </li>
 </ul>
- 
+
