@@ -254,7 +254,11 @@ export class EventualComponent implements OnInit {
         alert('Criação de reserva incorreta, verifique os dados. Obrigatório adicionar equipamento')
         console.log('A lista está vazia, é necessário um equipamento para reservar')
         console.error('Prencha todos so campos para adicionar um equipamento')
-      } else {
+      } else if (this.validationForm()) {
+        alert('Nome ou cobrenome ou data inicio estão vazios')
+      }
+
+      else  {
 
         this.reservaDTO = {
           setor: this.setor,
@@ -282,6 +286,10 @@ export class EventualComponent implements OnInit {
         this.selectedOptionListaEquipamento = ''
         this.selectedOptionListaQuantidade  = ''
 
+        // limpar o DOM da lista de equipamentos
+
+
+
 
         console.log('submit: ',this.reservaDTO)  //{Debug}\\
         console.log('submit: ',this.reservaDTO)  //{Debug}\\
@@ -291,12 +299,6 @@ export class EventualComponent implements OnInit {
             .then((response) => {
               // Lógica para lidar com a resposta do servidor, se necessário
             console.log('Resposta do servidor:', response);
-            //alert('Testando...')
-
-            //  this.router.navigateByUrl('/reservas/teste-redirect');
-            // window.location.reload();
-
-            window.location.reload();
             this.router.navigate(['/reservas/teste-redirect']).then(() => {
               window.location.reload();
             });
@@ -359,5 +361,35 @@ getListaEquipamento() {
   return this.listaEquipamento;
 }
 
+validationForm(): boolean {
+
+  const nome = this.nome === '' || this.nome === null;
+  const sobrenome = this.sobrenome === '' || this.sobrenome === null;
+  const dataInicio = this.dataRetirada === '' || this.dataRetirada === null;
+
+
+  if (
+      nome || sobrenome || dataInicio
+  ) {
+
+    return false;
+  } else {
+    return true
+  }
+
+
+
+
+
 
 }
+
+
+
+
+
+
+}
+
+
+
