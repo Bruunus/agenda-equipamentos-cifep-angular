@@ -1,106 +1,39 @@
 <div>
   <h3>Reserva eventual</h3>
 
-  <form (ngSubmit)="processForm()" [formGroup]="formValidation" #formDir="ngForm">
+  <form (ngSubmit)="processForm()" [formGroup]="formValidation">
 
 
   <label for="responsavel">Nome</label> &nbsp;
-  <input type="text" name="nome" formControlName="nome" required>
-
-  <div *ngIf="nome!.invalid && formDir.submitted" class="validation-error">
-    <p *ngIf="nome.errors?.['required']" style="font-size: 0.8rem; color: tomato;">
-      Nome obrigatório
-    </p>
-    <!-- <p *ngIf="nome.errors?.['maxlength']">Até 30 caracter</p> -->
-  </div>
-
-  <br>
-
-  <label for="sobrenome">Sobrenome</label> &nbsp;
-  <input #valid type="text" name="sobrenome" formControlName="sobrenome" required>
-
-  <div *ngIf="sobrenome!.invalid && formDir.submitted" class="validation-error">
-    <p *ngIf="sobrenome.errors?.['required']" style="font-size: 0.8rem; color: tomato;">
-      Sobrenome obrigatório
-    </p>
-    <!-- <p *ngIf="nome.errors?.['maxlength']">Até 30 caracter</p> -->
+  <input #valid type="text" name="nome" [(ngModel)]="nome">
+  <div *ngIf="formValidation.get('nome')?.invalid && formValidation.get('nome')touched">
+    Preencha o nome do responsável
   </div>
 
   <br>
 
   <label for="setor">Setor</label> &nbsp;
-  <input #valid type="text" name="setor" formControlName="setor" required>
-  <div *ngIf="setor!.invalid && formDir.submitted" class="validation-error">
-    <p *ngIf="setor.errors?.['required']" style="font-size: 0.8rem; color: tomato;">
-      Setor obrigatório
-    </p>
-    <!-- <p *ngIf="nome.errors?.['maxlength']">Até 30 caracter</p> -->
-  </div>
-
+  <input #valid type="text" name="setor" [(ngModel)]="setor">
 
   <br><br>
 
   <label for="dataRetirada">Data início:</label> &nbsp;
-  <input #valid type="date" formControlName="dataRetirada" required> &nbsp;
-  <div *ngIf="dataRetirada!.invalid && formDir.submitted" class="validation-error">
-    <span *ngIf="dataRetirada.errors?.['required']" style="font-size: 0.8rem; color: tomato;">
-      Insira a data de início da reserva
-    </span>
-    <!-- <p *ngIf="nome.errors?.['maxlength']">Até 30 caracter</p> -->
-  </div>
-
-
-
+  <input #valid type="date" name="dataRetirada" [(ngModel)]="dataRetirada"> &nbsp;
 
   <label for="hr-agendamento">Hora início:</label>
-  <select #valid name="horaRetirada"  formControlName="horaInicioSelect" required>
+  <select #valid name="horaRetirada" [(ngModel)]="horaRetirada">
       <option name="horaRetirada" *ngFor="let option of optionsHours" [value]="option.valor">{{ option.descricao }}</option>
   </select>
-  <div *ngIf="horaInicioSelect!.invalid && formDir.submitted" class="validation-error">
-    <span *ngIf="horaInicioSelect.errors?.['required']" style="font-size: 0.8rem; color: tomato;">
-      Insira o horário da retirada
-    </span>
-    <!-- <p *ngIf="nome.errors?.['maxlength']">Até 30 caracter</p> -->
-  </div>
-
-
 
   <div class="row">
     <div class="col">
-
       <label for="dt-agendamento">Data fim:</label> &nbsp;
-      <input #valid style="margin-left: 1.06em;" type="date" name="dataDevolucao" formControlName="dataDevolucao" required> &nbsp;
-      <div *ngIf="dataDevolucao!.invalid && formDir.submitted" class="validation-error">
-        <span *ngIf="dataDevolucao.errors?.['required']" style="font-size: 0.8rem; color: tomato;">
-          Insira a data de devolução da reserva
-        </span>
-        <!-- <p *ngIf="nome.errors?.['maxlength']">Até 30 caracter</p> -->
-      </div>
-
-      <!-- Validador de datas -->
-      <!-- <div *ngIf="formValidation.controls['dataDevolucao'].value < formValidation.controls['dataRetirada'].value">
-        <span style="font-size: 0.8rem; color: tomato;">
-          A data de devolução não pode ser menor que a data de retirada
-        </span>
-      </div> -->
-
+      <input #valid style="margin-left: 1.06em;" type="date" name="dataDevolucao" [(ngModel)]="dataDevolucao"> &nbsp;
 
       <label for="hr-agendamento">Hora fim:</label> &nbsp;
-      <select #valid name="horaDevolucaoSelect" formControlName="horaDevolucaoSelect" required>
+      <select #valid name="horaDevolucao" [(ngModel)]="horaDevolucao">
         <option *ngFor="let option of optionsHours" [value]="option.valor">{{ option.descricao }}</option>
       </select>
-      <div *ngIf="horaDevolucaoSelect!.invalid && formDir.submitted" class="validation-error">
-        <span *ngIf="horaDevolucaoSelect.errors?.['required']" style="font-size: 0.8rem; color: tomato;">
-          Insira o horário da devolução
-        </span>
-        <!-- <p *ngIf="nome.errors?.['maxlength']">Até 30 caracter</p> -->
-      </div>
-
-
-
-
-
-
       </div>
   </div>
 
@@ -108,16 +41,14 @@
     <tr>
       <td>
         <label for="equipamento">Equipamento</label>
-        <select #equipamentoValid  name="equipamento" formControlName="equipamentoSelect">
+        <select #equipamentoValid  name="equipamento" (change)="onOptionEquipamentoChange($event)" [(ngModel)]="selectedOptionListaEquipamento">
           <option value=""></option>
           <option *ngFor="let item of optionsListaEquipamento" [value]="item.valor">{{ item.descricao }}</option>
         </select>
       </td>
-
-
       <td>
         <label for="quantidade">Quantidade</label>
-        <select #quantidadeValid formControlName="quantidadeSelect" >
+        <select #quantidadeValid (change)="onOptionQuantidadeChange($event)" name="selectedOptionListaQuantidade" [(ngModel)]="selectedOptionListaQuantidade">
           <option name="selectedOptionListaQuantidade" *ngFor="let qtd of optionQuantidade" [value]="qtd.valor">{{ qtd.descricao }}</option>
         </select>
       </td>

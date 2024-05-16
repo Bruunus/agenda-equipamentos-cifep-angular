@@ -1,11 +1,10 @@
 
-import {  Component, ElementRef, EventEmitter, OnInit, QueryList, ViewChildren, } from '@angular/core';
+import {  Component, OnInit, } from '@angular/core';
 import { HorasService } from "../../../service/model/horasService";
 import { EquipamentoInterface } from 'src/app/service/model/equipamento-interface';
 import { ServiceApiReadEquipament } from 'src/app/service/api/equipamentos/service-api-read-equipament';
 import { OptionQtdService } from 'src/app/service/model/optionQtdService';
-import { ServiceApiCreateReservation } from 'src/app/service/api/reservas/service-api-create-reservation';
-import { Router } from '@angular/router';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 
 
@@ -17,9 +16,16 @@ import { Router } from '@angular/router';
 })
 export class EventualComponent implements OnInit {
 
+
+  formValidation!: FormGroup;
+
+
   // data class
   reservaDTO = {}
+  objectEquipamentos : {id: number, descricao: string, quantidade: number } = {id:0, descricao:'', quantidade:0}
 
+
+  //Arrays
   //equipamentos = [{}]
   equipamentos: EquipamentoInterface[] = [];
   listaEquipamento: Array<any> = [];
@@ -27,32 +33,12 @@ export class EventualComponent implements OnInit {
   optionsHours: { descricao: string, valor: string }[] = [] as { descricao: string, valor: string }[];
   optionQuantidade: { descricao: string, valor: string } [] = [] as { descricao: string, valor: string }[];
   options: { descricao: string, valor: string }[] = [] as { descricao: string, valor: string }[];
-  objectEquipamentos : {id: number, descricao: string, quantidade: number } = {id:0, descricao:'', quantidade:0}
-  selectedOptionListaEquipamento: string = '';
-  selectedOptionListaQuantidade: string = '';
+
+
   equipamentoContId = 0;
   isEmpty = false;
 
   // data-biding form
-  nome: string = '';
-  sobrenome: string = '';
-  setor: string = '';
-  dataRetirada: string = '';
-  horaRetirada: string = '';
-  dataDevolucao: string = '';
-  horaDevolucao: string = '';
-  opcaoSelecionada: string = '';
-  opcaoEquipamentoSelecionado: string = '';
-  opcaoQuantidadeSelecionado: string = '';
-
-  // data share
-  selectedOptionQuantidadeChange: EventEmitter<string> = new EventEmitter<string>();
-  selectedOptionEquipamentoChange: EventEmitter<string> = new EventEmitter<string>()
-
-  // valid form
-  @ViewChildren('valid') valid!: QueryList<ElementRef>;
-  @ViewChildren('equipamentoValid') equipamentoValid!: QueryList<ElementRef>;
-  // @ViewChildren('equipamentoValid') equipamentoValid!: QueryList<ElementRef>;
 
 
 
@@ -60,21 +46,38 @@ export class EventualComponent implements OnInit {
 
 
 
-  ;
+
+
 
 
 
 
   constructor(
     private horasService: HorasService, private serviceApiReadEquipament: ServiceApiReadEquipament,
-    private optionQtdService: OptionQtdService, private serviceApiCreateReservation: ServiceApiCreateReservation,
-    private router: Router
-    ) { }
+    private optionQtdService: OptionQtdService
+
+    ) {
+
+    }
 
   ngOnInit(): void {
     this.optionsHours = this.horasService.getHours();
     this.loadListEquipaments()
     this.getListQuantidade()
+
+    this.formValidation = new FormGroup({
+      nome: new FormControl('', [Validators.required]),
+      sobrenome: new FormControl('',[Validators.required]),
+      setor: new FormControl('',[Validators.required]),
+      dataRetirada: new FormControl('',[Validators.required]),
+      horaInicioSelect: new FormControl('',[Validators.required]),
+      dataDevolucao: new FormControl('',[Validators.required]),
+      horaDevolucaoSelect: new FormControl('',[Validators.required]),
+      equipamentoSelect: new FormControl(''),
+      quantidadeSelect: new FormControl('')
+    })
+
+
   }
 
 
@@ -103,23 +106,6 @@ export class EventualComponent implements OnInit {
 
 
 
-  // events
-
-  onClickOpcaoSelecionada(event: Event) {
-    this.opcaoSelecionada = this.horasService.getOptionSelecionado(event);
-  }
-
-
-  onSelectedOptionEquipamentoChange(value: any) {
-    // console.log('Opção selecionada:', value);
-    this.opcaoEquipamentoSelecionado = value;
-  }
-
-  onSelectedOptionQuantidadeChange(value: any) {
-    // console.log('Quantidade selecionada:', value);
-    this.opcaoQuantidadeSelecionado = value;
-  }
-
 
   // teste
 
@@ -130,54 +116,48 @@ export class EventualComponent implements OnInit {
 
 
 
-  onOptionEquipamentoChange(event: any) {
-    const selectedValue = event.target.value;
-    this.selectedOptionListaEquipamento = selectedValue;
-    this.selectedOptionEquipamentoChange.emit(selectedValue);
-  }
-
-  onOptionQuantidadeChange(event: Event) {
-    const quantidadeSelecionada = this.optionQtdService.getOptionQuantidadeSelecionado(event);
-    const quantidadeSelecionadaString = quantidadeSelecionada.toString();
-    this.selectedOptionQuantidadeChange.emit(quantidadeSelecionadaString);
-  }
-
-
 
 
   adicionarEquipamento(event: Event) {
-
   event.preventDefault()
 
+  // alert('Evento adicionar equipamentos')  //{Debug}\\
 
-  if(this.selectedOptionListaEquipamento === '' || this.selectedOptionListaEquipamento === null) {
-    alert('Selecione um equipamento para reservar')  // future response personality
-  } else if(this.selectedOptionListaQuantidade === '' || this.selectedOptionListaQuantidade === null) {
-    alert('Selecione uma quantidade')
+
+  // console.log(this.equipamentoSelect.value)  quantidadeSelect
+
+
+
+  if(this.equipamentoSelect.value === '' || this.equipamentoSelect.value === null) {
+    return alert('Selecione um equipamento para reservar')  // future response personality
+  } else if(this.quantidadeSelect.value === '' || this.quantidadeSelect.value === null) {
+    return alert('Selecione uma quantidade')
   } else {
 
     this.equipamentoContId++
 
-    const quantidade = parseInt(this.selectedOptionListaQuantidade, 10)
+    const quantidade = parseInt(this.quantidadeSelect.value, 10)
 
     this.objectEquipamentos = {
       id: this.equipamentoContId,
-      descricao: this.selectedOptionListaEquipamento,
+      descricao: this.equipamentoSelect.value,
       quantidade: quantidade
     }
 
     this.listaEquipamento.push(this.objectEquipamentos)
 
 
-      console.log(this.listaEquipamento);  //{Debug}\\
+    console.log(this.listaEquipamento);  //{Debug}\\
+
+    this.formValidation.get('equipamentoSelect')!.reset();
+    this.formValidation.get('quantidadeSelect')!.reset();
 
 
-    this.selectedOptionListaEquipamento = ''
-    this.selectedOptionListaQuantidade = ''
+
 
   }
 
-
+/**/
 
 
 
@@ -234,82 +214,41 @@ export class EventualComponent implements OnInit {
 
   processForm() {
 
-    const isEmpty = false;
+    if(this.formValidation.invalid) {
+    // Prende na validação
+     return;
 
 
-    // first validation
-    this.valid.forEach(input => {
-      if (input.nativeElement.value === '' || input.nativeElement.value === null) {
-        this.isEmpty = true;
-      }
+    } else if(this.listaEquipamento.length === 0) {
+      console.error("A lista está vazia", this.listaEquipamento);
+      alert('Adicione um equipamento para realizar a reserva')
+      return;
 
-    })
-
-    if (this.isEmpty && this.listaEquipamento.length === 0) {
-      alert('Preencha todos os campos.');
-      console.error('A lista de equipamentos está vazia')
     } else {
 
-      if(this.listaEquipamento.length === 0) {
-        alert('Criação de reserva incorreta, verifique os dados. Obrigatório adicionar equipamento')
-        console.log('A lista está vazia, é necessário um equipamento para reservar')
-        console.error('Prencha todos so campos para adicionar um equipamento')
-      } else if (this.validationForm()) {
-        alert('Nome ou cobrenome ou data inicio estão vazios')
+
+
+      console.log("A lista não está vazia", this.listaEquipamento)
+
+
+      this.reservaDTO = {
+        setor: this.setor.value,
+        responsavel : this.nome.value,  // alterar de responsavel => nome (quando alterar no backend)
+        sobrenome: this.sobrenome.value,
+        equipamentos: this.getListaEquipamento(),
+        agenda: [{
+          dataRetirada: this.dataRetirada.value,
+          horaRetirada: this.horaInicioSelect.value,
+          dataDevolucao: this.dataDevolucao.value,
+          horaDevolucao: this.horaDevolucaoSelect.value
+        }]
       }
 
-      else  {
 
-        this.reservaDTO = {
-          setor: this.setor,
-          responsavel : this.nome,  // alterar de responsavel => nome (quando alterar no backend)
-          // sobrenome: this.sobrenome    // liberar campo quando alterar no backend
-          equipamentos: this.getListaEquipamento(),
-          agenda: [{
-            dataRetirada: this.dataRetirada,
-            horaRetirada: this.horaRetirada,
-            dataDevolucao: this.dataDevolucao,
-            horaDevolucao: this.horaDevolucao
-          }]
-        }
+      console.log(this.reservaDTO)
 
-
-        console.log(this.reservaDTO)
-
-        this.nome = ''
-        // this.sobrenome   // liberar campo quando o backend estiver ajustado para receber
-        this.setor = ''
-        this.dataRetirada = ''
-        this.dataDevolucao = ''
-        this.horaRetirada = ''
-        this.horaDevolucao = ''
-        this.selectedOptionListaEquipamento = ''
-        this.selectedOptionListaQuantidade  = ''
-
-        // limpar o DOM da lista de equipamentos
-
-
-
-
-        console.log('submit: ',this.reservaDTO)  //{Debug}\\
-        console.log('submit: ',this.reservaDTO)  //{Debug}\\
-
-        try {
-          this.serviceApiCreateReservation.createEventualReservation(this.reservaDTO)
-            .then((response) => {
-              // Lógica para lidar com a resposta do servidor, se necessário
-            console.log('Resposta do servidor:', response);
-            this.router.navigate(['/reservas/teste-redirect']).then(() => {
-              window.location.reload();
-            });
-
-
-
-            })
-        } catch (error) {
-          // Lógica para lidar com exceções caso ocorram
-          console.error('Erro ao tentar criar reserva:', error);
-        }
+      return
+    }
 
 
 
@@ -320,8 +259,29 @@ export class EventualComponent implements OnInit {
 
 
 
+        // Chamada para API
 
-        }
+        // console.log('submit: ',this.reservaDTO)  //{Debug}\\
+        // console.log('submit: ',this.reservaDTO)  //{Debug}\\
+
+        // try {
+        //   this.serviceApiCreateReservation.createEventualReservation(this.reservaDTO)
+        //     .then((response) => {
+        //       // Lógica para lidar com a resposta do servidor, se necessário
+        //       this.formValidation.reset('nome')  // Limpar campos
+
+        //     console.log('Resposta do servidor:', response);
+        //     this.router.navigate(['/reservas/teste-redirect']).then(() => {
+        //       window.location.reload();
+        //     });
+
+
+
+        //     })
+        // } catch (error) {
+        //   // Lógica para lidar com exceções caso ocorram
+        //   console.error('Erro ao tentar criar reserva:', error);
+        // }
 
 
 
@@ -330,11 +290,6 @@ export class EventualComponent implements OnInit {
 
 
 
-
-
-
-
-  }
 
 
 
@@ -361,31 +316,44 @@ getListaEquipamento() {
   return this.listaEquipamento;
 }
 
-validationForm(): boolean {
-
-  const nome = this.nome === '' || this.nome === null;
-  const sobrenome = this.sobrenome === '' || this.sobrenome === null;
-  const dataInicio = this.dataRetirada === '' || this.dataRetirada === null;
-
-
-  if (
-      nome || sobrenome || dataInicio
-  ) {
-
-    return false;
-  } else {
-    return true
-  }
 
 
 
-
-
-
+get nome() {
+  return this.formValidation.get('nome')!;
 }
 
+get sobrenome() {
+  return this.formValidation.get('sobrenome')!;
+}
 
+get setor() {
+  return this.formValidation.get('setor')!;
+}
 
+get dataRetirada() {
+  return this.formValidation.get('dataRetirada')!;
+}
+
+get horaInicioSelect() {
+  return this.formValidation.get('horaInicioSelect')!;
+}
+
+get dataDevolucao() {
+  return this.formValidation.get('dataDevolucao')!;
+}
+
+get horaDevolucaoSelect() {
+  return this.formValidation.get('horaDevolucaoSelect')!;
+}
+
+get equipamentoSelect() {
+  return this.formValidation.get('equipamentoSelect')!;
+}
+
+get quantidadeSelect() {
+  return this.formValidation.get('quantidadeSelect')!;
+}
 
 
 

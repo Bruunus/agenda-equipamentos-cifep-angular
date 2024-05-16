@@ -1,4 +1,5 @@
-import { NgModule } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
+import { NgModule, TemplateRef } from '@angular/core';
 import { HorasService } from './model/horasService';
 
 import { ServiceApiCreateEquipament } from './api/equipamentos/service-api-create-equipament';
@@ -12,15 +13,16 @@ import { ServiceApiReadReservation } from './api/reservas/service-api-read-reser
 import { ServiceApiUpdateReservation } from './api/reservas/service-api-update-reservation';
 import { OptionQtdService } from './model/optionQtdService';
 import { ServiceApiRead } from './service-api-read';
+import { Validation } from './validation/validation';
 
 
- 
+
 
 @NgModule({
   providers: [
     HorasService, ServiceApiCreateEquipament, ServiceApiDeleteEquipament, ServiceApiReadEquipament, ServiceApiUpdateEquipament,
     ServiceApiCreateReservation, ServiceApiDeleteReservation, ServiceApiReadReservation, ServiceApiUpdateReservation, OptionQtdService,
-    ServiceApiRead
+    ServiceApiRead, Validation
   ]
 })
 export class ServiceModule {}
