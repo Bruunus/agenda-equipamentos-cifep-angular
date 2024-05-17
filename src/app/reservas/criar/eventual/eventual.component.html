@@ -177,10 +177,16 @@
 <h4>Sprint</h4>
 <ul style="color: tomato;">
   <li style="color: green;"><s>Limpar todos os campos após clicar no botão "Criar"</s></li>
-  <li style="/*color: green;*/">Criar validação: Nenhum campo pode estar vazio</li>
+  <li style="color: green;"><s>Criar validação: Nenhum campo pode estar vazio</s></li>
   <li>Criar validação para <b>adicionar data agendada</b>
     <ul><br>
 
+      <li style="color: green;"><s>Não pode uma data de devolução ser menor que a data de retirada</s></li>
+      <li style="color: green;"><s>Não pode fazer um agendamento com datas anteriores ao dia atual</s></li>
+      <li>
+        Se caso a hora de devolução for menor que a hora de inicio o sistema deve alterar a data de devlução
+        para o dia seguinte pega referenciando a data de início
+      </li>
       <li>
         O Expediênte é até as 18:00 - Se caso o agendamento  "Hora início" for a partir
         das 18:00hs o sistema deve trocar automaticamente em "Data fim"

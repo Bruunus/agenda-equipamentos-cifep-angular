@@ -1,3 +1,4 @@
+import { FormValidation } from './../../../service/model/formValidation';
 
 import {  Component, OnInit, } from '@angular/core';
 import { HorasService } from "../../../service/model/horasService";
@@ -54,7 +55,7 @@ export class EventualComponent implements OnInit {
 
   constructor(
     private horasService: HorasService, private serviceApiReadEquipament: ServiceApiReadEquipament,
-    private optionQtdService: OptionQtdService
+    private optionQtdService: OptionQtdService, private formValidationService: FormValidation
 
     ) {
 
@@ -76,6 +77,7 @@ export class EventualComponent implements OnInit {
       equipamentoSelect: new FormControl(''),
       quantidadeSelect: new FormControl('')
     })
+
 
 
   }
@@ -214,21 +216,28 @@ export class EventualComponent implements OnInit {
 
   processForm() {
 
+    const dataIncio = this.formValidation.get('dataRetirada')?.value;
+    const dataFim = this.formValidation.get('dataDevolucao')?.value;
+    const horaInicio = this.formValidation.get('horaInicioSelect')?.value;
+    const horaFim = this.formValidation.get('horaDevolucaoSelect')?.value;
+
     if(this.formValidation.invalid) {
     // Prende na validação
      return;
 
-
-    } else if(this.listaEquipamento.length === 0) {
-      console.error("A lista está vazia", this.listaEquipamento);
-      alert('Adicione um equipamento para realizar a reserva')
-      return;
-
     } else {
 
+      this.formValidationService.validationListEmpty(this.listaEquipamento);
+      this.formValidationService.validationDateHighestAndLowestValue(dataFim, dataIncio);
+      this.formValidationService.validationDateSmallerThanTheCurrent(dataIncio);
+      this.formValidationService.validationHourHighesAndLowestValue(horaFim, horaInicio, dataFim);
+      // console.log("A lista não está vazia", this.listaEquipamento) //{Debug}\\
 
-
-      console.log("A lista não está vazia", this.listaEquipamento)
+      // Retorna o campo dataDevolucao ajustada caso o valor de horas seja inaceitável
+      if (this.formValidation.controls.hasOwnProperty('dataDevolucao')) {
+        const dataDevolucaoReformada = this.formValidationService.dataFimValidationReturn;
+        this.formValidation.controls['dataDevolucao'].setValue(dataDevolucaoReformada);
+      }
 
 
       this.reservaDTO = {

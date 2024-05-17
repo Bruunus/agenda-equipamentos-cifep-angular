@@ -1,3 +1,4 @@
+import { ServiceApiRead } from './service-api-read';
 import { FormBuilder, Validators } from '@angular/forms';
 import { NgModule, TemplateRef } from '@angular/core';
 import { HorasService } from './model/horasService';
@@ -12,8 +13,8 @@ import { ServiceApiDeleteReservation } from './api/reservas/service-api-delete-r
 import { ServiceApiReadReservation } from './api/reservas/service-api-read-reservation';
 import { ServiceApiUpdateReservation } from './api/reservas/service-api-update-reservation';
 import { OptionQtdService } from './model/optionQtdService';
-import { ServiceApiRead } from './service-api-read';
-import { Validation } from './validation/validation';
+import { FormValidation } from './model/formValidation';
+
 
 
 
@@ -22,7 +23,7 @@ import { Validation } from './validation/validation';
   providers: [
     HorasService, ServiceApiCreateEquipament, ServiceApiDeleteEquipament, ServiceApiReadEquipament, ServiceApiUpdateEquipament,
     ServiceApiCreateReservation, ServiceApiDeleteReservation, ServiceApiReadReservation, ServiceApiUpdateReservation, OptionQtdService,
-    ServiceApiRead, Validation
+    FormValidation, ServiceApiRead
   ]
 })
 export class ServiceModule {}
