@@ -157,6 +157,8 @@ export class EventualComponent implements OnInit {
 
 
 
+
+
   }
 
 /**/
@@ -228,9 +230,15 @@ export class EventualComponent implements OnInit {
     } else {
 
       this.formValidationService.validationListEmpty(this.listaEquipamento);
-      this.formValidationService.validationDateHighestAndLowestValue(dataFim, dataIncio);
-      this.formValidationService.validationDateSmallerThanTheCurrent(dataIncio);
-      this.formValidationService.validationHourHighesAndLowestValue(horaFim, horaInicio, dataFim);
+      this.formValidationService.validacaoDataMaiorEMenor(dataFim, dataIncio);
+      this.formValidationService.validacaoDataMenorParaDataAtual(dataIncio);
+
+
+      this.formValidationService.validacaoHoraMaiorEMenor(horaFim, horaInicio, dataIncio, dataFim);
+      // if(horaFim < horaInicio) {
+      //   alert('Hora devolução menor')
+      // }
+
       // console.log("A lista não está vazia", this.listaEquipamento) //{Debug}\\
 
       // Retorna o campo dataDevolucao ajustada caso o valor de horas seja inaceitável
