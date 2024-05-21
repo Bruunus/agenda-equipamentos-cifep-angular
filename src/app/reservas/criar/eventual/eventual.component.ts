@@ -288,7 +288,7 @@ export class EventualComponent implements OnInit {
         //       this.formValidation.reset('nome')  // Limpar campos
 
         //     console.log('Resposta do servidor:', response);
-        //     this.router.navigate(['/reservas/teste-redirect']).then(() => {
+        //     this.router.navigate(['/reservas/redirect']).then(() => {
         //       window.location.reload();
         //     });
 

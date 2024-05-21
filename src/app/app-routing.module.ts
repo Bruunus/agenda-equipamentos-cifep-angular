@@ -1,3 +1,6 @@
+import { DatepickerComponent } from './reservas/suporte/datepicker/datepicker.component';
+import { SuporteComponent } from './reservas/suporte/suporte.component';
+import { RedirectedComponent } from './reservas/redirected/redirected.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ReservasComponent } from './reservas/reservas.component';
@@ -9,7 +12,7 @@ import { EditarViewComponent } from './reservas/editar-view/editar.component';
 import { HistoricoComponent } from './reservas/historico/historico.component';
 import { EditarChangeComponent } from './reservas/editar-change/editar-change.component';
 
-import { TesteComponent } from './reservas/teste/teste.component';
+
 import { ConfigComponent } from './config/config.component';
 import { FinalizarComponent } from './reservas/finalizar/finalizar.component';
 import { AgendaComponent } from './reservas/agenda/agenda.component';
@@ -27,7 +30,13 @@ const routes: Routes = [
   { path: 'reservas/finalizar', component: FinalizarComponent },
   { path: 'reservas/agenda', component: AgendaComponent},
 // teste dos componentes
-  { path: 'reservas/teste-redirect', component: TesteComponent},
+  { path: 'reservas/suporte', component: SuporteComponent},
+  { path: 'reservas/suporte/datepicker', component: DatepickerComponent},
+
+
+
+// Redirecionamento
+  { path: 'reservas/redirect', component: RedirectedComponent},
 
   // sessão adm
   { path: 'reservas/adm/config', component: ConfigComponent},

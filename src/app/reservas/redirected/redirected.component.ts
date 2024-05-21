@@ -3,10 +3,10 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-teste',
-  templateUrl: './teste.component.html',
-  styleUrls: ['./teste.component.scss']
+  templateUrl: './redirected.component.html',
+  styleUrls: ['./redirected.component.scss']
 })
-export class TesteComponent implements OnInit {
+export class RedirectedComponent implements OnInit {
 
   constructor(private router: Router) { }
 

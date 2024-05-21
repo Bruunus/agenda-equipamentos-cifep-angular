@@ -1,3 +1,4 @@
+import { RedirectedComponent } from './reservas/redirected/redirected.component';
 import { NgModule, TemplateRef } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
@@ -13,12 +14,14 @@ import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angu
 import { MultiplaComponent } from './reservas/criar/multipla/multipla.component';
 import { AnualComponent } from './reservas/criar/anual/anual.component';
 
-import { TesteComponent } from './reservas/teste/teste.component';
+
 import { ConfigComponent } from './config/config.component';
 import { ServiceModule } from './service/service-module';
 import { FinalizarComponent } from './reservas/finalizar/finalizar.component';
 import { AgendaComponent } from './reservas/agenda/agenda.component';
 import { EventualComponent } from './reservas/criar/eventual/eventual.component';
+import { SuporteComponent } from './reservas/suporte/suporte.component';
+import { DatepickerComponent } from './reservas/suporte/datepicker/datepicker.component';
 
 
 
@@ -34,10 +37,12 @@ import { EventualComponent } from './reservas/criar/eventual/eventual.component'
     EventualComponent,
     MultiplaComponent,
     AnualComponent,
-    TesteComponent,
+    RedirectedComponent,
     ConfigComponent,
     FinalizarComponent,
-    AgendaComponent
+    AgendaComponent,
+    SuporteComponent,
+    DatepickerComponent
 
 
 
