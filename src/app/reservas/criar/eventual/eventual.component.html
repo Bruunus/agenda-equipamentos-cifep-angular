@@ -40,7 +40,7 @@
 
   <br><br>
 
-  <label for="dataRetirada">Data início:</label> &nbsp;
+  <label for="dataRetirada">Data retirada:</label> &nbsp;
   <input #valid type="date" formControlName="dataRetirada" required> &nbsp;
   <div *ngIf="dataRetirada!.invalid && formDir.submitted" class="validation-error">
     <span *ngIf="dataRetirada.errors?.['required']" style="font-size: 0.8rem; color: tomato;">
@@ -52,7 +52,7 @@
 
 
 
-  <label for="hr-agendamento">Hora início:</label>
+  <label for="hr-agendamento">Horário retirada:</label>
   <select #valid name="horaRetirada"  formControlName="horaInicioSelect" required>
       <option name="horaRetirada" *ngFor="let option of optionsHours" [value]="option.valor">{{ option.descricao }}</option>
   </select>
@@ -68,7 +68,7 @@
   <div class="row">
     <div class="col">
 
-      <label for="dt-agendamento">Data fim:</label> &nbsp;
+      <label for="dt-agendamento">Data devolução:</label> &nbsp;
       <input #valid style="margin-left: 1.06em;" type="date" name="dataDevolucao" formControlName="dataDevolucao" required> &nbsp;
       <div *ngIf="dataDevolucao!.invalid && formDir.submitted" class="validation-error">
         <span *ngIf="dataDevolucao.errors?.['required']" style="font-size: 0.8rem; color: tomato;">
@@ -85,9 +85,9 @@
       </div> -->
 
 
-      <label for="hr-agendamento">Hora fim:</label> &nbsp;
+      <label for="hr-agendamento">Horário devolução:</label> &nbsp;
       <select #valid name="horaDevolucaoSelect" formControlName="horaDevolucaoSelect" required>
-        <option *ngFor="let option of optionsHours" [value]="option.valor">{{ option.descricao }}</option>
+        <option name="horaDevolucao" *ngFor="let option of optionsHours" [value]="option.valor">{{ option.descricao }}</option>
       </select>
       <div *ngIf="horaDevolucaoSelect!.invalid && formDir.submitted" class="validation-error">
         <span *ngIf="horaDevolucaoSelect.errors?.['required']" style="font-size: 0.8rem; color: tomato;">
@@ -176,36 +176,74 @@
 
 <h4>Sprint</h4>
 <ul style="color: tomato;">
+  <li style="color: green;">Ao salvar verificar se a lista está vazia, caso verdadeiro retorne erro</li>
   <li style="color: green;"><s>Limpar todos os campos após clicar no botão "Criar"</s></li>
   <li style="color: green;"><s>Criar validação: Nenhum campo pode estar vazio</s></li>
   <li>Criar validação para <b>adicionar data agendada</b>
     <ul><br>
 
+      <ul>
+        <b>Para data de retirada</b>
+        <li style="color: green;"><s>A data de inicio não pode ser menor que a data atual do sistema</s></li>
+        <li style="color: green;"><s>Ao inserir a data de inicio o mesmo valor deve ser adicionado na data fim</s></li>
+      </ul>
+
+
+      <ul>
+        <b style="color: green;">Para de devolução</b>
+        <li style="color: green;"><s>A data fim não pode ser menor que a data de início</s></li>
+      </ul>
+
+      <ul>
+        <b>Para hora de devolução</b>
+        <li style="color: green;"><s>Se a hora de devolução for menor que a hora de retirada então a devolução não é no mesmo dia. Para isso</s>
+          <ul>
+            <li style="color: green;"><s>o sistema deve colher as datas de retirada e data de devolução, se caso</s>
+              <ul>
+
+                <li style="color: green;"><s>as duas foram iguais então o sistema deve:</s>
+                  <ul>
+                    <li style="color: green;"><s>Verificar em que dia da semana cai esta data, se caso:</s>
+                      <ul>
+                        <li style="color: green;"><s>Cair na sexta-feira - o Sistema deve modificar a data de devolução para a próxima segunda-feira (+ 3 dias)</s></li>
+                        <li style="color: green;"><s>Se cair entre segunda-feira até quinta-feira o sistema deve modificar a data de devolução para o dia seguinte</s></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+
+                <li style="color: green;">
+                  <s>
+                    a data de devolução for maior e diferente da data de retirada (ou seja, a devolução não é para o mesmo dia) então o sistema nãi faz nada
+                      e pode computar o valor inserido na data de devolução normalmente.
+                  </s>
+                </li>
+
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+
+
       <li style="color: green;"><s>Não pode uma data de devolução ser menor que a data de retirada</s></li>
       <li style="color: green;"><s>Não pode fazer um agendamento com datas anteriores ao dia atual</s></li>
-      <li>
-        Se caso a hora de devolução for menor que a hora de inicio o sistema deve alterar a data de devlução
-        para o dia seguinte pega referenciando a data de início
+      <li style="color: green;">
+        <s>
+          Se caso a hora de devolução for menor que a hora de inicio o sistema deve alterar a data de devlução
+          para o dia seguinte pega referenciando a data de início
+        </s>
       </li>
-      <li>
-        O Expediênte é até as 18:00 - Se caso o agendamento  "Hora início" for a partir
-        das 18:00hs o sistema deve trocar automaticamente em "Data fim"
-        para o dia seguinte de acordo com o campo "Data início" colocada.
-        <br><br>
-        E se a "Data início" for em uma sexta-feira e hora fim estiver
-        a partir das 17:00hs então o sistema deve trocar automaticamente em "Data fim" para a segunda-feira seguinte da semana pulando sábado
-        e domingo.
-        <br><br>
-      </li>
+
 
     </ul>
   </li>
   <li>Criar validação para <b>adicionar equipamento</b>:
       <ul>
-        <li>Não pode adicionar um equipamento sem quantidade</li>
-        <li>Não pode adicionar uma quantidade sem equipamento</li>
-        <li>Não pode adicionar o mesmo equipamento 2x</li>
-        <li>
+        <li style="color: green;"><s>Não pode adicionar um equipamento sem quantidade</s></li>
+        <li style="color: green;"><s>Não pode adicionar uma quantidade sem equipamento</s></li>
+        <li style="color: green;"><s>Não pode adicionar o mesmo equipamento 2x</s></li>
+        <li style="color: blue">
           Validade a quantidade solicitada ao adicionar com o estoque disponível, caso não tiver disponível emita o aviso
           e não deixa passar o formulário
         </li>
@@ -222,6 +260,9 @@
   </li>
   <li>
     Limpar a lista de equipamentos - Quando o submit der certo limpe a lista.
+  </li>
+  <li>
+    Criar um classe de sistema de erros de logs com com "nome da funcionalidade e código de erro "er0001" "
   </li>
 </ul>
 

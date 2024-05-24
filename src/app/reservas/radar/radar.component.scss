@@ -1,0 +1,19 @@
+@import '../../../styles.scss';
+
+
+table, th, tr, td {
+    @extend .t_table;
+}
+
+table {
+  margin: 20pt 0 40pt 0;
+}
+
+.descricao-equipamento th {
+  width: 100.51px;
+}
+
+.quantidade {
+  font-size: 18pt;
+  font-weight: bold;
+}

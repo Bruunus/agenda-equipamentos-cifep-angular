@@ -6,6 +6,7 @@ import { EquipamentoInterface } from 'src/app/service/model/equipamento-interfac
 import { ServiceApiReadEquipament } from 'src/app/service/api/equipamentos/service-api-read-equipament';
 import { OptionQtdService } from 'src/app/service/model/optionQtdService';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import * as moment from 'moment';
 
 
 
@@ -17,54 +18,40 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 })
 export class EventualComponent implements OnInit {
 
-
+  // Angular services
   formValidation!: FormGroup;
 
 
-  // data class
+  // objects
   reservaDTO = {}
   objectEquipamentos : {id: number, descricao: string, quantidade: number } = {id:0, descricao:'', quantidade:0}
-
-
-  //Arrays
-  //equipamentos = [{}]
-  equipamentos: EquipamentoInterface[] = [];
-  listaEquipamento: Array<any> = [];
-  optionsListaEquipamento: any[] = [];
   optionsHours: { descricao: string, valor: string }[] = [] as { descricao: string, valor: string }[];
   optionQuantidade: { descricao: string, valor: string } [] = [] as { descricao: string, valor: string }[];
   options: { descricao: string, valor: string }[] = [] as { descricao: string, valor: string }[];
 
+  // lists
+  equipamentos: EquipamentoInterface[] = [];
+  listaEquipamento: Array<any> = [];
+  optionsListaEquipamento: any[] = [];
 
+  // vars
   equipamentoContId = 0;
   isEmpty = false;
-
-  // data-biding form
-
+  dataAtual: string = ''
 
 
 
-
-
-
-
-
-
-
-
-
-  constructor(
-    private horasService: HorasService, private serviceApiReadEquipament: ServiceApiReadEquipament,
+  constructor(private horasService: HorasService, private serviceApiReadEquipament: ServiceApiReadEquipament,
     private optionQtdService: OptionQtdService, private formValidationService: FormValidation
+  ) { this.dataAtual = moment().format('YYYY-MM-DD') }
 
-    ) {
-
-    }
 
   ngOnInit(): void {
-    this.optionsHours = this.horasService.getHours();
+
+    this.loadOptionsDay()
     this.loadListEquipaments()
     this.getListQuantidade()
+
 
     this.formValidation = new FormGroup({
       nome: new FormControl('', [Validators.required]),
@@ -78,6 +65,11 @@ export class EventualComponent implements OnInit {
       quantidadeSelect: new FormControl('')
     })
 
+    // events
+    this.onInputValueDataDevolucao()
+    this.onDataInicioChange()
+    this.onDataDevolucaoChange()
+
 
 
   }
@@ -85,22 +77,43 @@ export class EventualComponent implements OnInit {
 
 
 
-  // get datas
 
-  loadListEquipaments(): void {
+
+
+  /**
+   * Serviço de carregamento das options conferindo pelo dia da
+   * semana.
+   */
+  private loadOptionsDay(): void {
+    const dataAtualMoment = moment(this.dataAtual, 'YYYY-MM-DD');
+    const dataAtualMomentValue = dataAtualMoment.format('dddd');
+
+    if(dataAtualMomentValue !== 'Friday') {
+      // console.log('Hoje não sexta   {Debug}') //{Debug}\\
+      this.optionsHours = this.horasService.getHoursSegAQuint();
+    } else {
+      // console.log('Hoje é sexta   {Debug}') //{Debug}\\
+      this.optionsHours = this.horasService.getHoursSexta();
+    }
+
+  }
+
+  /**
+   * API de carregamento dos equipamentos
+   */
+  private loadListEquipaments(): void {
     this.serviceApiReadEquipament.getListEquipaments()
       .then((lista: any[]) => {
         //  console.log(lista)   //{debug}\\
         this.optionsListaEquipamento = lista;
-
-        // this.optionsListaEquipamento.forEach(data => {   //{debug}\\
-        //   console.log(data)
-        // })
-
       })
   }
 
-  getListQuantidade() {
+
+  /**
+   * Serviço de carregamento da lista de quantidade da option quantidade
+   */
+  private getListQuantidade() {
     return this.optionQuantidade = this.optionQtdService.getQuantidade();
   }
 
@@ -109,93 +122,117 @@ export class EventualComponent implements OnInit {
 
 
 
-  // teste
+  // events
 
-  onListaEquipamentosEvent(equipamentos: EquipamentoInterface[]): void {
+  protected onListaEquipamentosEvent(equipamentos: EquipamentoInterface[]): void {
     this.equipamentos = equipamentos;
     console.log('Lista vinda de equipamentos', this.equipamentos)
   }
 
+  private onInputValueDataDevolucao(): void {
+    this.formValidation.controls['dataRetirada'].valueChanges.subscribe((value) => {
+      if (value) {
+        this.formValidation.controls['dataDevolucao'].patchValue(value);
+      }
+    });
+  }
+
+  private onDataInicioChange(): void {
+    this.formValidation.get('dataRetirada')?.valueChanges.subscribe((value) => {
+      const isSexta = this.formValidationService.programacaoDeHorasParaSextaFeiraDataInicio(value);
+      if (isSexta) {
+        this.optionsHours = this.horasService.getHoursSexta()
+      } else {
+        this.optionsHours = this.horasService.getHoursSegAQuint()
+      }
+    })
+
+  }
+
+  private onDataDevolucaoChange(): void {
+    this.formValidation.get('dataDevolucao')?.valueChanges.subscribe((value) => {
+      const isSexta = this.formValidationService.programacaoDeHorasParaSextaFeiraDataFim(value);
+      if (isSexta) {
+        this.optionsHours = this.horasService.getHoursSexta()
+      } else {
+        this.optionsHours = this.horasService.getHoursSegAQuint()
+      }
+    })
+  }
 
 
 
+  /**
+   * Funcionalidade para adicionar um equipamento à lista de agendamento que será
+   * salva do submit do formulário
+   */
+  protected adicionarEquipamento(event: Event) {
 
-  adicionarEquipamento(event: Event) {
-  event.preventDefault()
+    event.preventDefault()
+    let equipamentoIgual = false;
+    let getDescricao = this.equipamentoSelect.value;
 
-  // alert('Evento adicionar equipamentos')  //{Debug}\\
-
-
-  // console.log(this.equipamentoSelect.value)  quantidadeSelect
-
-
-
-  if(this.equipamentoSelect.value === '' || this.equipamentoSelect.value === null) {
-    return alert('Selecione um equipamento para reservar')  // future response personality
-  } else if(this.quantidadeSelect.value === '' || this.quantidadeSelect.value === null) {
-    return alert('Selecione uma quantidade')
-  } else {
-
-    this.equipamentoContId++
-
-    const quantidade = parseInt(this.quantidadeSelect.value, 10)
-
-    this.objectEquipamentos = {
-      id: this.equipamentoContId,
-      descricao: this.equipamentoSelect.value,
-      quantidade: quantidade
+    for (const equipamento of this.listaEquipamento) {
+      if (equipamento.descricao === getDescricao) {
+          equipamentoIgual = true;
+          break;
+      }
     }
 
-    this.listaEquipamento.push(this.objectEquipamentos)
+    if (equipamentoIgual) {
+      alert('Este equipamento já foi adicionado.')
+    } else {
+      // alert('Evento adicionar equipamentos')  //{Debug}\\
 
+      if(this.equipamentoSelect.value === '' || this.equipamentoSelect.value === null) {
+        return alert('Selecione um equipamento para reservar')  // future response personality
+      } else if(this.quantidadeSelect.value === '' || this.quantidadeSelect.value === null) {
+        return alert('Selecione uma quantidade')
+      } else {
 
-    console.log(this.listaEquipamento);  //{Debug}\\
+        this.equipamentoContId++
 
-    this.formValidation.get('equipamentoSelect')!.reset();
-    this.formValidation.get('quantidadeSelect')!.reset();
+        const quantidade = parseInt(this.quantidadeSelect.value, 10)
 
+        this.objectEquipamentos = {
+          id: this.equipamentoContId,
+          descricao: this.equipamentoSelect.value,
+          quantidade: quantidade
+        }
 
+        this.listaEquipamento.push(this.objectEquipamentos)
+        console.log(this.listaEquipamento);  //{Debug}\\
+
+        this.formValidation.get('equipamentoSelect')!.reset();
+        this.formValidation.get('quantidadeSelect')!.reset();
+
+      }
+    }
 
 
 
 
   }
 
-/**/
 
+  /**
+   * Método para removar um equipamento pelo botão fechar. Remove tanto do DOM
+   * quanto da lista
+   */
+  protected removerEquipamento(event: Event) {
 
-
-
-
-
-
-
-
-
-  }
-
-
-
-  removerEquipamento(event: Event) {
-
-    // alert('remover item')
-
+    // alert('remover item')    //{debug}\\
     const deletar = (event.target as HTMLElement).classList.contains('delete');
-
     // console.log('O id foi datectado? ',deletar)   //{debug}\\
 
     if (deletar) {
       const liElement = (event.target as HTMLElement).closest('li');
-
-      console.log(liElement)
+      console.log(liElement)  //{debug}\\
 
       if (liElement) {
-
             const idLi = liElement.dataset['id'];   // get id for remove
-
             if (idLi !== undefined) {
               const id = parseInt(idLi, 10);        // convert this for type number
-
               this.listaEquipamento.forEach((objectElements, item) => {
                 if (objectElements.id === id) {
                     this.listaEquipamento.splice(item, 1);
@@ -204,19 +241,17 @@ export class EventualComponent implements OnInit {
 
               console.log(this.listaEquipamento)  //{Debug}\\
             }
-
         }
     }
-
 
   }
 
 
 
-  // submit
-
-
-  processForm() {
+  /**
+   * Método final para salvar a reserva
+   */
+  protected processForm() {
 
     const dataIncio = this.formValidation.get('dataRetirada')?.value;
     const dataFim = this.formValidation.get('dataDevolucao')?.value;
@@ -229,57 +264,31 @@ export class EventualComponent implements OnInit {
 
     } else {
 
-      this.formValidationService.validationListEmpty(this.listaEquipamento);
-      this.formValidationService.validacaoDataMaiorEMenor(dataFim, dataIncio);
-      this.formValidationService.validacaoDataMenorParaDataAtual(dataIncio);
-
-
-      this.formValidationService.validacaoHoraMaiorEMenor(horaFim, horaInicio, dataIncio, dataFim);
-      // if(horaFim < horaInicio) {
-      //   alert('Hora devolução menor')
-      // }
-
+      const validation = this.formValidationService
+        .validacaoHoraMaiorEMenor(horaFim, horaInicio, dataIncio, dataFim, this.listaEquipamento);
       // console.log("A lista não está vazia", this.listaEquipamento) //{Debug}\\
 
       // Retorna o campo dataDevolucao ajustada caso o valor de horas seja inaceitável
       if (this.formValidation.controls.hasOwnProperty('dataDevolucao')) {
-        const dataDevolucaoReformada = this.formValidationService.dataFimValidationReturn;
+        let dataDevolucaoReformada = this.formValidationService.dataFimValidationReturn;
         this.formValidation.controls['dataDevolucao'].setValue(dataDevolucaoReformada);
       }
 
+      if(validation) {
 
-      this.reservaDTO = {
-        setor: this.setor.value,
-        responsavel : this.nome.value,  // alterar de responsavel => nome (quando alterar no backend)
-        sobrenome: this.sobrenome.value,
-        equipamentos: this.getListaEquipamento(),
-        agenda: [{
-          dataRetirada: this.dataRetirada.value,
-          horaRetirada: this.horaInicioSelect.value,
-          dataDevolucao: this.dataDevolucao.value,
-          horaDevolucao: this.horaDevolucaoSelect.value
-        }]
-      }
+        this.reservaDTO = {
+          setor: this.setor.value,
+          responsavel : this.nome.value,
+          sobrenome: this.sobrenome.value,
+          equipamentos: this.getListaEquipamentoDelete(),
+          agenda: [{
+            dataRetirada: this.dataRetirada.value,
+            horaRetirada: this.horaInicioSelect.value,
+            dataDevolucao: this.dataDevolucao.value,
+            horaDevolucao: this.horaDevolucaoSelect.value
+          }]
 
-
-      console.log(this.reservaDTO)
-
-      return
-    }
-
-
-
-
-
-
-
-
-
-
-        // Chamada para API
-
-        // console.log('submit: ',this.reservaDTO)  //{Debug}\\
-        // console.log('submit: ',this.reservaDTO)  //{Debug}\\
+        }
 
         // try {
         //   this.serviceApiCreateReservation.createEventualReservation(this.reservaDTO)
@@ -299,6 +308,32 @@ export class EventualComponent implements OnInit {
         //   // Lógica para lidar com exceções caso ocorram
         //   console.error('Erro ao tentar criar reserva:', error);
         // }
+
+        console.log('Reserva realizada com sucesso !!!')
+        console.log(this.reservaDTO)
+
+      } else {
+        console.error('Falha na validação dos métodos')
+        return
+      }
+
+      return
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -324,7 +359,9 @@ export class EventualComponent implements OnInit {
 
 // getters
 
-getListaEquipamento() {
+getListaEquipamentoDelete() {
+
+
 
   this.listaEquipamento.forEach(deleteId => {
     delete deleteId.id;
@@ -371,6 +408,8 @@ get equipamentoSelect() {
 get quantidadeSelect() {
   return this.formValidation.get('quantidadeSelect')!;
 }
+
+
 
 
 

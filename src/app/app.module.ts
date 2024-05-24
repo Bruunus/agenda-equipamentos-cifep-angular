@@ -22,6 +22,7 @@ import { AgendaComponent } from './reservas/agenda/agenda.component';
 import { EventualComponent } from './reservas/criar/eventual/eventual.component';
 import { SuporteComponent } from './reservas/suporte/suporte.component';
 import { DatepickerComponent } from './reservas/suporte/datepicker/datepicker.component';
+import { RadarComponent } from './reservas/radar/radar.component';
 
 
 
@@ -42,7 +43,8 @@ import { DatepickerComponent } from './reservas/suporte/datepicker/datepicker.co
     FinalizarComponent,
     AgendaComponent,
     SuporteComponent,
-    DatepickerComponent
+    DatepickerComponent,
+    RadarComponent
 
 
 

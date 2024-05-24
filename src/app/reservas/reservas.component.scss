@@ -3,7 +3,19 @@
 
 table, th, tr, td {
     @extend .t_table;
+    border-color: #efefef;
+    text-align: left;
+
 }
 
+
+
+.criada { color: tomato; }
+.executando { color: blue; }
+.finalizada {
+  text-decoration: line-through;
+  color: green;
+  background-color: lightgray;
+ }
 
 
