@@ -6,7 +6,7 @@ import { Subscription } from "rxjs";
 export class ServiceApiReadEquipament {
 
 
-    private getEstoque: string = 'http://localhost:8080/load/getestoque';
+    private getEstoque: string = 'http://localhost:8080/load/getestoqueXX';
 
     constructor(private http: HttpClient) { }
     
@@ -19,8 +19,9 @@ export class ServiceApiReadEquipament {
 
         return new Promise<Object[]>((resolve, reject) => {
             
-          const subscription: Subscription = this.http.get<any[]>(this.getEstoque).subscribe({
+          const subscription: Subscription = this.http.get<string[]>(this.getEstoque).subscribe({
             next: (listaDeEquipamentos: any[]) => {
+              // console.log(listaDeEquipamentos)  //{Debug}\\
               listaDeEquipamentos.sort((a, b) => {
                 const descricaoA = a.descricao.toUpperCase();
                 const descricaoB = b.descricao.toUpperCase();

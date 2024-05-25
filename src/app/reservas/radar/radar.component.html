@@ -20,13 +20,44 @@
     </thead>
 
     <tbody class="radar-tbody">
-<!-- 100.38px -->
+ 
 
 
       <!-- quantidade -->
       <tr class="quantidade">
+        <td>
+          <span *ngIf="!loading">{{ listaQuantidade['Notebook'] }}</span>
+          <span *ngIf="loading">
+            <img class="loading" src="assets/loading.gif" alt="Loading" />
+          </span>
+        </td>
+
+
+
+
+
+
+
+
+
+
+
+
         <!-- Notebook -->
-        <td>0</td>
+        <!-- <ng-container *ngIf="loading">
+          <td>
+          Exibir o .gif de loading enquanto os dados estão sendo carregados  
+            <img class="loading" src="assets/loading.gif" alt="Loading" />
+          </td>
+        </ng-container>
+        <ng-container *ngIf="!loading">
+         Se os dados foram carregados, exibir as quantidades -->
+          
+          
+          <!-- Outros equipamentos -->
+        <!-- </ng-container>  -->
+
+        <!-- <td>{{ listaQuantidade['Notebook'] }}</td> -->
         <td>0</td>
         <td>0</td>
         <td>0</td>
@@ -37,6 +68,9 @@
         <td>0</td>
 
       </tr>
+
+
+
       <!-- mensagem -->
       <tr>
         <td>Disponível</td>
@@ -52,6 +86,9 @@
     </tbody>
   </table>
 </div>
+
+
+<img class="loading" src="assets/loading.gif" alt="Loading" />
 
 
 
