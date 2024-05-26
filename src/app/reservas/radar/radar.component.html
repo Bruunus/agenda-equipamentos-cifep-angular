@@ -26,7 +26,63 @@
       <!-- quantidade -->
       <tr class="quantidade">
         <td>
-          <span *ngIf="!loading">{{ listaQuantidade['Notebook'] }}</span>
+          <span *ngIf="!loading">{{ listaQuantidade['NOTEBOOK'] }}</span>
+          <span *ngIf="loading">
+            <img class="loading" src="assets/loading.gif" alt="Loading" />
+          </span>
+        </td>
+
+        <td>
+          <span *ngIf="!loading">{{ listaQuantidade['DATASHOW'] }}</span>
+          <span *ngIf="loading">
+            <img class="loading" src="assets/loading.gif" alt="Loading" />
+          </span>
+        </td>
+
+        <td>
+          <span *ngIf="!loading">{{ listaQuantidade['EXTENSAO'] }}</span>
+          <span *ngIf="loading">
+            <img class="loading" src="assets/loading.gif" alt="Loading" />
+          </span>
+        </td>
+
+        <td>
+          <span *ngIf="!loading">{{ listaQuantidade['LASER_POINTER'] }}</span>
+          <span *ngIf="loading">
+            <img class="loading" src="assets/loading.gif" alt="Loading" />
+          </span>
+        </td>
+
+        <td>
+          <span *ngIf="!loading">{{ listaQuantidade['WEB_CAM'] }}</span>
+          <span *ngIf="loading">
+            <img class="loading" src="assets/loading.gif" alt="Loading" />
+          </span>
+        </td>
+
+        <td>
+          <span *ngIf="!loading">{{ listaQuantidade['MICROFONE'] }}</span>
+          <span *ngIf="loading">
+            <img class="loading" src="assets/loading.gif" alt="Loading" />
+          </span>
+        </td>
+
+        <td>
+          <span *ngIf="!loading">{{ listaQuantidade['CABO_HDMI'] }}</span>
+          <span *ngIf="loading">
+            <img class="loading" src="assets/loading.gif" alt="Loading" />
+          </span>
+        </td>
+
+        <td>
+          <span *ngIf="!loading">{{ listaQuantidade['CABO_P10'] }}</span>
+          <span *ngIf="loading">
+            <img class="loading" src="assets/loading.gif" alt="Loading" />
+          </span>
+        </td>
+
+        <td>
+          <span *ngIf="!loading">{{ listaQuantidade['CABO_P2'] }}</span>
           <span *ngIf="loading">
             <img class="loading" src="assets/loading.gif" alt="Loading" />
           </span>
@@ -40,32 +96,7 @@
 
 
 
-
-
-
-        <!-- Notebook -->
-        <!-- <ng-container *ngIf="loading">
-          <td>
-          Exibir o .gif de loading enquanto os dados estão sendo carregados  
-            <img class="loading" src="assets/loading.gif" alt="Loading" />
-          </td>
-        </ng-container>
-        <ng-container *ngIf="!loading">
-         Se os dados foram carregados, exibir as quantidades -->
-          
-          
-          <!-- Outros equipamentos -->
-        <!-- </ng-container>  -->
-
-        <!-- <td>{{ listaQuantidade['Notebook'] }}</td> -->
-        <td>0</td>
-        <td>0</td>
-        <td>0</td>
-        <td>0</td>
-        <td>0</td>
-        <td>0</td>
-        <td>0</td>
-        <td>0</td>
+ 
 
       </tr>
 

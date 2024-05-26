@@ -34,7 +34,7 @@ export class RadarComponent implements OnInit {
         } else {
           this.loading = false
           lista.forEach((item) => {
-            this.listaQuantidade[item.descricao] = item.quantidade;
+            this.listaQuantidade[item.valor] = item.quantidade;
           });
         }
 
