@@ -1,3 +1,5 @@
+import { Router } from '@angular/router';
+import { ServiceApiCreateReservation } from './../../../service/api/reservas/service-api-create-reservation';
 import { FormValidation } from './../../../service/model/formValidation';
 
 import {  Component, OnInit, } from '@angular/core';
@@ -42,7 +44,8 @@ export class EventualComponent implements OnInit {
 
 
   constructor(private horasService: HorasService, private serviceApiReadEquipament: ServiceApiReadEquipament,
-    private optionQtdService: OptionQtdService, private formValidationService: FormValidation
+    private optionQtdService: OptionQtdService, private formValidationService: FormValidation,
+    private serviceApiCreateReservation: ServiceApiCreateReservation, private router: Router
   ) { this.dataAtual = moment().format('YYYY-MM-DD') }
 
 
@@ -278,7 +281,7 @@ export class EventualComponent implements OnInit {
 
         this.reservaDTO = {
           setor: this.setor.value,
-          responsavel : this.nome.value,
+          nome: this.nome.value,
           sobrenome: this.sobrenome.value,
           equipamentos: this.getListaEquipamentoDelete(),
           agenda: [{
@@ -290,24 +293,35 @@ export class EventualComponent implements OnInit {
 
         }
 
-        // try {
-        //   this.serviceApiCreateReservation.createEventualReservation(this.reservaDTO)
-        //     .then((response) => {
-        //       // Lógica para lidar com a resposta do servidor, se necessário
-        //       this.formValidation.reset('nome')  // Limpar campos
-
-        //     console.log('Resposta do servidor:', response);
-        //     this.router.navigate(['/reservas/redirect']).then(() => {
-        //       window.location.reload();
-        //     });
+        console.log(this.reservaDTO)
 
 
+        try {
+          this.serviceApiCreateReservation.createEventualReservation(this.reservaDTO)
+            .then((response) => {
+              // Lógica para lidar com a resposta do servidor, se necessário
+            this.formValidation.reset('nome')  // Limpar campos
+            this.formValidation.reset('sobrenome')
+            this.formValidation.reset('setor')
+            this.formValidation.reset('dataRetirada')
+            this.formValidation.reset('horaInicioSelect')
+            this.formValidation.reset('dataDevolucao')
+            this.formValidation.reset('horaDevolucaoSelect')
+            this.formValidation.reset('equipamentoSelect')
+            this.formValidation.reset('quantidadeSelect')
 
-        //     })
-        // } catch (error) {
-        //   // Lógica para lidar com exceções caso ocorram
-        //   console.error('Erro ao tentar criar reserva:', error);
-        // }
+            console.log('Resposta do servidor:', response);
+            this.router.navigate(['reservas/redirect']).then(() => {
+              window.location.reload();
+            });
+
+
+
+            })
+        } catch (error) {
+          // Lógica para lidar com exceções caso ocorram
+          console.error('Erro ao tentar criar reserva:', error);
+        }
 
         console.log('Reserva realizada com sucesso !!!')
         console.log(this.reservaDTO)
