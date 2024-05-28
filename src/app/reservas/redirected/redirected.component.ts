@@ -14,7 +14,7 @@ export class RedirectedComponent implements OnInit {
 
     setTimeout(() => {
       this.router.navigate(['/reservas']);
-    }, 2000);
+    }, 1000);
   }
 
 }
