@@ -1,17 +1,20 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Subject, Subscription,  interval, Observable, switchMap, takeUntil, map, tap, delayWhen, timer } from "rxjs";
+import { Subject, Subscription,  interval, Observable, catchError, delay, of, tap, delayWhen, timer } from "rxjs";
 import { retryWhen } from 'rxjs/operators';
 
 @Injectable()
 export class ServiceApiReadEquipament {
 
 
-  private getEstoque: string = 'http://localhost:8080/load/getestoque';
+  private getEquipamentoListUrl: string = 'http://localhost:8080/load/getestoque';
+
   private pollInterval: number = 5000;                            // Intervalo de atualização em milissegundos (5 segundos)
   private unsubscribe$: Subject<void> = new Subject<void>();      // Observable para cancelar a assinatura
   private status_connection: boolean = false;
   private intervalId: any;
+  private listaDeEquipamentosPoll: any[] = []
+  private subscription: Subscription = Subscription.EMPTY;
 
 
   constructor(private http: HttpClient) { }
@@ -25,7 +28,7 @@ export class ServiceApiReadEquipament {
 
     return new Promise<Object[]>((resolve, reject) => {
 
-      const subscription: Subscription = this.http.get<string[]>(this.getEstoque).subscribe({
+      const subscription: Subscription = this.http.get<string[]>(this.getEquipamentoListUrl).subscribe({
         next: (listaDeEquipamentos: any[]) => {
           console.log(listaDeEquipamentos)  //{Debug}\\
           listaDeEquipamentos.sort((a, b) => {
@@ -51,7 +54,137 @@ export class ServiceApiReadEquipament {
   }
 
 
+  /**
+   *  Eu preciso que este método realize a técnica de polling. Que a cada 7 segundos ele repita
+   * a solicitação para atualizar o estoque de equipamentos.
+   *
+   * Depois aplique o método reduce e transforme esse array em objeto que possam ser acessados
+   * pelo valor do chave [imprime o array no console e mostre pra IA]
 
+
+:
+{id: 81, descricao: 'Adaptador', valor: 'ADAPTADOR', quantidade: 1}
+1
+:
+{id: 79, descricao: 'Cabo HDMI', valor: 'CABO_HDMI', quantidade: 0}
+2
+:
+{id: 86, descricao: 'Cabo P10', valor: 'CABO_P10', quantidade: 4}
+3
+:
+{id: 85, descricao: 'Cabo P2', valor: 'CABO_P2', quantidade: 3}
+4
+:
+{id: 76, descricao: 'Datashow', valor: 'DATASHOW', quantidade: 4}
+5
+:
+{id: 80, descricao: 'Extensão', valor: 'EXTENSAO', quantidade: 4}
+6
+:
+{id: 82, descricao: 'Flip Chart', valor: 'FLIP_CHART', quantidade: 1}
+7
+:
+{id: 78, descricao: 'Lazer Pointer', valor: 'LASER_POINTER', quantidade: 1}
+8
+:
+{id: 87, descricao: 'Microfone', valor: 'MICROFONE', quantidade: 3}
+9
+:
+{id: 77, descricao: 'Notebook', valor: 'NOTEBOOK', quantidade: 5}
+10
+:
+{id: 88, descricao: 'Outros', valor: 'OUTROS', quantidade: 0}
+11
+:
+{id: 84, descricao: 'Pendrive', valor: 'PEN_DRIVE', quantidade: 0}
+12
+:
+{id: 83, descricao: 'Webcam', valor: 'WEB_CAM', quantidade: 3}
+length
+:
+13
+[[Prototype]]
+:
+Array(0)
+
+
+
+   *
+   */
+  getListEquipamentsPoll(): Promise<any[]> {
+
+    return new Promise<Object[]>((resolve, reject) => {
+
+      const subscription: Subscription = this.http.get<string[]>(this.getEquipamentoListUrl).subscribe({
+        next: (listaDeEquipamentos: any[]) => {
+
+          console.log(listaDeEquipamentos)  //{Debug}\\
+
+          subscription.unsubscribe();
+          resolve(listaDeEquipamentos);
+        },
+        error: (error) => {
+          console.error('Erro ao carregar lista de equipamentos', error);
+          reject(error);
+        }
+      });
+    });
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+  // 4° tentativa usando observable simples   // não alcançou o resultado
+  // getListaEquipamento(): Observable<string[]> {
+  //   return this.http.get<string[]>(this.getEquipamentoListUrl)
+  //     .pipe(
+  //       retryWhen(errors => errors.pipe(delay(5000))),
+  //       catchError(error => {
+  //         console.log('Falha na conexão, tentando novamente ... ');
+  //         return of([]);
+  //       })
+  //     );
+  // }
+
+
+
+  /*  //  3° tentativa
+
+  private getListEquipamentsPoll(): void {
+    this.subscription = this.http.get<string[]>(this.getEstoque)
+    .pipe(
+      tap({
+        next: (data) => {
+          this.listaDeEquipamentosPoll = data;
+
+        },
+        error: () => {
+          timer(5000).subscribe(() => this.getListEquipamentsPoll());
+          console.log('tentando nova conexão...')
+        }
+      }),
+      retryWhen(errors => errors.pipe(delayWhen(() => timer(5000))))
+    )
+    .subscribe({
+      complete: () => {
+        if (this.subscription) {
+          console.log('lista carregada\n',this.getListaDeEquipamentosPoll)
+          this.subscription.unsubscribe();
+        }
+      }
+    });
+  }
+  */
+
+/*  // 2° tentativa
   getListEquipamentsPoll() {
     this.intervalId = setInterval(() => {
       this.http.get<{ id: number, descricao: string, valor: string, quantidade: number }[]>(this.getEstoque)
@@ -72,19 +205,17 @@ export class ServiceApiReadEquipament {
         );
     }, 5000);
   }
+  */
 
-  ngOnDestroy() {
-    // if (this.intervalId) {     // do método observable
-    //   clearInterval(this.intervalId);
-    // }
-    if (this.intervalId) {
-      clearInterval(this.intervalId);
+  ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
     }
   }
 
 
 
-/*  // técnica de long polling usando observable
+/*  // técnica de long polling usando observable 1° tentativa
   getListEquipamentsPoll(): Observable<{ [descricao: string]: number }> {
     return interval(this.pollInterval).pipe(
       switchMap(() => this.http.get<{ id: number, descricao: string, valor: string, quantidade: number }[]>(this.getEstoque).pipe(
@@ -121,17 +252,17 @@ export class ServiceApiReadEquipament {
 
 
 
-  get getStatus_connection(): boolean {
-    return this.status_connection
+  public get getListaDeEquipamentosPoll(): any {
+    return console.log(this.listaDeEquipamentosPoll)
   }
 
-  set setStatus_connection(status: boolean) {
-    this.status_connection = status;
-  }
+  // set setStatus_connection(status: boolean) {
+  //   this.status_connection = status;
+  // }
 
-  public getConnection(): boolean {
-    return this.getStatus_connection
-  }
+  // public getConnection(): boolean {
+  //   return this.getStatus_connection
+  // }
 
 
 }

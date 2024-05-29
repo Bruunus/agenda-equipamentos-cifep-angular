@@ -22,11 +22,11 @@ export class RadarComponent implements OnInit, OnDestroy  {
 
 
   ngOnInit(): void {
+    this.getListaQuantidade()
+    console.log(this.listaQuantidade)
 
-
-
-    setInterval(() => {
-      console.log('executando set interval ...')
+    // setInterval(() => {
+      // console.log('executando set interval ...')
       // if(this.status_connetion) {
       //   console.log('Conexão estabelecida !', this.status_connetion)
 
@@ -37,7 +37,7 @@ export class RadarComponent implements OnInit, OnDestroy  {
       //   this.listaQuantidade = {}
       //   this.loadListEquipaments();
       // }
-    }, 6000); // atualiza a lista a cada 6 segundos
+    // }, 6000); // atualiza a lista a cada 6 segundos
 
 
   }
@@ -71,7 +71,12 @@ export class RadarComponent implements OnInit, OnDestroy  {
    * API de carregamento dos equipamentos. Realizamos um map para mapear dentro do objeto
    * a quantidade e a descrição para poderem ser renderizadas no ngIf e ngFor
    */
+   private getListaQuantidade() {
 
+
+
+
+  }
 
 
 
