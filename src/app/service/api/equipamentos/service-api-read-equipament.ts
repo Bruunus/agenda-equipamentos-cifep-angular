@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Subject, Subscription,  interval, Observable, catchError, delay, of, tap, delayWhen, timer } from "rxjs";
+import { Subject, Subscription,  interval, Observable, map, switchMap, throwError, tap, delayWhen, timer } from "rxjs";
 import { retryWhen } from 'rxjs/operators';
 
 @Injectable()
@@ -8,6 +8,7 @@ export class ServiceApiReadEquipament {
 
 
   private getEquipamentoListUrl: string = 'http://localhost:8080/load/getestoque';
+                                        // http://localhost:8080/load/getestoque
 
   private pollInterval: number = 5000;                            // Intervalo de atualização em milissegundos (5 segundos)
   private unsubscribe$: Subject<void> = new Subject<void>();      // Observable para cancelar a assinatura
@@ -52,6 +53,54 @@ export class ServiceApiReadEquipament {
       });
     });
   }
+
+
+  // AQUI DEU CERTO - SÓ NÃO IMPLANTOU O INTERVAL
+  // getListEquipamentsPoll(): Observable<any[]> {
+  //   return this.http.get<any[]>(this.getEquipamentoListUrl)
+  //     .pipe(
+  //       tap((equipamentos: any[]) => {
+  //         // Implemente o código para manipular os equipamentos recebidos
+  //         console.log(equipamentos);
+  //       })
+  //     );
+  // }
+
+
+  getListEquipamentsPoll(): Observable<any[]> {
+    this.setStatus_connection = false
+    return interval(5000).pipe(
+      switchMap(() => {
+        return this.http.get<any[]>(this.getEquipamentoListUrl).pipe(
+          tap((equipamentos: any[]) => {
+            // Implemente o código para manipular os equipamentos recebidos
+            this.setStatus_connection = true
+            // console.log(equipamentos);
+            
+          }),
+          retryWhen(errors => errors.pipe(
+            delayWhen(() => throwError('Erro ao conectar ao servidor. Tentando novamente em 5 segundos...'),
+          this.getListEquipamentsPoll()),
+          ))
+        );
+      })
+    );
+  }
+
+
+
+
+    // 4° tentativa usando observable simples   // não alcançou o resultado
+  // getListaEquipamento(): Observable<string[]> {
+  //   return this.http.get<string[]>(this.getEquipamentoListUrl)
+  //     .pipe(
+  //       retryWhen(errors => errors.pipe(delay(5000))),
+  //       catchError(error => {
+  //         console.log('Falha na conexão, tentando novamente ... ');
+  //         return of([]);
+  //       })
+  //     );
+  // }
 
 
   /**
@@ -111,48 +160,38 @@ Array(0)
 
    *
    */
-  getListEquipamentsPoll(): Promise<any[]> {
+  // getListEquipamentsPoll(): Promise<any[]> {
 
-    return new Promise<Object[]>((resolve, reject) => {
+  //   return new Promise<Object[]>((resolve, reject) => {
 
-      const subscription: Subscription = this.http.get<string[]>(this.getEquipamentoListUrl).subscribe({
-        next: (listaDeEquipamentos: any[]) => {
+  //     const subscription: Subscription = this.http.get<string[]>(this.getEquipamentoListUrl).subscribe({
+  //       next: (listaDeEquipamentos: any[]) => {
 
-          console.log(listaDeEquipamentos)  //{Debug}\\
+  //         console.log(listaDeEquipamentos)  //{Debug}\\
 
-          subscription.unsubscribe();
-          resolve(listaDeEquipamentos);
-        },
-        error: (error) => {
-          console.error('Erro ao carregar lista de equipamentos', error);
-          reject(error);
-        }
-      });
-    });
-  }
-
-
-
-
-
-
-
-
-
-
-
-
-  // 4° tentativa usando observable simples   // não alcançou o resultado
-  // getListaEquipamento(): Observable<string[]> {
-  //   return this.http.get<string[]>(this.getEquipamentoListUrl)
-  //     .pipe(
-  //       retryWhen(errors => errors.pipe(delay(5000))),
-  //       catchError(error => {
-  //         console.log('Falha na conexão, tentando novamente ... ');
-  //         return of([]);
-  //       })
-  //     );
+  //         subscription.unsubscribe();
+  //         resolve(listaDeEquipamentos);
+  //       },
+  //       error: (error) => {
+  //         console.error('Erro ao carregar lista de equipamentos', error);
+  //         reject(error);
+  //       }
+  //     });
+  //   });
   // }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -215,29 +254,35 @@ Array(0)
 
 
 
-/*  // técnica de long polling usando observable 1° tentativa
-  getListEquipamentsPoll(): Observable<{ [descricao: string]: number }> {
-    return interval(this.pollInterval).pipe(
-      switchMap(() => this.http.get<{ id: number, descricao: string, valor: string, quantidade: number }[]>(this.getEstoque).pipe(
-        retryWhen(errors => errors.pipe(
-          tap(val => {
-            this.setStatus_connection = false;
-            console.log(`Got error, retrying...`);
 
-          }),
-          delayWhen(val => timer(5000)) // delay retry by 5 seconds
-        ))
-      )),
-      map(array => array.reduce((obj, item) => {
-        // Use 'descricao' como chave e 'quantidade' como valor
-        this.setStatus_connection = true;
-        obj[item.valor] = item.quantidade;
-        return obj;
-      }, {} as { [descricao: string]: number })),
-      takeUntil(this.unsubscribe$)
-    );
-  }
-*/
+
+
+   // técnica de long polling usando observable 1° tentativa
+  // getListEquipamentsPoll(): Observable<{ [descricao: string]: number }> {
+  //   return interval(this.pollInterval).pipe(
+  //     switchMap(() => this.http.get<{ id: number, descricao: string, valor: string, quantidade: number }[]>(this.getEquipamentoListUrl).pipe(
+  //       retryWhen(errors => errors.pipe(
+          
+  //         tap(val => {
+  //           this.setStatus_connection = false;
+  //           console.log(`Servidor fora do ar, tentando nova conexão ...` + this.getListaDeEquipamentosPoll);
+
+  //         }),
+          
+  //         delayWhen(val => timer(5000)) // delay retry by 5 seconds
+          
+  //       ))
+  //     )),
+  //     map(array => array.reduce((obj, item) => {
+  //       // Use 'descricao' como chave e 'quantidade' como valor
+  //       this.setStatus_connection = true;
+  //       obj[item.valor] = item.quantidade;
+  //       return obj;
+  //     }, {} as { [descricao: string]: number })),
+  //     takeUntil(this.unsubscribe$)
+  //   );
+  // }
+ 
 
 
 
@@ -252,13 +297,13 @@ Array(0)
 
 
 
-  public get getListaDeEquipamentosPoll(): any {
-    return console.log(this.listaDeEquipamentosPoll)
+  public get getListaDeEquipamentosPoll(): boolean {
+    return this.status_connection;
   }
 
-  // set setStatus_connection(status: boolean) {
-  //   this.status_connection = status;
-  // }
+  set setStatus_connection(status: boolean) {
+    this.status_connection = status;
+  }
 
   // public getConnection(): boolean {
   //   return this.getStatus_connection

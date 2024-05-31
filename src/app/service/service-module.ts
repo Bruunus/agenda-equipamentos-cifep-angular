@@ -14,6 +14,7 @@ import { ServiceApiReadReservation } from './api/reservas/service-api-read-reser
 import { ServiceApiUpdateReservation } from './api/reservas/service-api-update-reservation';
 import { OptionQtdService } from './model/optionQtdService';
 import { FormValidation } from './model/formValidation';
+import { RadarComponent } from '../reservas/radar/radar.component';
 
 
 
@@ -23,7 +24,7 @@ import { FormValidation } from './model/formValidation';
   providers: [
     HorasService, ServiceApiCreateEquipament, ServiceApiDeleteEquipament, ServiceApiReadEquipament, ServiceApiUpdateEquipament,
     ServiceApiCreateReservation, ServiceApiDeleteReservation, ServiceApiReadReservation, ServiceApiUpdateReservation, OptionQtdService,
-    FormValidation, ServiceApiRead
+    FormValidation, ServiceApiRead,  
   ]
 })
 export class ServiceModule {}

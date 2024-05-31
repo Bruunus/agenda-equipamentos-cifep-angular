@@ -59,8 +59,8 @@ import { RadarComponent } from './reservas/radar/radar.component';
 
   ],
 
-  providers: [ServiceModule],
+  providers: [ServiceModule, RadarComponent],
   bootstrap: [AppComponent],
-  exports: [HttpClientModule]
+  exports: [HttpClientModule,]
 })
 export class AppModule { }
