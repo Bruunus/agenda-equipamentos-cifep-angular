@@ -32,7 +32,7 @@
 
           <span  *ngIf="!loading">
             <span >
-              {{ listaQuantidade[1]?.quantidade || loading  }}
+              {{ listaQuantidade[1]?.quantidade || 0  }}
             </span>
            
           </span>
@@ -150,9 +150,9 @@
           <img *ngIf="loading" class="loading-status" src="assets/loading.gif" alt="Loading" />
 
           <span *ngIf="!loading">
-            <!-- <span [style.color]="statusRadar(listaQuantidade['NOTEBOOK'])">
+            <span [style.color]="statusRadar(listaQuantidade[1]?.quantidade)">
               {{ status }}
-            </span> -->
+            </span>
           </span>
         </td>
 
