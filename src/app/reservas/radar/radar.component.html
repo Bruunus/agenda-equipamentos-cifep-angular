@@ -31,7 +31,7 @@
           <img *ngIf="loading" class="loading" src="assets/loading.gif" alt="Loading" />
 
           <span  *ngIf="!loading">
-            <span >
+            <span [style.color]="alertRadar(listaQuantidade[1]?.quantidade)">
               {{ listaQuantidade[1]?.quantidade || 0  }}
             </span>
            
