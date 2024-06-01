@@ -12,10 +12,9 @@ import { Subject, interval, Observable, switchMap, takeUntil, map, tap, delayWhe
 export class RadarComponent implements OnInit, OnDestroy  {
 
   constructor(private serviceApiReadEquipament: ServiceApiReadEquipament) { }
-  listaQuantidade2: { [key: string]: number } = {};
+  
   listaQuantidade: any[] = []
   loading: boolean = true;
-  radar: boolean = true;
   status: string = '';
   status_connetion: boolean = true;
   color_alerta = '#ED9400'
@@ -25,91 +24,48 @@ export class RadarComponent implements OnInit, OnDestroy  {
 
   ngOnInit(): void {
     this.loading = true;
+    this.getRadarQuantidade() 
+  }
 
-    // deu certo a parte de ouvir o status da conexão, agora precida fazer o teste o loading dentro do subscribe
-    //  posteriormente passe para um metodo a parte
 
-    /**
-     * Metodo que realiza observação em tempo real do status da conexão com o servidor. Enquanto o servidor 
-     * estiver fora do ar o set interval vai alterar a exibição dos dados para loading...
-     */
+  /**
+   * Metodo que realiza observação em tempo real do status da conexão com o servidor. Enquanto o servidor 
+   * estiver fora do ar o setInterval acionará o loading deixando-o permanecer até que a conexão seja 
+   * estabelecida novamente. Quando a conexão é estabelecida o subscribe é lido pois ele só executa 
+   * em caso de o servidor e conexão estiverem ativa, uma vez executado o subscribe ele preenche a lista
+   * e remove o loading da página.
+   */
+  protected getRadarQuantidade(): void  {
+
     setInterval(() => {
       this.status_connetion = this.serviceApiReadEquipament.getListaDeEquipamentosPoll;   // retorna true ou false a cada 6 segundos
       if (this.status_connetion) {
 
-        console.log('status ', this.status_connetion, '(true)')   //{Debug}\\
+        // console.log('status ', this.status_connetion, '(true)')   //{Debug}\\
 
       } else {
-        console.log('status ', this.status_connetion, '(false)')//{Debug}\\
-        console.log('Executando o loading ...')
-        this.loading = true   // aqui que carrega o loading novamente
+        // console.log('status ', this.status_connetion, '(false)')   //{Debug}\\
+        // console.log('Executando o loading ...')      //{Debug}\\  
+        this.loading = true   // ponto de recarregamento do loading
       }
-    },6000)
+    },5000)
 
-
-    // TESTEI CHAMAR A API COM SUBSCRIBE E SE O SERVIDOR CAIR NÃO REALIZA NADA AQUI
-    this.serviceApiReadEquipament.getListEquipamentsPoll()
+     
+    this.subscription = this.serviceApiReadEquipament.getListEquipamentsPoll()
     .subscribe(
       (lista: any[]) => {
-
-        // se der erro não entra aqui...
+   
         if(this.status_connetion) {
-          console.log('Removendo o loading ... ')
+          // console.log('Removendo o loading ... ')   //{Debug}\\
 
-          this.loading = false      // AQUI REMOVE O LOADING
+          this.loading = false      // ponto de remoção do loading
           this.listaQuantidade = lista;
-          console.log('Recebendo lista ', this.listaQuantidade)
+          // console.log('Recebendo lista ', this.listaQuantidade)
         } 
  
       }
     );
-
-
-
     
-    
-
-    // TESTE CHAMANDO O GET PARA RETORNAR A LISTA DA SERVICE --   não deu certo a  lista volta vazia
-
-    // this.listaQuantidade = this.serviceApiReadEquipament.getListaDeEquipamentosPoll();
-
-    // console.log(this.listaQuantidade)
-
-
-
-   
-
-      
-
-
-
-
-
-
-    // this.loadListEquipaments()
-    // this.getListaQuantidade()
-    // console.log(this.listaQuantidade)
-
-    // setInterval(() => {
-      // console.log('executando set interval ...')
-      // if(this.status_connetion) {
-      //   console.log('Conexão estabelecida !', this.status_connetion)
-
-
-      // } else {
-      //   console.log('Tentando conexão...')
-      //   this.loading = true;
-      //   this.listaQuantidade = {}
-      //   this.loadListEquipaments();
-      // }
-    // }, 6000); // atualiza a lista a cada 6 segundos
-
-
-  }
-
-
-  getTest(): void  {
-   
   }
 
   protected alertRadar(quantidade: number): string {
@@ -137,85 +93,6 @@ export class RadarComponent implements OnInit, OnDestroy  {
 
 
 
-  /**
-   * API de carregamento dos equipamentos. Realizamos um map para mapear dentro do objeto
-   * a quantidade e a descrição para poderem ser renderizadas no ngIf e ngFor
-   */
-   public statusConnection(status: boolean): boolean {
-    return status
-  }
-
-
-
-
-
-
-
-
-
-
-  /**
-   * API de carregamento dos equipamentos. Realizamos um map para mapear dentro do objeto
-   * a quantidade e a descrição para poderem ser renderizadas no ngIf e ngFor
-   */
-
-   // lógica adequada para receber um observable
-  //  private loadListEquipaments(): void {
-  //   this.loading = true;
-  //   this.subscription = this.serviceApiReadEquipament.getListEquipamentsPoll().subscribe(
-  //     data => {
-  //       console.log('Entrou na clausula data');
-  //       this.listaQuantidade = data;
-  //       this.loading = false
-  //       console.log('Verificando se a lista foi preenchida:', this.listaQuantidade); //{Debug}\\
-  //       if (Object.keys(this.listaQuantidade).length === 0) {
-  //         this.loading = true;
-  //         // this.setConnection = false;
-  //         this.listaQuantidade = {};
-  //       } else {
-  //         this.loading = false;
-  //       }
-  //       console.log('Conexão estabelecida:', this.listaQuantidade);
-  //     },
-  //     error => {
-  //       console.log('Entrou na clausula error');
-  //       this.loading = true;
-  //       this.listaQuantidade = {};
-  //     },
-  //     () => {
-  //       // Executado quando a stream é concluída (complete)
-  //     }
-  //   );
-  
-    // Intervalo de 5000ms para chamar o método da API novamente
-  //   setInterval(() => {
-  //     console.log('Entrou na set interval');
-  //     this.serviceApiReadEquipament.getListEquipamentsPoll().subscribe(
-  //       data => {
-  //         console.log('Entrou na clausula data (set interval)');
-  //         this.listaQuantidade = data;
-  //         console.log('Verificando se a lista foi preenchida:', this.listaQuantidade); //{Debug}\\
-  //         if (Object.keys(this.listaQuantidade).length === 0) {
-  //           this.loading = true;
-  //           // this.setConnection = false;
-  //           this.listaQuantidade = {};
-  //         } else {
-  //           this.loading = false;
-  //         }
-  //         console.log('Conexão estabelecida:', this.listaQuantidade);
-  //       },
-  //       error => {
-  //         console.log('Entrou na clausula error (set interval)');
-  //         // console.log('Erro ao carregar os equipamentos:', error);
-  //         this.loading = true;
-  //         this.listaQuantidade = {};
-  //       }
-  //     );
-  //   }, 5000);
-  // }
- 
-
-
 
 
 
@@ -224,16 +101,7 @@ export class RadarComponent implements OnInit, OnDestroy  {
       this.subscription.unsubscribe();
     }
   }
-
-
-  // get getConnection(): boolean {
-  //   return this.status_connetion;
-  // }
-
-
-  // set setConnection(status: boolean) {
-  //   this.status_connetion = status;
-  // }
+ 
 
 
 }

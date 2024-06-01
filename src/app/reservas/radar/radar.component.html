@@ -21,6 +21,22 @@
 
     <tbody class="radar-tbody">
 
+      <!-- 
+        0:  DATASHOW
+        1:  NOTEBOOK
+        2:  LASER_POINTER
+        3:  CABO_HDMI
+        4:  EXTENSAO
+        5:  
+        6:
+        7:  WEB_CAM 
+        8:
+        9:  CABO_P2
+        10: CABO_P10
+        11: MICROFONE
+       -->
+
+
 
 
       <!-- quantidade -->
@@ -45,9 +61,9 @@
           <img *ngIf="loading" class="loading" src="assets/loading.gif" alt="Loading" />
 
           <span *ngIf="!loading">
-            <!-- <span [style.color]="alertRadar(listaQuantidade['DATASHOW'])">
-              {{ listaQuantidade['DATASHOW'] }}
-            </span> -->
+            <span [style.color]="alertRadar(listaQuantidade[0]?.quantidade)">
+              {{ listaQuantidade[0]?.quantidade || 0  }}
+            </span>
           </span>
 
         </td>
@@ -58,9 +74,9 @@
           <img *ngIf="loading" class="loading" src="assets/loading.gif" alt="Loading" />
 
           <span *ngIf="!loading">
-            <!-- <span [style.color]="alertRadar(listaQuantidade['EXTENSAO'])">
-              {{ listaQuantidade['EXTENSAO'] }}
-            </span> -->
+            <span [style.color]="alertRadar(listaQuantidade[4]?.quantidade)">
+              {{ listaQuantidade[4]?.quantidade || 0  }}
+            </span>
           </span>
 
         </td>
@@ -71,9 +87,9 @@
           <img *ngIf="loading" class="loading" src="assets/loading.gif" alt="Loading" />
 
           <span *ngIf="!loading">
-            <!-- <span [style.color]="alertRadar(listaQuantidade['LASER_POINTER'])">
-              {{ listaQuantidade['LASER_POINTER'] }}
-            </span> -->
+            <span [style.color]="alertRadar(listaQuantidade[2]?.quantidade)">
+              {{ listaQuantidade[2]?.quantidade || 0  }}
+            </span>
           </span>
 
 
@@ -84,9 +100,9 @@
           <img *ngIf="loading" class="loading" src="assets/loading.gif" alt="Loading" />
 
           <span *ngIf="!loading">
-            <!-- <span [style.color]="alertRadar(listaQuantidade['WEB_CAM'])">
-              {{ listaQuantidade['WEB_CAM'] }}
-            </span> -->
+            <span [style.color]="alertRadar(listaQuantidade[7]?.quantidade)">
+              {{ listaQuantidade[7]?.quantidade || 0  }}
+            </span>
           </span>
 
         </td>
@@ -96,9 +112,9 @@
           <img *ngIf="loading" class="loading" src="assets/loading.gif" alt="Loading" />
 
           <span *ngIf="!loading">
-            <!-- <span [style.color]="alertRadar(listaQuantidade['MICROFONE'])">
-              {{ listaQuantidade['MICROFONE'] }}
-            </span> -->
+            <span [style.color]="alertRadar(listaQuantidade[11]?.quantidade)">
+              {{ listaQuantidade[11]?.quantidade || 0  }}
+            </span>
           </span>
 
         </td>
@@ -108,9 +124,9 @@
           <img *ngIf="loading" class="loading" src="assets/loading.gif" alt="Loading" />
 
           <span *ngIf="!loading">
-            <!-- <span [style.color]="alertRadar(listaQuantidade['CABO_HDMI'])">
-              {{ listaQuantidade['CABO_HDMI'] }}
-            </span> -->
+            <span [style.color]="alertRadar(listaQuantidade[3]?.quantidade)">
+              {{ listaQuantidade[3]?.quantidade || 0  }}
+            </span>
           </span>
 
         </td>
@@ -120,9 +136,9 @@
           <img *ngIf="loading" class="loading" src="assets/loading.gif" alt="Loading" />
 
           <span *ngIf="!loading">
-            <!-- <span [style.color]="alertRadar(listaQuantidade['CABO_P10'])">
-              {{ listaQuantidade['CABO_P10'] }}
-            </span> -->
+            <span [style.color]="alertRadar(listaQuantidade[10]?.quantidade)">
+              {{ listaQuantidade[10]?.quantidade || 0  }}
+            </span>
           </span>
 
         </td>
@@ -132,9 +148,9 @@
           <img *ngIf="loading" class="loading" src="assets/loading.gif" alt="Loading" />
 
           <span *ngIf="!loading">
-            <!-- <span [style.color]="alertRadar(listaQuantidade['CABO_P10'])">
-              {{ listaQuantidade['CABO_P2'] }}
-            </span> -->
+            <span [style.color]="alertRadar(listaQuantidade[9]?.quantidade)">
+              {{ listaQuantidade[9]?.quantidade || 0  }}
+            </span>
           </span>
         </td>
 
@@ -162,9 +178,9 @@
           <img *ngIf="loading" class="loading-status" src="assets/loading.gif" alt="Loading" />
 
           <span *ngIf="!loading">
-            <!-- <span [style.color]="statusRadar(listaQuantidade['DATASHOW'])">
+            <span [style.color]="statusRadar(listaQuantidade[0]?.quantidade)">
               {{ status }}
-            </span> -->
+            </span>
           </span>
         </td>
 
@@ -174,9 +190,9 @@
           <img *ngIf="loading" class="loading-status" src="assets/loading.gif" alt="Loading" />
 
           <span *ngIf="!loading">
-            <!-- <span [style.color]="statusRadar(listaQuantidade['EXTENSAO'])">
+            <span [style.color]="statusRadar(listaQuantidade[4]?.quantidade)">
               {{ status }}
-            </span> -->
+            </span>
           </span>
         </td>
 
@@ -186,9 +202,9 @@
           <img *ngIf="loading" class="loading-status" src="assets/loading.gif" alt="Loading" />
 
           <span *ngIf="!loading">
-            <!-- <span [style.color]="statusRadar(listaQuantidade['LASER_POINTER'])">
+            <span [style.color]="statusRadar(listaQuantidade[2]?.quantidade)">
               {{ status }}
-            </span> -->
+            </span>
           </span>
         </td>
 
@@ -198,9 +214,9 @@
           <img *ngIf="loading" class="loading-status" src="assets/loading.gif" alt="Loading" />
 
           <span *ngIf="!loading">
-            <!-- <span [style.color]="statusRadar(listaQuantidade['WEB_CAM'])">
+            <span [style.color]="statusRadar(listaQuantidade[7]?.quantidade)">
               {{ status }}
-            </span> -->
+            </span>
           </span>
         </td>
 
@@ -210,9 +226,9 @@
           <img *ngIf="loading" class="loading-status" src="assets/loading.gif" alt="Loading" />
 
           <span *ngIf="!loading">
-            <!-- <span [style.color]="statusRadar(listaQuantidade['MICROFONE'])">
+            <span [style.color]="statusRadar(listaQuantidade[11]?.quantidade)">
               {{ status }}
-            </span> -->
+            </span>
 
           </span>
         </td>
@@ -223,9 +239,9 @@
           <img *ngIf="loading" class="loading-status" src="assets/loading.gif" alt="Loading" />
 
           <span *ngIf="!loading">
-            <!-- <span [style.color]="statusRadar(listaQuantidade['CABO_HDMI'])">
+            <span [style.color]="statusRadar(listaQuantidade[3]?.quantidade)">
               {{ status }}
-            </span> -->
+            </span>
           </span>
         </td>
 
@@ -235,9 +251,9 @@
           <img *ngIf="loading" class="loading-status" src="assets/loading.gif" alt="Loading" />
 
           <span *ngIf="!loading">
-            <!-- <span [style.color]="statusRadar(listaQuantidade['CABO_P10'])">
+            <span [style.color]="statusRadar(listaQuantidade[10]?.quantidade)">
               {{ status }}
-            </span> -->
+            </span>
           </span>
         </td>
 
@@ -247,9 +263,9 @@
           <img *ngIf="loading" class="loading-status" src="assets/loading.gif" alt="Loading" />
 
           <span *ngIf="!loading">
-            <!-- <span [style.color]="statusRadar(listaQuantidade['CABO_P2'])">
+            <span [style.color]="statusRadar(listaQuantidade[9]?.quantidade)">
               {{ status }}
-            </span> -->
+            </span>
           </span>
         </td>
 
@@ -261,7 +277,7 @@
 </div>
 
 
-<img class="loading" src="assets/loading.gif" alt="Loading" />
+<!-- <img class="loading" src="assets/loading.gif" alt="Loading" /> -->
 
 
 
