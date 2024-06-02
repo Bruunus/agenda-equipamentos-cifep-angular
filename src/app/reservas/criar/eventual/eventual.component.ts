@@ -9,6 +9,7 @@ import { ServiceApiReadEquipament } from 'src/app/service/api/equipamentos/servi
 import { OptionQtdService } from 'src/app/service/model/optionQtdService';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import * as moment from 'moment';
+import { Subscription } from 'rxjs';
 
 
 
@@ -22,6 +23,7 @@ export class EventualComponent implements OnInit {
 
   // Angular services
   formValidation!: FormGroup;
+  subscription: Subscription = Subscription.EMPTY;
 
 
   // objects
@@ -35,11 +37,14 @@ export class EventualComponent implements OnInit {
   equipamentos: EquipamentoInterface[] = [];
   listaEquipamento: Array<any> = [];
   optionsListaEquipamento: any[] = [];
+  listaEquipamentoQuantidade: any[] = [];
 
   // vars
   equipamentoContId = 0;
   isEmpty = false;
   dataAtual: string = ''
+  status_connetion: boolean = true;
+  interval: any;
 
 
 
@@ -54,6 +59,7 @@ export class EventualComponent implements OnInit {
     this.loadOptionsDay()
     this.loadListEquipaments()
     this.getListQuantidade()
+    this.validacaoDeQuantidade()
 
 
     this.formValidation = new FormGroup({
@@ -116,9 +122,89 @@ export class EventualComponent implements OnInit {
   /**
    * Serviço de carregamento da lista de quantidade da option quantidade
    */
-  private getListQuantidade() {
+  private getListQuantidade(): Object[]   {
     return this.optionQuantidade = this.optionQtdService.getQuantidade();
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  private validacaoDeQuantidade(): boolean {
+
+    this.interval = setInterval(() => {
+      this.status_connetion = this.serviceApiReadEquipament.getListaDeEquipamentosPoll;    
+      if (this.status_connetion) {
+
+        console.log('status ', this.status_connetion, '(true)')   //{Debug}\\
+
+      } else {
+        console.log('status ', this.status_connetion, '(false)')   //{Debug}\\
+        
+      }
+    },2000)
+ 
+    this.subscription = this.serviceApiReadEquipament.getListEquipamentsPoll()
+      .subscribe(
+        (lista: any[]) => {
+
+          this.listaEquipamentoQuantidade = lista
+
+          this.listaEquipamentoQuantidade.forEach(find => {
+            // para cada item procure o item selecionado de equipamentos
+            // quando encontrar puxe a quantidade 
+            // se a quantidade for menor que a quantidade solicitada no formulário então 
+              // apresenta o erro "Equipamento indisponível em estoque"
+              
+          })
+
+
+
+
+          console.log('Recebendo lista de equipamentos ', this.listaEquipamentoQuantidade)
+          return true
+
+        })
+
+        return false
+
+   
+
+    
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -181,6 +267,33 @@ export class EventualComponent implements OnInit {
           break;
       }
     }
+
+
+    // VALIDAÇÃO DE QUANTIDADE COM O ESTOQUE
+    this.validacaoDeQuantidade()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     
 
     if (equipamentoIgual) {
       alert('Este equipamento já foi adicionado.')
@@ -333,6 +446,8 @@ export class EventualComponent implements OnInit {
 
       return
     }
+  
+  }
 
 
 
@@ -341,32 +456,15 @@ export class EventualComponent implements OnInit {
 
 
 
+  ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    if (this.interval) {
+      clearInterval(this.interval);
+    }
+    
   }
 
 

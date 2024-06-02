@@ -16,13 +16,16 @@ export class ServiceApiReadEquipament {
   private intervalId: any;
   private listaDeEquipamentosPoll: any[] = []
   private subscription: Subscription = Subscription.EMPTY;
+  
 
 
   constructor(private http: HttpClient) { }
 
 
   /**
-   * Realiza a chamada para api backend, realiza ordenação alfabética
+   * Esse método oferece a lista de equipamentos offine não sincronizada do banco de dados para serem carregados
+   * nos selects dos formulários de criação de reserva. Os dados já são enviados em ordem alfabética para não 
+   * dar trabalho a classe que o invoca. 
    * @returns
    */
   getListEquipaments(): Promise<any[]> {
@@ -57,12 +60,14 @@ export class ServiceApiReadEquipament {
 
 
   /**
-   * Método que realiza técnica de polling no servidor, executando o módulo a cada 5 segundos 
+   * Método que realiza técnica de polling no servidor, executando o módulo a cada 5 segundos. O objetivo
+   * desse método é realiza a busca atualizada do estoque, mas deixa os dados retornados para serem tratados
+   * e modelados conforme a necessidade da classe que o invoca, podendo trabalhar de várias formas. 
    * @returns lista observable
    */
   getListEquipamentsPoll(): Observable<any[]> {
     this.setStatus_connection = false
-    return timer(15, 4200).pipe(
+    return interval(1500).pipe(
       switchMap(() => {
         return this.http.get<any[]>(this.getEquipamentoListUrl).pipe(
           tap((equipamentos: any[]) => {
@@ -82,6 +87,35 @@ export class ServiceApiReadEquipament {
 
 
 
+
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  // fechamento de conexão do observable
+
+
   ngOnDestroy(): void {
     if (this.subscription) {
       this.subscription.unsubscribe();
@@ -97,6 +131,7 @@ export class ServiceApiReadEquipament {
   }
 
 
+  // sessão getters
 
   public get getListaDeEquipamentosPoll(): boolean {
     return this.status_connection;

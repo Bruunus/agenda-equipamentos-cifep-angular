@@ -1,5 +1,5 @@
 import { Subscription } from 'rxjs';
-import { Component, Injectable, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, Injectable, OnDestroy, OnInit } from '@angular/core';
 import { ServiceApiReadEquipament } from 'src/app/service/api/equipamentos/service-api-read-equipament';
 import { Subject, interval, Observable, switchMap, takeUntil, map, tap, delayWhen, timer } from "rxjs";
 
@@ -20,6 +20,7 @@ export class RadarComponent implements OnInit, OnDestroy  {
   color_alerta = '#ED9400'
   color_indisponivel = '#ff836d'
   subscription: Subscription | null = null;
+  interval: any;
 
 
   ngOnInit(): void {
@@ -37,7 +38,7 @@ export class RadarComponent implements OnInit, OnDestroy  {
    */
   protected getRadarQuantidade(): void  {
 
-    setInterval(() => {
+    this.interval = setInterval(() => {
       this.status_connetion = this.serviceApiReadEquipament.getListaDeEquipamentosPoll;   // retorna true ou false a cada 6 segundos
       if (this.status_connetion) {
 
@@ -48,7 +49,7 @@ export class RadarComponent implements OnInit, OnDestroy  {
         // console.log('Executando o loading ...')      //{Debug}\\  
         this.loading = true   // ponto de recarregamento do loading
       }
-    },5000)
+    },2000)
 
      
     this.subscription = this.serviceApiReadEquipament.getListEquipamentsPoll()
@@ -95,8 +96,9 @@ export class RadarComponent implements OnInit, OnDestroy  {
 
 
 
-
+  @HostListener('window:beforeunload')
   ngOnDestroy(): void {
+    clearInterval(this.interval);
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
