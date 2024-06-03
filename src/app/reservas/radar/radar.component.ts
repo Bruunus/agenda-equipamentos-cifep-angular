@@ -3,7 +3,7 @@ import { Component, HostListener, Injectable, OnDestroy, OnInit } from '@angular
 import { ServiceApiReadEquipament } from 'src/app/service/api/equipamentos/service-api-read-equipament';
 import { Subject, interval, Observable, switchMap, takeUntil, map, tap, delayWhen, timer } from "rxjs";
 
- 
+
 @Component({
   selector: 'app-radar',
   templateUrl: './radar.component.html',
@@ -12,7 +12,7 @@ import { Subject, interval, Observable, switchMap, takeUntil, map, tap, delayWhe
 export class RadarComponent implements OnInit, OnDestroy  {
 
   constructor(private serviceApiReadEquipament: ServiceApiReadEquipament) { }
-  
+
   listaQuantidade: any[] = []
   loading: boolean = true;
   status: string = '';
@@ -25,14 +25,14 @@ export class RadarComponent implements OnInit, OnDestroy  {
 
   ngOnInit(): void {
     this.loading = true;
-    this.getRadarQuantidade() 
+    this.getRadarQuantidade()
   }
 
 
   /**
-   * Metodo que realiza observação em tempo real do status da conexão com o servidor. Enquanto o servidor 
-   * estiver fora do ar o setInterval acionará o loading deixando-o permanecer até que a conexão seja 
-   * estabelecida novamente. Quando a conexão é estabelecida o subscribe é lido pois ele só executa 
+   * Metodo que realiza observação em tempo real do status da conexão com o servidor. Enquanto o servidor
+   * estiver fora do ar o setInterval acionará o loading deixando-o permanecer até que a conexão seja
+   * estabelecida novamente. Quando a conexão é estabelecida o subscribe é lido pois ele só executa
    * em caso de o servidor e conexão estiverem ativa, uma vez executado o subscribe ele preenche a lista
    * e remove o loading da página.
    */
@@ -46,27 +46,27 @@ export class RadarComponent implements OnInit, OnDestroy  {
 
       } else {
         // console.log('status ', this.status_connetion, '(false)')   //{Debug}\\
-        // console.log('Executando o loading ...')      //{Debug}\\  
+        // console.log('Executando o loading ...')      //{Debug}\\
         this.loading = true   // ponto de recarregamento do loading
       }
     },2000)
 
-     
+
     this.subscription = this.serviceApiReadEquipament.getListEquipamentsPoll()
     .subscribe(
       (lista: any[]) => {
-   
+
         if(this.status_connetion) {
           // console.log('Removendo o loading ... ')   //{Debug}\\
 
           this.loading = false      // ponto de remoção do loading
           this.listaQuantidade = lista;
           // console.log('Recebendo lista ', this.listaQuantidade)
-        } 
- 
+        }
+
       }
     );
-    
+
   }
 
   protected alertRadar(quantidade: number): string {
@@ -96,14 +96,14 @@ export class RadarComponent implements OnInit, OnDestroy  {
 
 
 
-  @HostListener('window:beforeunload')
+
   ngOnDestroy(): void {
     clearInterval(this.interval);
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
   }
- 
+
 
 
 }

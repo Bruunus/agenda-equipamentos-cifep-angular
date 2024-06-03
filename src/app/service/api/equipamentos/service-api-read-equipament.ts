@@ -7,8 +7,8 @@ import { retryWhen } from 'rxjs/operators';
 export class ServiceApiReadEquipament {
 
 
-  private getEquipamentoListUrl: string = 'http://localhost:8080/load/getestoque';
-                                        // http://localhost:8080/load/getestoque
+  private GET_EQUIPAMENTO_LIST_URL: string = 'http://localhost:8080/load/getestoque';
+  private GET_EQUIPAMENTO_ESTOQUE_LIST_URL: string = 'http://localhost:8080/load/getestoquequantidade';
 
   private pollInterval: number = 5000;                            // Intervalo de atualização em milissegundos (5 segundos)
   private unsubscribe$: Subject<void> = new Subject<void>();      // Observable para cancelar a assinatura
@@ -16,7 +16,7 @@ export class ServiceApiReadEquipament {
   private intervalId: any;
   private listaDeEquipamentosPoll: any[] = []
   private subscription: Subscription = Subscription.EMPTY;
-  
+
 
 
   constructor(private http: HttpClient) { }
@@ -24,15 +24,15 @@ export class ServiceApiReadEquipament {
 
   /**
    * Esse método oferece a lista de equipamentos offine não sincronizada do banco de dados para serem carregados
-   * nos selects dos formulários de criação de reserva. Os dados já são enviados em ordem alfabética para não 
-   * dar trabalho a classe que o invoca. 
+   * nos selects dos formulários de criação de reserva. Os dados já são enviados em ordem alfabética para não
+   * dar trabalho a classe que o invoca.
    * @returns
    */
   getListEquipaments(): Promise<any[]> {
 
     return new Promise<Object[]>((resolve, reject) => {
 
-      const subscription: Subscription = this.http.get<string[]>(this.getEquipamentoListUrl).subscribe({
+      const subscription: Subscription = this.http.get<string[]>(this.GET_EQUIPAMENTO_LIST_URL).subscribe({
         next: (listaDeEquipamentos: any[]) => {
           console.log(listaDeEquipamentos)  //{Debug}\\
           listaDeEquipamentos.sort((a, b) => {
@@ -62,19 +62,19 @@ export class ServiceApiReadEquipament {
   /**
    * Método que realiza técnica de polling no servidor, executando o módulo a cada 5 segundos. O objetivo
    * desse método é realiza a busca atualizada do estoque, mas deixa os dados retornados para serem tratados
-   * e modelados conforme a necessidade da classe que o invoca, podendo trabalhar de várias formas. 
+   * e modelados conforme a necessidade da classe que o invoca, podendo trabalhar de várias formas.
    * @returns lista observable
    */
   getListEquipamentsPoll(): Observable<any[]> {
     this.setStatus_connection = false
     return interval(1500).pipe(
       switchMap(() => {
-        return this.http.get<any[]>(this.getEquipamentoListUrl).pipe(
+        return this.http.get<any[]>(this.GET_EQUIPAMENTO_ESTOQUE_LIST_URL).pipe(
           tap((equipamentos: any[]) => {
             // Implemente o código para manipular os equipamentos recebidos
             this.setStatus_connection = true
             // console.log(equipamentos);   //{Debug}\\
-            
+
           }),
           retryWhen(errors => errors.pipe(
             delayWhen(() => throwError('Erro ao conectar ao servidor. Tentando novamente em 5 segundos...'),
@@ -88,7 +88,7 @@ export class ServiceApiReadEquipament {
 
 
 
-   
+
 
 
 
@@ -140,7 +140,7 @@ export class ServiceApiReadEquipament {
   set setStatus_connection(status: boolean) {
     this.status_connection = status;
   }
- 
+
 
 
 }

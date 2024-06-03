@@ -46,6 +46,9 @@ export class EventualComponent implements OnInit {
   status_connetion: boolean = true;
   interval: any;
 
+  teste1: string = ''
+  teste2: number = 0
+
 
 
   constructor(private horasService: HorasService, private serviceApiReadEquipament: ServiceApiReadEquipament,
@@ -150,45 +153,51 @@ export class EventualComponent implements OnInit {
 
   private validacaoDeQuantidade(): boolean {
 
-    this.interval = setInterval(() => {
-      this.status_connetion = this.serviceApiReadEquipament.getListaDeEquipamentosPoll;    
-      if (this.status_connetion) {
-
-        console.log('status ', this.status_connetion, '(true)')   //{Debug}\\
-
-      } else {
-        console.log('status ', this.status_connetion, '(false)')   //{Debug}\\
-        
-      }
-    },2000)
- 
     this.subscription = this.serviceApiReadEquipament.getListEquipamentsPoll()
       .subscribe(
         (lista: any[]) => {
 
           this.listaEquipamentoQuantidade = lista
 
-          this.listaEquipamentoQuantidade.forEach(find => {
+
+
+
             // para cada item procure o item selecionado de equipamentos
-            // quando encontrar puxe a quantidade 
-            // se a quantidade for menor que a quantidade solicitada no formulário então 
+            // quando encontrar puxe a quantidade
+            // se a quantidade for menor que a quantidade solicitada no formulário então
               // apresenta o erro "Equipamento indisponível em estoque"
-              
-          })
-
-
-
-
           console.log('Recebendo lista de equipamentos ', this.listaEquipamentoQuantidade)
-          return true
+
 
         })
 
-        return false
+         console.log(this.listaEquipamentoQuantidade)
 
-   
 
-    
+        for(let i = 0; i < this.listaEquipamentoQuantidade.length; i++) {
+            if(this.listaEquipamentoQuantidade[i].valor === this.getEquipamentoSelect.value) {
+              console.log(
+                'Achado valor igual ', this.listaEquipamentoQuantidade[i].valor ,
+                ' Com o valor = ', this.getEquipamentoSelect.value, '\n',
+                'Qtd. estoque = ', this.listaEquipamentoQuantidade[i].quantidade,
+                ' Com Qtd. solicitada = ', this.getQuantidadeSelect.value
+              )
+
+              // console.log('Valor do banco ', this.listaEquipamentoQuantidade[i].quantidade)  //{Debug}\\
+              // console.log('Valor do form ', this.getQuantidadeSelect.value)    //{Debug}\\
+              if(this.listaEquipamentoQuantidade[i].quantidade < this.getQuantidadeSelect.value)  {
+                console.log('Equipamento indisponível para reservar!')
+                alert('Equipamento indisponível para empréstimo! ')
+                return false;
+
+              }
+
+
+            }
+          }
+
+          return true
+
   }
 
 
@@ -259,7 +268,7 @@ export class EventualComponent implements OnInit {
 
     event.preventDefault()
     let equipamentoIgual = false;
-    let getDescricao = this.equipamentoSelect.value;
+    let getDescricao = this.getEquipamentoSelect.value;
 
     for (const equipamento of this.listaEquipamento) {
       if (equipamento.descricao === getDescricao) {
@@ -270,7 +279,8 @@ export class EventualComponent implements OnInit {
 
 
     // VALIDAÇÃO DE QUANTIDADE COM O ESTOQUE
-    this.validacaoDeQuantidade()
+    const estoqueAtualizado = this.validacaoDeQuantidade();
+    console.log(estoqueAtualizado)
 
 
 
@@ -287,32 +297,25 @@ export class EventualComponent implements OnInit {
 
 
 
-
-
-
-
-
-
-     
 
     if (equipamentoIgual) {
       alert('Este equipamento já foi adicionado.')
-    } else {
+    } else {  // A VALIDAÇÃO DE ESTOQUE DE QUANTIDADE ENTRA AQUI !!!
       // alert('Evento adicionar equipamentos')  //{Debug}\\
 
-      if(this.equipamentoSelect.value === '' || this.equipamentoSelect.value === null) {
+      if(this.getEquipamentoSelect.value === '' || this.getEquipamentoSelect.value === null) {
         return alert('Selecione um equipamento para reservar')  // future response personality
-      } else if(this.quantidadeSelect.value === '' || this.quantidadeSelect.value === null) {
+      } else if(this.getQuantidadeSelect.value === '' || this.getQuantidadeSelect.value === null) {
         return alert('Selecione uma quantidade')
       } else {
 
         this.equipamentoContId++
 
-        const quantidade = parseInt(this.quantidadeSelect.value, 10)
+        const quantidade = parseInt(this.getQuantidadeSelect.value, 10)
 
         this.objectEquipamentos = {
           id: this.equipamentoContId,
-          descricao: this.equipamentoSelect.value,
+          descricao: this.getEquipamentoSelect.value,
           quantidade: quantidade
         }
 
@@ -446,7 +449,7 @@ export class EventualComponent implements OnInit {
 
       return
     }
-  
+
   }
 
 
@@ -464,7 +467,7 @@ export class EventualComponent implements OnInit {
     if (this.interval) {
       clearInterval(this.interval);
     }
-    
+
   }
 
 
@@ -513,11 +516,11 @@ get horaDevolucaoSelect() {
   return this.formValidation.get('horaDevolucaoSelect')!;
 }
 
-get equipamentoSelect() {
+get getEquipamentoSelect() {
   return this.formValidation.get('equipamentoSelect')!;
 }
 
-get quantidadeSelect() {
+get getQuantidadeSelect() {
   return this.formValidation.get('quantidadeSelect')!;
 }
 
