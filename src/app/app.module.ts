@@ -15,7 +15,7 @@ import { MultiplaComponent } from './reservas/criar/multipla/multipla.component'
 import { AnualComponent } from './reservas/criar/anual/anual.component';
 
 
-import { ConfigComponent } from './config/config.component';
+import { ConfiguracaoComponent } from './configuracao/configuracao.component';
 import { ServiceModule } from './service/service-module';
 import { FinalizarComponent } from './reservas/finalizar/finalizar.component';
 import { AgendaComponent } from './reservas/agenda/agenda.component';
@@ -39,7 +39,7 @@ import { RadarComponent } from './reservas/radar/radar.component';
     MultiplaComponent,
     AnualComponent,
     RedirectedComponent,
-    ConfigComponent,
+    ConfiguracaoComponent,
     FinalizarComponent,
     AgendaComponent,
     SuporteComponent,

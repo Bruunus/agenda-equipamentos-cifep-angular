@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Subject, Subscription,  interval, Observable, map, switchMap, throwError, tap, delayWhen, timer } from "rxjs";
+import { Subject, Subscription,  interval, Observable, takeUntil, switchMap, throwError, tap, delayWhen, timer } from "rxjs";
 import { retryWhen } from 'rxjs/operators';
 
 @Injectable()
@@ -34,7 +34,7 @@ export class ServiceApiReadEquipament {
 
       const subscription: Subscription = this.http.get<string[]>(this.GET_EQUIPAMENTO_LIST_URL).subscribe({
         next: (listaDeEquipamentos: any[]) => {
-          console.log(listaDeEquipamentos)  //{Debug}\\
+          // console.log(listaDeEquipamentos)  //{Debug}\\
           listaDeEquipamentos.sort((a, b) => {
             const descricaoA = a.descricao.toUpperCase();
             const descricaoB = b.descricao.toUpperCase();
@@ -84,6 +84,11 @@ export class ServiceApiReadEquipament {
       })
     );
   }
+
+
+
+
+
 
 
 

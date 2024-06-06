@@ -1,8 +1,9 @@
+import { FormEquipamentoValidationService } from './../../../service/model/formEquipamentoValidationService';
 import { Router } from '@angular/router';
 import { ServiceApiCreateReservation } from './../../../service/api/reservas/service-api-create-reservation';
 import { FormValidation } from './../../../service/model/formValidation';
 
-import {  Component, OnInit, } from '@angular/core';
+import {  ChangeDetectorRef, Component, OnInit, } from '@angular/core';
 import { HorasService } from "../../../service/model/horasService";
 import { EquipamentoInterface } from 'src/app/service/model/equipamento-interface';
 import { ServiceApiReadEquipament } from 'src/app/service/api/equipamentos/service-api-read-equipament';
@@ -10,6 +11,7 @@ import { OptionQtdService } from 'src/app/service/model/optionQtdService';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import * as moment from 'moment';
 import { Subscription } from 'rxjs';
+import { ConfiguracaoComponent } from 'src/app/configuracao/configuracao.component';
 
 
 
@@ -25,6 +27,9 @@ export class EventualComponent implements OnInit {
   formValidation!: FormGroup;
   subscription: Subscription = Subscription.EMPTY;
 
+  //formControl
+  habilitaOutros: FormControl = new FormControl(false);
+
 
   // objects
   reservaDTO = {}
@@ -36,6 +41,7 @@ export class EventualComponent implements OnInit {
   // lists
   equipamentos: EquipamentoInterface[] = [];
   listaEquipamento: Array<any> = [];
+  listaEquipamentoApresentacao: Array<any> = [];
   optionsListaEquipamento: any[] = [];
   listaEquipamentoQuantidade: any[] = [];
 
@@ -45,20 +51,19 @@ export class EventualComponent implements OnInit {
   dataAtual: string = ''
   status_connetion: boolean = true;
   interval: any;
-
-  teste1: string = ''
-  teste2: number = 0
+  inputOutrosDisabled: boolean = true;
+  status_input_habilitado: boolean = false; // não habilitado
 
 
 
   constructor(private horasService: HorasService, private serviceApiReadEquipament: ServiceApiReadEquipament,
     private optionQtdService: OptionQtdService, private formValidationService: FormValidation,
-    private serviceApiCreateReservation: ServiceApiCreateReservation, private router: Router
+    private serviceApiCreateReservation: ServiceApiCreateReservation, private router: Router,
+    private formEquipamentoValidationService: FormEquipamentoValidationService
   ) { this.dataAtual = moment().format('YYYY-MM-DD') }
 
 
   ngOnInit(): void {
-
     this.loadOptionsDay()
     this.loadListEquipaments()
     this.getListQuantidade()
@@ -74,13 +79,19 @@ export class EventualComponent implements OnInit {
       dataDevolucao: new FormControl('',[Validators.required]),
       horaDevolucaoSelect: new FormControl('',[Validators.required]),
       equipamentoSelect: new FormControl(''),
-      quantidadeSelect: new FormControl('')
+      quantidadeSelect: new FormControl(''),
+      outros: new FormControl({value: '', disabled: true}),
+      habilitaOutros: new FormControl('')
+
     })
+
+
 
     // events
     this.onInputValueDataDevolucao()
     this.onDataInicioChange()
     this.onDataDevolucaoChange()
+    this.onCheckboxOutrosChange()
 
 
 
@@ -150,54 +161,53 @@ export class EventualComponent implements OnInit {
 
 
 
-
+  /**
+   * Esse método recebe em intervalo de tempo uma nova lista atualizada do servidor para poder
+   * realizar a checagem de equipamento em tempo de execução recebendo o valor mais exato.
+   * Iteramos sobre a lista para procurar o valor passado pelo usuário com o valor da lista,
+   * tendo uma igualdade fazemos uma cerificação do campo select de equipamento se caso o
+   * usuário não desabilito-o acionando o campo de "outros de equipamentos" que não estão na lista.
+   * A sequência só prosegue daqui se estiver habilitado, o campo estando habilitado então é
+   * realizado a lógica do estoque onde o valor do usuário não pode ultrapassar o valor disponível
+   * em estoque, o valor sendo ultrapassado o formulário gera um aviso não permite prosseguir até
+   * um novo valor ser passado novamente.
+   */
   private validacaoDeQuantidade(): boolean {
 
     this.subscription = this.serviceApiReadEquipament.getListEquipamentsPoll()
       .subscribe(
         (lista: any[]) => {
-
           this.listaEquipamentoQuantidade = lista
-
-
-
-
-            // para cada item procure o item selecionado de equipamentos
-            // quando encontrar puxe a quantidade
-            // se a quantidade for menor que a quantidade solicitada no formulário então
-              // apresenta o erro "Equipamento indisponível em estoque"
-          console.log('Recebendo lista de equipamentos ', this.listaEquipamentoQuantidade)
-
-
+          // console.log('Recebendo lista de equipamentos... ', this.listaEquipamentoQuantidade)  //{Debug}\\
         })
 
-         console.log(this.listaEquipamentoQuantidade)
+    // console.log(this.listaEquipamentoQuantidade)   //{Debug}\\
 
 
-        for(let i = 0; i < this.listaEquipamentoQuantidade.length; i++) {
-            if(this.listaEquipamentoQuantidade[i].valor === this.getEquipamentoSelect.value) {
-              console.log(
-                'Achado valor igual ', this.listaEquipamentoQuantidade[i].valor ,
-                ' Com o valor = ', this.getEquipamentoSelect.value, '\n',
-                'Qtd. estoque = ', this.listaEquipamentoQuantidade[i].quantidade,
-                ' Com Qtd. solicitada = ', this.getQuantidadeSelect.value
-              )
+    for(let i = 0; i < this.listaEquipamentoQuantidade.length; i++) {
+      if(this.listaEquipamentoQuantidade[i].valor === this.getEquipamentoSelect.value) {
+        // {Debugger}
+        // console.log(
+        //   'Achado valor igual ', this.listaEquipamentoQuantidade[i].valor ,
+        //   ' Com o valor = ', this.getEquipamentoSelect.value, '\n',
+        //   'Qtd. estoque = ', this.listaEquipamentoQuantidade[i].quantidade,
+        //   ' Com Qtd. solicitada = ', this.getQuantidadeSelect.value
+        // )
 
-              // console.log('Valor do banco ', this.listaEquipamentoQuantidade[i].quantidade)  //{Debug}\\
-              // console.log('Valor do form ', this.getQuantidadeSelect.value)    //{Debug}\\
-              if(this.listaEquipamentoQuantidade[i].quantidade < this.getQuantidadeSelect.value)  {
-                console.log('Equipamento indisponível para reservar!')
-                alert('Equipamento indisponível para empréstimo! ')
-                return false;
+        // console.log('Valor do banco ', this.listaEquipamentoQuantidade[i].quantidade)  //{Debug}\\
+        // console.log('Valor do form ', this.getQuantidadeSelect.value)    //{Debug}\\
 
-              }
-
-
-            }
+        if(!this.getStatusInputHabilitado) {
+          if(this.listaEquipamentoQuantidade[i].quantidade < this.getQuantidadeSelect.value)  {
+            console.log('Quantidade indisponível para reservar!')
+            alert('Quantidade indisponível para empréstimo! ')
+            return false;
           }
+        }
 
-          return true
-
+      }
+    }
+    return true;
   }
 
 
@@ -222,11 +232,10 @@ export class EventualComponent implements OnInit {
 
   // events
 
-  protected onListaEquipamentosEvent(equipamentos: EquipamentoInterface[]): void {
-    this.equipamentos = equipamentos;
-    console.log('Lista vinda de equipamentos', this.equipamentos)
-  }
-
+  /**
+   * Evento criado para copiar a data de retirada para o campo de data de devolução.
+   *
+   */
   private onInputValueDataDevolucao(): void {
     this.formValidation.controls['dataRetirada'].valueChanges.subscribe((value) => {
       if (value) {
@@ -235,6 +244,14 @@ export class EventualComponent implements OnInit {
     });
   }
 
+  /**
+   * Evento com o campo de data de retirada para observar em qual dia da semana o usuário
+   * realizou a seleção tendo como regra de negócio se a devolução for um horário antes do
+   * horario de retirada. O evento precisa observa se o valor selecionado cai em um sexta-feira.
+   * Caindo em uma sexta feira o sistema notifica que prorrogará a data de devolução para segunda
+   * da próxima semana, e se no caso de ser qualquer outro dia além deste o sistema avança para o
+   * dia seguinte.
+   */
   private onDataInicioChange(): void {
     this.formValidation.get('dataRetirada')?.valueChanges.subscribe((value) => {
       const isSexta = this.formValidationService.programacaoDeHorasParaSextaFeiraDataInicio(value);
@@ -247,6 +264,14 @@ export class EventualComponent implements OnInit {
 
   }
 
+  /**
+   * Evento com o campo de data de devolução para observar em qual dia da semana o usuário
+   * realizou a seleção tendo como regra de negócio se a devolução for um horário antes do
+   * horario de retirada. O evento precisa observa se o valor selecionado cai em um sexta-feira.
+   * Caindo em uma sexta feira o sistema notifica que prorrogará a data de devolução para segunda
+   * da próxima semana, e se no caso de ser qualquer outro dia além deste o sistema avança para o
+   * dia seguinte.
+   */
   private onDataDevolucaoChange(): void {
     this.formValidation.get('dataDevolucao')?.valueChanges.subscribe((value) => {
       const isSexta = this.formValidationService.programacaoDeHorasParaSextaFeiraDataFim(value);
@@ -258,79 +283,111 @@ export class EventualComponent implements OnInit {
     })
   }
 
+  /**
+   * Evento do checkbox para permitir adicionar um equipamento que não esteja incluso na lista.
+   * O FormControl nos permite atribuir um evento pelo estado por um valor boleano do checkbox,
+   * dessa forma retornando verdadeiro desabilitamos o select para a lista de equipamentos e
+   * atualizamos o valor da variável de status e vice e versa no caso do valor voltar a ser false.
+   * o
+   */
+  protected onCheckboxOutrosChange(): boolean {
+
+    const habilitaOutrosControl = this.formValidation.get('outros')
+    const selectEquipamentos = this.formValidation.get('equipamentoSelect')
+
+    this.formValidation.get('habilitaOutros')?.valueChanges.subscribe((value) => {
+
+      if (value) {
+        console.log('habilitado')
+        selectEquipamentos?.disable()
+        selectEquipamentos?.reset()
+        habilitaOutrosControl?.enable()
+        this.setStatusInputHabilitado = true
+        console.log('status do input outros ', this.getStatusInputHabilitado)  //{Debug}\\
+        return true;
+      } else {
+        console.log('desabilitado')
+        selectEquipamentos?.enable()
+        habilitaOutrosControl?.reset()
+        habilitaOutrosControl?.disable()
+        this.setStatusInputHabilitado = false
+        console.log('status do input outros ', this.getStatusInputHabilitado)  //{Debug}\\
+        return false;
+      }
+    })
+    return false;
+  }
+
 
 
   /**
    * Funcionalidade para adicionar um equipamento à lista de agendamento que será
-   * salva do submit do formulário
+   * salva do submit do formulário. Existe algumas validações necessárias que foram tratadas
+   * diretamente na classe para melhor performance em tempo de execução. Um equipamento não pode
+   * ser adicionado sem antes ser validado. Um equipamento não pode ser adicionado 2 vezes e a
+   * quantidade antes de adicionar é validada no estoque se a quantidade passada tem disponível,
+   * do contrário o andamento do método é bloqueado impedindo o avanço no preenchimento do
+   * formulário.
    */
   protected adicionarEquipamento(event: Event) {
 
     event.preventDefault()
-    let equipamentoIgual = false;
-    let getDescricao = this.getEquipamentoSelect.value;
 
-    for (const equipamento of this.listaEquipamento) {
-      if (equipamento.descricao === getDescricao) {
-          equipamentoIgual = true;
-          break;
-      }
+    let valorEquipamentoSelecionado = this.getEquipamentoSelect.value;
+    let valorQuantidadeSelecionada = this.getQuantidadeSelect.value;
+    let validacaoQuantidade = this.validacaoDeQuantidade();
+    this.onCheckboxOutrosChange();
+    let equipamentoEscolhido = '';
+    let campoHabilitado = this.getStatusInputHabilitado;
+
+    const validacaoDoCampoOutros =
+      this.formEquipamentoValidationService.validacaoFormCampoOutros(valorQuantidadeSelecionada)
+
+    // console.log('valor retornado ', teste)
+
+    const validation = this.formEquipamentoValidationService.validacaoFormAdicionarEquipamento(
+      valorEquipamentoSelecionado, valorQuantidadeSelecionada, this.listaEquipamento, campoHabilitado
+    )
+
+    if (!validation || !validacaoQuantidade) {
+     return;
     }
+    else {
+      console.log('Validação quantidade passou')
+      console.log('Entrado no else após validação de quantidade');
 
-
-    // VALIDAÇÃO DE QUANTIDADE COM O ESTOQUE
-    const estoqueAtualizado = this.validacaoDeQuantidade();
-    console.log(estoqueAtualizado)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    if (equipamentoIgual) {
-      alert('Este equipamento já foi adicionado.')
-    } else {  // A VALIDAÇÃO DE ESTOQUE DE QUANTIDADE ENTRA AQUI !!!
-      // alert('Evento adicionar equipamentos')  //{Debug}\\
-
-      if(this.getEquipamentoSelect.value === '' || this.getEquipamentoSelect.value === null) {
-        return alert('Selecione um equipamento para reservar')  // future response personality
-      } else if(this.getQuantidadeSelect.value === '' || this.getQuantidadeSelect.value === null) {
-        return alert('Selecione uma quantidade')
-      } else {
-
-        this.equipamentoContId++
-
-        const quantidade = parseInt(this.getQuantidadeSelect.value, 10)
-
-        this.objectEquipamentos = {
-          id: this.equipamentoContId,
-          descricao: this.getEquipamentoSelect.value,
-          quantidade: quantidade
+      if(campoHabilitado) {
+        if (validacaoDoCampoOutros) {
+          alert('Este equipamento não será monitorado no painel de estoque. Para isso cadastre esse novo equipamentos em \"Configurações > Adicionar novo equipamento\"')
+          equipamentoEscolhido =  this.getOutros.value;
+          // console.log('Valor do campo Outros coletado: ', equipamentoEscolhido);   //{Debug}\\
+        } else {
+          return;
         }
-
-        this.listaEquipamento.push(this.objectEquipamentos)
-        console.log(this.listaEquipamento);  //{Debug}\\
-
-        this.formValidation.get('equipamentoSelect')!.reset();
-        this.formValidation.get('quantidadeSelect')!.reset();
-
+      } else {
+        equipamentoEscolhido = valorEquipamentoSelecionado;
       }
+
+
+      this.equipamentoContId++
+      const quantidade = parseInt(valorQuantidadeSelecionada, 10);
+
+      this.objectEquipamentos = {
+        id: this.equipamentoContId,
+        descricao: equipamentoEscolhido,
+        quantidade: quantidade
+      }
+
+      this.listaEquipamento.push(this.objectEquipamentos)
+
+      this.formatadorDeListaEquipamento(this.objectEquipamentos)
+
+      console.log(this.listaEquipamento);  //{Debug}\\
+
+      this.formValidation.get('equipamentoSelect')!.reset();
+      this.formValidation.get('quantidadeSelect')!.reset();
+      this.formValidation.get('outros')!.reset();
     }
-
-
-
-
   }
 
 
@@ -363,6 +420,16 @@ export class EventualComponent implements OnInit {
         }
     }
 
+  }
+
+
+  private limpartListaDeEquipamentoSubmit() {
+    var elementsLi = document.querySelectorAll('#table-equipamento tbody tr td ul li');
+
+    elementsLi.forEach(function(element) {
+      element.parentNode?.removeChild(element);
+    })
+    // console.log('Lista de LI ',elementLi)  //{Debug}\\
   }
 
 
@@ -399,7 +466,7 @@ export class EventualComponent implements OnInit {
           setor: this.setor.value,
           nome: this.nome.value,
           sobrenome: this.sobrenome.value,
-          equipamentos: this.getListaEquipamentoDelete(),
+          equipamentos: this.getListaEquipamentoRevisados(),
           agenda: [{
             dataRetirada: this.dataRetirada.value,
             horaRetirada: this.horaInicioSelect.value,
@@ -411,10 +478,12 @@ export class EventualComponent implements OnInit {
 
         console.log(this.reservaDTO)
 
-
         try {
+
+
+
           this.serviceApiCreateReservation.createEventualReservation(this.reservaDTO)
-            .then((response) => {
+            .then(() => {
               // Lógica para lidar com a resposta do servidor, se necessário
             this.formValidation.reset('nome')  // Limpar campos
             this.formValidation.reset('sobrenome')
@@ -426,7 +495,9 @@ export class EventualComponent implements OnInit {
             this.formValidation.reset('equipamentoSelect')
             this.formValidation.reset('quantidadeSelect')
 
-            console.log('Resposta do servidor:', response);
+            this.limpartListaDeEquipamentoSubmit()
+
+            // console.log('Resposta do servidor:', response);
             this.router.navigate(['reservas/redirect']).then(() => {
               window.location.reload();
             });
@@ -471,12 +542,36 @@ export class EventualComponent implements OnInit {
   }
 
 
+  /**
+   * Este métido vai receber a lista
+   * @param list
+   */
+  private formatadorDeListaEquipamento(object: {id:number, descricao:string, quantidade:number}): void {
+
+    // RECEBO O OBJETO
+    //  OK
+
+    // FORMATO O VALOR DA DESCRIÇÃO
+    // object.descricao = object.descricao.charAt(0).toUpperCase() + object.descricao.slice(1).toLowerCase();
+
+    // ADICIONO ESTE OBJETO A LISTA USANDO PUSH
+    this.listaEquipamentoFormatada.push(object)
+
+
+
+
+
+
+
+
+
+  }
+
+
 
 // getters
 
-getListaEquipamentoDelete() {
-
-
+getListaEquipamentoRevisados() {
 
   this.listaEquipamento.forEach(deleteId => {
     delete deleteId.id;
@@ -524,6 +619,21 @@ get getQuantidadeSelect() {
   return this.formValidation.get('quantidadeSelect')!;
 }
 
+get getOutros() {
+  return this.formValidation.get('outros')!;
+}
+
+get getEquipamentoSelectInput() {
+  return this.formValidation.get('equipamentoSelect')?.disabled;
+}
+
+get getStatusInputHabilitado() {
+  return this.status_input_habilitado
+}
+
+set setStatusInputHabilitado(status: boolean) {
+  this.status_input_habilitado = status;
+}
 
 
 

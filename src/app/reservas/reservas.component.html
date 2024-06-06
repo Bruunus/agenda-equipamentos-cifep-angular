@@ -74,6 +74,11 @@
 
 </div>
 
+
+<h3>Devolução para hoje</h3>
+
+<p>Agendadas para serem devolvidas hoje</p>
+
 <p>precisa fazer refresh na página a cada nova reserva adicionada</p>
 
 
@@ -119,7 +124,7 @@
             Início: 28/05/2024 -- Término: em manutenção...
           </li>
           <b>Rollback</b>
-          <li style="color: tomato;"> 
+          <li style="color: tomato;">
             Está tendo vazamento de memória quando o servidor cai
           </li>
         </ul>
@@ -144,6 +149,39 @@
       </td>
       <td>24/05/2024 - 15:42</td>
       <td>28/05/2024 - 11:00</td>
+    </tr>
+
+    <tr class="criada">
+      <td>
+          O sistema deve assim como mostra as reservas para hoje, mostrar as devoluções para hoje também. E que
+          essas devoluções mostrem o radar de atrasado tão esperado
+      </td>
+      <td></td>
+      <td></td>
+    </tr>
+
+    <tr class="criada">
+      <td>
+        O sistema também precisa antes de renderizar fazer a 'verificação das reservas para hoje' =>
+        É daqui que ele faz esse tópico abaixo
+
+        Decidir se será no front ou no back
+        (Essa verificação é ao carregar as reservas de hoje (API) ao receber a lista o sistema deve iterar em cima
+        do equipamento e da quantidade e subtrair o valor de quantidade do equipamento instantaneamente quando for
+        reservas multiplas e anuais, porque quando é eventual o sistema ja realiza essa tarefa sozinho)
+
+
+        <br>
+
+        Criar um sistema que a reserva que aparecer para ser retirada hoje, ela deve subtrair o estoque
+        com os equipamentos agendados para serem retirados do no dia de 'hoje'. Essa leitura precisa
+        ser feita com base nos dados dos equipamentos agendados para hoje levando em conta a 'Descrição'
+        e a "quantidade".
+
+
+      </td>
+      <td></td>
+      <td></td>
     </tr>
 
 

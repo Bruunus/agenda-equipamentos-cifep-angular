@@ -104,7 +104,7 @@
       </div>
   </div>
 
-  <table id="table-adicionar">
+  <table id="table-adicionar" >
     <tr>
       <td>
         <label for="equipamento">Equipamento</label>
@@ -121,11 +121,22 @@
           <option name="selectedOptionListaQuantidade" *ngFor="let qtd of optionQuantidade" [value]="qtd.valor">{{ qtd.descricao }}</option>
         </select>
       </td>
+
       <td>
         <button (click)="adicionarEquipamento($event)">Adicionar</button>
       </td>
 
     </tr>
+
+    <tr>
+      <td colspan="3">
+        <label for="">Outros equipamentos</label>
+        <input type="text" formControlName="outros" id="">
+        <input style="margin-left: 8pt;" type="checkbox" formControlName="habilitaOutros" >
+        <label style="margin-left: 8pt;">Adicionar</label>
+      </td>
+    </tr>
+
   </table>
 
 
@@ -247,31 +258,64 @@
         <li style="color: green;"><s>Não pode adicionar um equipamento sem quantidade</s></li>
         <li style="color: green;"><s>Não pode adicionar uma quantidade sem equipamento</s></li>
         <li style="color: green;"><s>Não pode adicionar o mesmo equipamento 2x</s></li>
-        <li style="color: blue">
-          Validade a quantidade solicitada ao adicionar com o estoque disponível, caso não tiver disponível emita o aviso
-          e não deixa passar o formulário
+        <li style="color: green">
+          <s>Validade a quantidade solicitada ao adicionar com o estoque disponível, caso não tiver disponível emita o aviso
+            e não deixa passar o formulário</s>
           <ul>
-            <li>Data início: 01/jun/2024</li>
-            <li>Data término: Fazendo ...</li>
+            <li><s>Data início: 01/jun/2024</s></li>
+            <li><s>Data término: 04/jun/2024</s></li>
           </ul>
         </li>
       </ul>
   </li>
-  <li>
-    Liberar o campo 'sobrenome' na classe eventual.compoent.ts quando o backend estiver ajustado
+  <li style="color: green;">
+    <s>Liberar o campo 'sobrenome' na classe eventual.compoent.ts quando o backend estiver ajustado</s>
   </li>
-  <li>
-    Tratar do [option] 'Outros' => Ao ser selecionado junto com a quantidade, dentro da tabela de equipamentos
-    deve aparecer um input para o usuário fornecer a descrição do equipamento. <br>
-    Salve este valor no banco e forneça um aviso "Este equipamento não será monitorado no painel de estoque.
-    para isso adicione esse novo equipamentos em Configurações > Adicionar novo equipamento"
+  <li style="color: green;">
+    <s>Tratar do [option] 'Outros' => Ao ser selecionado junto com a quantidade, dentro da tabela de equipamentos
+      deve aparecer um input para o usuário fornecer a descrição do equipamento. <br>
+      Salve este valor no banco e forneça um aviso "Este equipamento não será monitorado no painel de estoque.
+      para isso adicione esse novo equipamentos em Configurações > Adicionar novo equipamento"</s>
+      <ul>
+        <li><s>Data início: maio/2024</s></li>
+        <li><s>Data término: 05/jun/2024</s></li>
+      </ul>
   </li>
-  <li>
-    Limpar a lista de equipamentos visual -  Quando o submit der certo limpe a lista.
+  <li style="color: green;">
+    <s>
+      Ao dar submit para criar a reserva, o sistema precisa fazer uma nova busca dos dados e comparação novamente para
+      saber se nesse meio tempo teve alteração no estoque. Se sim deve sinalizar o equipamento esgotado e notificar
+    </s>
+    <ul>
+      <li>
+        <s>
+          Cria no backend um validador de quantidade de estoque, que antes de salver no banco ele precisa realizar
+          uma última verificação de disponibilidade. Caso não tenha deve lançar uma exception
+        </s>
+      </li>
+    </ul>
+    <ul>
+      <li><s>Data início: 05/06/2024</s></li>
+      <li><s>Data término: 06/06/2024</s><li>
+    </ul>
   </li>
-  <li>
-    Criar um classe de sistema de erros de logs com com "nome da funcionalidade e código de erro "er0001" "
+
+  <li style="color: green;">
+    <s>Limpar a lista de equipamentos visual -  Quando o submit der certo limpe a lista.</s>
+    <ul>
+      <li><s>Data início: 05/06/2024</s></li>
+      <li><s>Data término: 06/06/2024</s><li>
+    </ul>
   </li>
+
+  <li style="color: green;">
+    <s>Criar um classe de sistema de erros de logs com com "nome da funcionalidade e código de erro "er0001" "</s>
+    <ul>
+      <li><s>Data início: 05/06/2024</s></li>
+      <li><s>Data término: 06/06/2024</s><li>
+    </ul>
+  </li>
+
   <li>
     Aplicar o regex nos campos impust e criar validações para os campos (Verifique também a capacidade máxima de caracteres
     definidas nas tabelas)

@@ -1,6 +1,7 @@
+import { ErroServiceService } from './erro/reservas/erro-service.service';
+import { FormEquipamentoValidationService } from './model/formEquipamentoValidationService';
 import { ServiceApiRead } from './service-api-read';
-import { FormBuilder, Validators } from '@angular/forms';
-import { NgModule, TemplateRef } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { HorasService } from './model/horasService';
 
 import { ServiceApiCreateEquipament } from './api/equipamentos/service-api-create-equipament';
@@ -14,7 +15,7 @@ import { ServiceApiReadReservation } from './api/reservas/service-api-read-reser
 import { ServiceApiUpdateReservation } from './api/reservas/service-api-update-reservation';
 import { OptionQtdService } from './model/optionQtdService';
 import { FormValidation } from './model/formValidation';
-import { RadarComponent } from '../reservas/radar/radar.component';
+
 
 
 
@@ -24,7 +25,7 @@ import { RadarComponent } from '../reservas/radar/radar.component';
   providers: [
     HorasService, ServiceApiCreateEquipament, ServiceApiDeleteEquipament, ServiceApiReadEquipament, ServiceApiUpdateEquipament,
     ServiceApiCreateReservation, ServiceApiDeleteReservation, ServiceApiReadReservation, ServiceApiUpdateReservation, OptionQtdService,
-    FormValidation, ServiceApiRead,  
+    FormValidation, ServiceApiRead, FormEquipamentoValidationService, ErroServiceService
   ]
 })
 export class ServiceModule {}

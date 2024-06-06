@@ -1,5 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { ErroServiceService } from "../../erro/reservas/erro-service.service";
 
 @Injectable()
 export class ServiceApiCreateReservation {
@@ -8,7 +9,7 @@ export class ServiceApiCreateReservation {
     private MULTIPLE: string = 'http://localhost:8080/new/scheduled-multiple/reserva'
     private YEARLY: string = 'http://localhost:8080/new/scheduled-full-year/reserva'
 
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient, private erroService: ErroServiceService) { }
 
     createEventualReservation(JSONData: Object): Promise<Object> {
 
@@ -20,12 +21,11 @@ export class ServiceApiCreateReservation {
                     resolve(response)
                 },
                 error: (error) => {
-                    console.error('Erro ao salvar JSON:', error);
-                    reject(error);
+                    this.erroService.estoqueInsuficienteException(error)
                 }
-        
+
             })
-        })        
+        })
 
     }
 
@@ -43,9 +43,9 @@ export class ServiceApiCreateReservation {
                     console.error('Erro ao salvar JSON:', error);
                     reject(error);
                 }
-        
+
             })
-        })        
+        })
 
     }
 
@@ -63,12 +63,12 @@ export class ServiceApiCreateReservation {
                     console.error('Erro ao salvar JSON:', error);
                     reject(error);
                 }
-        
+
             })
-        })        
+        })
 
     }
 
 
-    
+
 }

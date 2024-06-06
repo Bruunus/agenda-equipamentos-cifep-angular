@@ -13,7 +13,7 @@ import { HistoricoComponent } from './reservas/historico/historico.component';
 import { EditarChangeComponent } from './reservas/editar-change/editar-change.component';
 
 
-import { ConfigComponent } from './config/config.component';
+import { ConfiguracaoComponent } from './configuracao/configuracao.component';
 import { FinalizarComponent } from './reservas/finalizar/finalizar.component';
 import { AgendaComponent } from './reservas/agenda/agenda.component';
 
@@ -39,7 +39,7 @@ const routes: Routes = [
   { path: 'reservas/redirect', component: RedirectedComponent},
 
   // sessão adm
-  { path: 'reservas/adm/config', component: ConfigComponent},
+  { path: 'reservas/adm/config', component: ConfiguracaoComponent},
 
 
   { path: '', redirectTo: '/reservas', pathMatch: 'full'}
