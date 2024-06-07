@@ -5,11 +5,14 @@
 
 
   <label for="responsavel">Nome</label> &nbsp;
-  <input type="text" name="nome" formControlName="nome" required>
+  <input type="text" name="nome" formControlName="nome" required maxlength="40">
 
   <div *ngIf="nome!.invalid && formDir.submitted" class="validation-error">
     <p *ngIf="nome.errors?.['required']" style="font-size: 0.8rem; color: tomato;">
       Nome obrigatório
+    </p>
+    <p *ngIf="nome.errors?.['minlength']" style="font-size: 0.8rem; color: tomato;">
+      Descrição de nome inválido
     </p>
     <!-- <p *ngIf="nome.errors?.['maxlength']">Até 30 caracter</p> -->
   </div>
@@ -17,19 +20,22 @@
   <br>
 
   <label for="sobrenome">Sobrenome</label> &nbsp;
-  <input #valid type="text" name="sobrenome" formControlName="sobrenome" required>
+  <input #valid type="text" name="sobrenome" formControlName="sobrenome" required maxlength="40">
 
   <div *ngIf="sobrenome!.invalid && formDir.submitted" class="validation-error">
     <p *ngIf="sobrenome.errors?.['required']" style="font-size: 0.8rem; color: tomato;">
       Sobrenome obrigatório
     </p>
-    <!-- <p *ngIf="nome.errors?.['maxlength']">Até 30 caracter</p> -->
+    <p *ngIf="nome.errors?.['minlength']" style="font-size: 0.8rem; color: tomato;">
+      Descrição de nome inválido
+    </p>
+
   </div>
 
   <br>
 
   <label for="setor">Setor</label> &nbsp;
-  <input #valid type="text" name="setor" formControlName="setor" required>
+  <input #valid type="text" name="setor" formControlName="setor" required maxlength="40">
   <div *ngIf="setor!.invalid && formDir.submitted" class="validation-error">
     <p *ngIf="setor.errors?.['required']" style="font-size: 0.8rem; color: tomato;">
       Setor obrigatório
@@ -108,9 +114,11 @@
     <tr>
       <td>
         <label for="equipamento">Equipamento</label>
-        <select #equipamentoValid  name="equipamento" formControlName="equipamentoSelect">
+        <select #equipamentoValid  name="equipamento" formControlName="equipamentoSelect"
+        (change)="onDescricaoValorChange(equipamentoValid.options[equipamentoValid.selectedIndex].text)">
           <option value=""></option>
-          <option *ngFor="let item of optionsListaEquipamento" [value]="item.valor">{{ item.descricao }}</option>
+          <option *ngFor="let item of optionsListaEquipamento" [value]="item.valor" >
+            {{ item.descricao }}</option>
         </select>
       </td>
 
@@ -132,7 +140,7 @@
       <td colspan="3">
         <label for="">Outros equipamentos</label>
         <input type="text" formControlName="outros" id="">
-        <input style="margin-left: 8pt;" type="checkbox" formControlName="habilitaOutros" >
+        <input style="margin-left: 8pt;" type="checkbox" formControlName="habilitaOutros" maxlength="40">
         <label style="margin-left: 8pt;">Adicionar</label>
       </td>
     </tr>
@@ -154,7 +162,7 @@
               <ul>
                 <!-- template -->
                 <li id="template-li" class="row"
-                *ngFor="let equipamento of listaEquipamento; let i = index" [attr.data-id]="equipamento.id">
+                *ngFor="let equipamento of listaEquipamentoApresentacao; let i = index" [attr.data-id]="equipamento.id">
                   <td class="col">{{ equipamento.descricao }}</td>
                   <td class="col-6">
                     <div class="row justify-content-between">
@@ -316,9 +324,26 @@
     </ul>
   </li>
 
-  <li>
-    Aplicar o regex nos campos impust e criar validações para os campos (Verifique também a capacidade máxima de caracteres
-    definidas nas tabelas)
+  <li style="color: green;">
+    <s>
+      Aplicar o regex nos campos impust e criar validações para os campos (Verifique também a capacidade máxima de caracteres
+      definidas nas tabelas)
+    </s>
+    <ul>
+      <li><s>Data início: 07/06/2024</s></li>
+      <li><s>Data término: 07/06/2024</s><li>
+    </ul>
   </li>
+
+  <li style="color: blue;">
+    A hora de retirada não pode ser igual a hora de devolução
+    <ul>
+      <li>Data início: </li>
+      <li>Data término: <li>
+    </ul>
+  </li>
+
+
+
 </ul>
 

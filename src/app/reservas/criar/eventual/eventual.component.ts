@@ -34,6 +34,7 @@ export class EventualComponent implements OnInit {
   // objects
   reservaDTO = {}
   objectEquipamentos : {id: number, descricao: string, quantidade: number } = {id:0, descricao:'', quantidade:0}
+  objectEquipamentosApresentacao: {id: number, descricao: string, quantidade: number } = {id:0, descricao:'', quantidade:0}
   optionsHours: { descricao: string, valor: string }[] = [] as { descricao: string, valor: string }[];
   optionQuantidade: { descricao: string, valor: string } [] = [] as { descricao: string, valor: string }[];
   options: { descricao: string, valor: string }[] = [] as { descricao: string, valor: string }[];
@@ -53,6 +54,7 @@ export class EventualComponent implements OnInit {
   interval: any;
   inputOutrosDisabled: boolean = true;
   status_input_habilitado: boolean = false; // não habilitado
+  valorDescricao: string = '';
 
 
 
@@ -71,8 +73,16 @@ export class EventualComponent implements OnInit {
 
 
     this.formValidation = new FormGroup({
-      nome: new FormControl('', [Validators.required]),
-      sobrenome: new FormControl('',[Validators.required]),
+      nome: new FormControl('', [
+        Validators.required,
+        Validators.minLength(4),
+        Validators.maxLength(40)
+      ]),
+      sobrenome: new FormControl('',[
+        Validators.required,
+        Validators.minLength(4),
+        Validators.maxLength(40)
+      ]),
       setor: new FormControl('',[Validators.required]),
       dataRetirada: new FormControl('',[Validators.required]),
       horaInicioSelect: new FormControl('',[Validators.required]),
@@ -80,7 +90,7 @@ export class EventualComponent implements OnInit {
       horaDevolucaoSelect: new FormControl('',[Validators.required]),
       equipamentoSelect: new FormControl(''),
       quantidadeSelect: new FormControl(''),
-      outros: new FormControl({value: '', disabled: true}),
+      outros: new FormControl({value: '', disabled: true}, Validators.maxLength(40)),
       habilitaOutros: new FormControl('')
 
     })
@@ -129,6 +139,7 @@ export class EventualComponent implements OnInit {
       .then((lista: any[]) => {
         //  console.log(lista)   //{debug}\\
         this.optionsListaEquipamento = lista;
+
       })
   }
 
@@ -199,7 +210,7 @@ export class EventualComponent implements OnInit {
 
         if(!this.getStatusInputHabilitado) {
           if(this.listaEquipamentoQuantidade[i].quantidade < this.getQuantidadeSelect.value)  {
-            console.log('Quantidade indisponível para reservar!')
+            // console.log('Quantidade indisponível para reservar!')     //{Debug}\\
             alert('Quantidade indisponível para empréstimo! ')
             return false;
           }
@@ -209,25 +220,6 @@ export class EventualComponent implements OnInit {
     }
     return true;
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
   // events
@@ -298,24 +290,29 @@ export class EventualComponent implements OnInit {
     this.formValidation.get('habilitaOutros')?.valueChanges.subscribe((value) => {
 
       if (value) {
-        console.log('habilitado')
+        // console.log('habilitado')  //{Debug}\\
         selectEquipamentos?.disable()
         selectEquipamentos?.reset()
         habilitaOutrosControl?.enable()
         this.setStatusInputHabilitado = true
-        console.log('status do input outros ', this.getStatusInputHabilitado)  //{Debug}\\
+        // console.log('status do input outros ', this.getStatusInputHabilitado)  //{Debug}\\
         return true;
       } else {
-        console.log('desabilitado')
+        // console.log('desabilitado')  //{Debug}\\
         selectEquipamentos?.enable()
         habilitaOutrosControl?.reset()
         habilitaOutrosControl?.disable()
         this.setStatusInputHabilitado = false
-        console.log('status do input outros ', this.getStatusInputHabilitado)  //{Debug}\\
+        // console.log('status do input outros ', this.getStatusInputHabilitado)  //{Debug}\\
         return false;
       }
     })
     return false;
+  }
+
+  protected onDescricaoValorChange(descricao: string): void {
+    this.valorDescricao = descricao;
+    // console.log('Valor de descricao: ',descricao)
   }
 
 
@@ -338,6 +335,7 @@ export class EventualComponent implements OnInit {
     let validacaoQuantidade = this.validacaoDeQuantidade();
     this.onCheckboxOutrosChange();
     let equipamentoEscolhido = '';
+    let equipamentoEscolhidoApresentacao = '';
     let campoHabilitado = this.getStatusInputHabilitado;
 
     const validacaoDoCampoOutros =
@@ -353,19 +351,24 @@ export class EventualComponent implements OnInit {
      return;
     }
     else {
-      console.log('Validação quantidade passou')
-      console.log('Entrado no else após validação de quantidade');
+      // console.log('Validação quantidade passou')
+      // console.log('Entrado no else após validação de quantidade');
 
       if(campoHabilitado) {
         if (validacaoDoCampoOutros) {
           alert('Este equipamento não será monitorado no painel de estoque. Para isso cadastre esse novo equipamentos em \"Configurações > Adicionar novo equipamento\"')
           equipamentoEscolhido =  this.getOutros.value;
+          equipamentoEscolhido.toUpperCase()
+          let valorCampoOutros = this.getOutros.value;
+          equipamentoEscolhidoApresentacao = this.formatacaoDeTextoApresentacaoOutros(valorCampoOutros);
           // console.log('Valor do campo Outros coletado: ', equipamentoEscolhido);   //{Debug}\\
         } else {
           return;
         }
       } else {
         equipamentoEscolhido = valorEquipamentoSelecionado;
+        equipamentoEscolhidoApresentacao = this.valorDescricao;
+        // console.log(this.valorDescricao) //{Debug}\\
       }
 
 
@@ -378,11 +381,21 @@ export class EventualComponent implements OnInit {
         quantidade: quantidade
       }
 
+       this. objectEquipamentosApresentacao = {
+        id: this.equipamentoContId,
+        descricao: equipamentoEscolhidoApresentacao,
+        quantidade: quantidade
+      }
+
+
+
+
+      // this.formatadorDeListaParaApresentacao(this.objectEquipamentosApresentacao)
+      this.listaEquipamentoApresentacao.push(this.objectEquipamentosApresentacao);
       this.listaEquipamento.push(this.objectEquipamentos)
 
-      this.formatadorDeListaEquipamento(this.objectEquipamentos)
 
-      console.log(this.listaEquipamento);  //{Debug}\\
+      // console.log('Valor adicionado a lista original ', this.listaEquipamento);  //{Debug}\\
 
       this.formValidation.get('equipamentoSelect')!.reset();
       this.formValidation.get('quantidadeSelect')!.reset();
@@ -409,13 +422,18 @@ export class EventualComponent implements OnInit {
             const idLi = liElement.dataset['id'];   // get id for remove
             if (idLi !== undefined) {
               const id = parseInt(idLi, 10);        // convert this for type number
+              // arrisquei mudar aqui
               this.listaEquipamento.forEach((objectElements, item) => {
                 if (objectElements.id === id) {
                     this.listaEquipamento.splice(item, 1);
+                    this.listaEquipamentoApresentacao.splice(item, 1);
                 }
               })
 
-              console.log(this.listaEquipamento)  //{Debug}\\
+              console.log('Lista de equipamento após delete ',this.listaEquipamento)  //{Debug}\\
+              console.log('Lista de equipamento de apresentação após delete ',this.listaEquipamentoApresentacao)  //{Debug}\\
+              liElement.parentNode?.removeChild(liElement)
+
             }
         }
     }
@@ -430,6 +448,21 @@ export class EventualComponent implements OnInit {
       element.parentNode?.removeChild(element);
     })
     // console.log('Lista de LI ',elementLi)  //{Debug}\\
+  }
+
+  private formatacaoDeTextoApresentacaoOutros(texto: string): string {
+    console.log('Entrado na formatação do campo \'Outros\' com o valor passado: ',texto)
+    var espaco = texto.split(' ')
+    var mapaDoTexto = espaco.map((palavra) => {
+      var primeiraLetra = palavra.charAt(0).toUpperCase();
+      var demaisPalavras = palavra.slice(1);
+      return primeiraLetra + demaisPalavras;
+    });
+
+    var juntandoTexto = mapaDoTexto.join(' ');
+    console.log(juntandoTexto)
+
+    return juntandoTexto;
   }
 
 
@@ -452,7 +485,7 @@ export class EventualComponent implements OnInit {
 
       const validation = this.formValidationService
         .validacaoHoraMaiorEMenor(horaFim, horaInicio, dataIncio, dataFim, this.listaEquipamento);
-      // console.log("A lista não está vazia", this.listaEquipamento) //{Debug}\\
+      // console.log("A lista não está vazia", this.listaEquipamento)     //{Debug}\\
 
       // Retorna o campo dataDevolucao ajustada caso o valor de horas seja inaceitável
       if (this.formValidation.controls.hasOwnProperty('dataDevolucao')) {
@@ -476,7 +509,7 @@ export class EventualComponent implements OnInit {
 
         }
 
-        console.log(this.reservaDTO)
+        // console.log(this.reservaDTO)     //{Debug}\\
 
         try {
 
@@ -497,6 +530,8 @@ export class EventualComponent implements OnInit {
 
             this.limpartListaDeEquipamentoSubmit()
 
+            alert('Reserva realizada com sucesso !!!')
+
             // console.log('Resposta do servidor:', response);
             this.router.navigate(['reservas/redirect']).then(() => {
               window.location.reload();
@@ -510,8 +545,8 @@ export class EventualComponent implements OnInit {
           console.error('Erro ao tentar criar reserva:', error);
         }
 
-        console.log('Reserva realizada com sucesso !!!')
-        console.log(this.reservaDTO)
+
+        // console.log(this.reservaDTO)     //{Debug}\\
 
       } else {
         console.error('Falha na validação dos métodos')
@@ -542,31 +577,6 @@ export class EventualComponent implements OnInit {
   }
 
 
-  /**
-   * Este métido vai receber a lista
-   * @param list
-   */
-  private formatadorDeListaEquipamento(object: {id:number, descricao:string, quantidade:number}): void {
-
-    // RECEBO O OBJETO
-    //  OK
-
-    // FORMATO O VALOR DA DESCRIÇÃO
-    // object.descricao = object.descricao.charAt(0).toUpperCase() + object.descricao.slice(1).toLowerCase();
-
-    // ADICIONO ESTE OBJETO A LISTA USANDO PUSH
-    this.listaEquipamentoFormatada.push(object)
-
-
-
-
-
-
-
-
-
-  }
-
 
 
 // getters
@@ -576,6 +586,8 @@ getListaEquipamentoRevisados() {
   this.listaEquipamento.forEach(deleteId => {
     delete deleteId.id;
   })
+
+
 
   return this.listaEquipamento;
 }

@@ -13,7 +13,7 @@ export class ServiceApiCreateReservation {
 
     createEventualReservation(JSONData: Object): Promise<Object> {
 
-        console.log('JSONData antes de enviar:', JSONData);
+        // console.log('JSONData antes de enviar:', JSONData);     //{Debug}\\
 
         return new Promise<Object>((resolve, reject) => {
             this.http.post<Object>(this.EVENTUAL, JSONData).subscribe({

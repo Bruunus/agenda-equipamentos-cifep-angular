@@ -220,10 +220,10 @@ export class FormValidation {
    * Metodo responsável por verificar se a data de devolução fornecia cai em uma sexta-feira com retorno booleano
    */
   programacaoDeHorasParaSextaFeiraDataFim(dataDevolucao: string): boolean {
-    console.log('Alterado data de devolução {Debug}')  //{Debug}\\
+    // console.log('Alterado data de devolução {Debug}')  //{Debug}\\
     const dataDevolucaoMoment = moment(dataDevolucao, 'YYYY-MM-DD');
     const dataDevolucaoToString = dataDevolucaoMoment.format('dddd');
-    console.log('Dia recebido foi ', dataDevolucaoToString)  //{Debug}\\
+    // console.log('Dia recebido foi ', dataDevolucaoToString)  //{Debug}\\
     if(dataDevolucaoToString === 'Friday') {
       return true
     } else {
