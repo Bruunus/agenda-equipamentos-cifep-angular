@@ -145,11 +145,12 @@ export class FormValidation {
     const dataInicioNaoPodeSerMenorADoSistema = this.validacaoDataMenorParaDataAtual(dataInicio, dataFim)
     const dataFimNaoPodeSerManiorADataInicio = this.validacaoDataMaiorEMenor(dataFim, dataInicio)
     const validacaoHoraFim = this.validacaoHoraFim(horaFim, horaInicio, dataInicio, dataFim)
+    const horasIguaisNãoPodem = this.horasNãoPodemSerIguais(horaInicio, horaFim, dataInicio, dataFim)
 
 
     if (
       dataInicioNaoPodeSerMenorADoSistema && dataFimNaoPodeSerManiorADataInicio && validacaoHoraFim &&
-      validarSeListaDeEquipamentosEstaVazia
+      validarSeListaDeEquipamentosEstaVazia && horasIguaisNãoPodem
     ) {
       return true
     }
@@ -228,6 +229,16 @@ export class FormValidation {
       return true
     } else {
       return false
+    }
+  }
+
+
+  private horasNãoPodemSerIguais(horaInicio: string, horaFim: string, dataInicio: string, dataFim: string): boolean {
+    if (dataInicio === dataFim  && horaFim === horaInicio) {
+      alert('A hora de retirada não pode ser igual a hora de devolução se a devolução é para o mesmo em que foi retirado.')
+      return false;
+    } else {
+      return true;
     }
   }
 
