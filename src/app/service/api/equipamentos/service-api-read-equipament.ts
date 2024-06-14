@@ -1,3 +1,4 @@
+import { EstoqueInterface } from './../../model/typing-interfaces/estoque-interface';
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Subject, Subscription,  interval, Observable, takeUntil, switchMap, throwError, tap, delayWhen, timer } from "rxjs";
@@ -28,12 +29,12 @@ export class ServiceApiReadEquipament {
    * dar trabalho a classe que o invoca.
    * @returns
    */
-  getListEquipaments(): Promise<any[]> {
+  getListEquipaments(): Promise<EstoqueInterface[]> {
 
-    return new Promise<Object[]>((resolve, reject) => {
+    return new Promise<EstoqueInterface[]>((resolve, reject) => {
 
-      const subscription: Subscription = this.http.get<string[]>(this.GET_EQUIPAMENTO_LIST_URL).subscribe({
-        next: (listaDeEquipamentos: any[]) => {
+      const subscription: Subscription = this.http.get<EstoqueInterface[]>(this.GET_EQUIPAMENTO_LIST_URL).subscribe({
+        next: (listaDeEquipamentos: EstoqueInterface[]) => {
           // console.log(listaDeEquipamentos)  //{Debug}\\
           listaDeEquipamentos.sort((a, b) => {
             const descricaoA = a.descricao.toUpperCase();

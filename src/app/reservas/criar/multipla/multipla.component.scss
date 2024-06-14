@@ -2,31 +2,39 @@
 
 /* Styles table list of equipament */
 
-#table-equipamento {
+#table-datas {
     border: 1px solid;
-    width: 370pt;
+    width: 400pt;
     height: 174px;
     max-height: 174px;
 }
 
 
-#table-equipamento thead {
+#table-datas thead {
     border-bottom: 1px solid;
+
+}
+
+#table-datas thead div {
+  margin-left: 0;
+  margin-right: 0;
+  border-right: 1px;
+  border-right-style: solid;
 }
 
 
-#table-equipamento thead th {
+#table-datas thead th {
     padding: 5px;
     background-color: #f7f5f5;
 }
 
-#table-equipamento tbody tr td {
+#table-datas tbody tr td {
     padding: 0;
 }
 
 
-// <ul>
-#table-equipamento tbody tr td ul {
+// altura do frame
+#table-datas tbody tr td ul {
     height: 138px;  // age em conjunto com a altura da table
     max-height: 163px;
     margin: 0 !important;
@@ -37,42 +45,56 @@
 
 
 
+
 // stilo do template
 
-#template-li {
-    padding: 5px;
-    margin: 0;
-    list-style-type: none;
-    border-bottom: 1px solid;
-    // background-color: #c4eee5;
+#template-li-dates {
+  padding: 5px;
+  margin: 0;
+  list-style-type: none;
+  border-bottom: 1px solid;
+  background-color: #EFEFEF;  // cor de fundo de cada item da li
 
 }
-#template-li:hover {
-    background-color: #fcfafa;
+#template-li-dates:hover {
+  // background-color: #fcfafa; Retirado o hover, pretendo deixar assim com o tema de Multipla
 }
 
 
-#template-li td:nth-child(2) {
-    // background-color: #6894e7;
-    // para col-6
-    flex: 0 0 45% !important;
-    max-width: 50% !important;
+#template-li-dates td:nth-child(2) {
+  // background-color: #6894e7;
+
 }
 
 
 // div row
-#template-li td:nth-child(2) div {
-    margin: 0;
+#template-li-dates td:nth-child(2) div {
+  margin: 0;
 }
 
-// span 2
-#template-li td:nth-child(2) div span:nth-child(2) {    
-    padding-left: 6px;
-    padding-right: 5px;
-    border-radius: 3%;
+// button close
+#template-li-dates div:nth-child(3) div span {
+  padding-left: 6px;
+  padding-right: 5px;
+  border-radius: 3%;
 }
-#template-li td:nth-child(2) div span:nth-child(2):hover {
-    cursor: pointer;
-    background-color: tomato;
-    color: #fff;
+
+// button close : hover
+#template-li-dates div:nth-child(3) div span:hover {
+  cursor: pointer;
+  background-color: tomato;
+  color: #fff;
+}
+
+.position-img {
+  padding-left: 4em;
+}
+
+
+
+.pre-agendamento {
+  font-style: italic;
+  font-weight: bold;
+  color: #646464;
+  // color: #484953;
 }

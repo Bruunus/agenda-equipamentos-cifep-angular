@@ -1,19 +1,17 @@
+import { EstoqueInterface } from './../../../service/model/typing-interfaces/estoque-interface';
 import { FormEquipamentoValidationService } from './../../../service/model/formEquipamentoValidationService';
 import { Router } from '@angular/router';
 import { ServiceApiCreateReservation } from './../../../service/api/reservas/service-api-create-reservation';
 import { FormValidation } from './../../../service/model/formValidation';
 
-import {  ChangeDetectorRef, Component, OnInit, } from '@angular/core';
+import { Component, OnInit, } from '@angular/core';
 import { HorasService } from "../../../service/model/horasService";
-import { EquipamentoInterface } from 'src/app/service/model/equipamento-interface';
+import { EquipamentoInterface } from 'src/app/service/model/typing-interfaces/equipamento-interface';
 import { ServiceApiReadEquipament } from 'src/app/service/api/equipamentos/service-api-read-equipament';
 import { OptionQtdService } from 'src/app/service/model/optionQtdService';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import * as moment from 'moment';
 import { Subscription } from 'rxjs';
-import { ConfiguracaoComponent } from 'src/app/configuracao/configuracao.component';
-
-
 
 
 @Component({
@@ -32,7 +30,7 @@ export class EventualComponent implements OnInit {
 
 
   // objects
-  reservaDTO = {}
+  reservaDTO = {setor: FormControl, nome: FormControl, sobrenome: FormControl, equipamentos: [{}], agenda: [{}]}
   objectEquipamentos : {id: number, descricao: string, quantidade: number } = {id:0, descricao:'', quantidade:0}
   objectEquipamentosApresentacao: {id: number, descricao: string, quantidade: number } = {id:0, descricao:'', quantidade:0}
   optionsHours: { descricao: string, valor: string }[] = [] as { descricao: string, valor: string }[];
@@ -43,7 +41,7 @@ export class EventualComponent implements OnInit {
   equipamentos: EquipamentoInterface[] = [];
   listaEquipamento: Array<any> = [];
   listaEquipamentoApresentacao: Array<any> = [];
-  optionsListaEquipamento: any[] = [];
+  optionsListaEquipamento: EstoqueInterface[] = [];
   listaEquipamentoQuantidade: any[] = [];
 
   // vars
@@ -136,7 +134,7 @@ export class EventualComponent implements OnInit {
    */
   private loadListEquipaments(): void {
     this.serviceApiReadEquipament.getListEquipaments()
-      .then((lista: any[]) => {
+      .then((lista: EstoqueInterface[]) => {
         //  console.log(lista)   //{debug}\\
         this.optionsListaEquipamento = lista;
 
@@ -470,7 +468,7 @@ export class EventualComponent implements OnInit {
   /**
    * Método final para salvar a reserva
    */
-  protected processForm() {
+  protected processForm(): void {
 
     const dataIncio = this.formValidation.get('dataRetirada')?.value;
     const dataFim = this.formValidation.get('dataDevolucao')?.value;

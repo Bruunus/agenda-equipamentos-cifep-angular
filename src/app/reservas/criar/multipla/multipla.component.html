@@ -2,36 +2,22 @@
 <div>
     <h3>Reservas Múltiplas</h3>
 
-    <form>
+    <form style="margin-bottom: 7em;" (ngSubmit)="processForm()" [formGroup]="formValidation" #formDir="ngForm">
 
-        <label for="responsavel">Responsável</label> &nbsp;
-        <input type="text" name="responsavel">
+      <label for="responsavel">Nome</label> &nbsp;
+      <input type="text" name="nome" formControlName="nome" required maxlength="40">
 
-        <br>
+      <br>
 
-        <label for="setor">Setor</label> &nbsp;
-        <input type="text" name="setor">
+      <label for="sobrenome">Sobrenome</label> &nbsp;
+      <input #valid type="text" name="sobrenome" formControlName="sobrenome" required maxlength="40">
 
-        <br><br>
+      <br>
 
-        <label for="dataRetirada">Data início:</label> &nbsp;
-        <input type="date" name="dataRetirada" > &nbsp;
+      <label for="setor">Setor</label> &nbsp;
+      <input #valid type="text" name="setor" formControlName="setor" required maxlength="40">
 
-        <label for="hr-agendamento">Hora início:</label>
-        <select name="horaRetirada">
-            <option value="-- select --">-- select --</option>
-        </select>
-
-        <br>
-
-        <label for="dt-agendamento">Data fim:</label> &nbsp;
-        <input style="margin-left: 1.06em;" type="date" name="dataDevolucao"> &nbsp;
-
-        <label for="hr-agendamento">Hora fim:</label> &nbsp;
-        <select  name="horaDevolucao">
-            <option value="-- select --">-- select --</option>
-        </select>
-
+      <br><br>
 
         <table>
 
@@ -39,12 +25,72 @@
                 <th>Horas Múltiplas</th>
             </thead>
 
+            <tbody>
+
+              <tr>
+                <td><label for="dataRetirada">Data início:</label></td>
+                <td><input #valid type="date" formControlName="dataRetirada" required></td>
+
+
+                <td><label for="hr-agendamento">Hora início:</label></td>
+                <td>
+                  <select #valid name="horaRetirada"  formControlName="horaInicioSelect" required>
+                    <option name="horaRetirada" *ngFor="let option of optionsHours" [value]="option.valor">{{ option.descricao }}</option>
+                  </select>
+                </td>
+
+
+                <td rowspan="2" style="padding-left: 10px;">
+                  <button style="height: 70px">Adicionar</button>
+                </td>
+              </tr>
+
+              <tr>
+                <td><label for="dataDevolucao">Data fim:</label></td>
+                <td><input type="date" name="dataDevolucao"></td>
+                <td><label for="hr-agendamento">Hora fim:</label></td>
+                <td>
+                  <select name="horaDEvolucao">
+                    <option value="-- select --">-- select --</option>
+                  </select>
+                </td>
+
+              </tr>
+
+            </tbody>
+
         </table>
 
+        <br>
 
+        <table id="table-datas">
+          <thead>
+            <th style="width: 12.7em;">Retirada</th>
+            <th>Devolução</th>
+          </thead>
+          <tbody>
+            <tr>
+              <td colspan="2">
+                <ul>
+                  <!-- template -->
+                  <li id="template-li-dates" class="row">
 
+                    <div class="col-4 pl-0 pre-agendamento">14/05/2024 às 14:00</div>
+                    <div class="col-4 pre-agendamento">14/05/2024 às 18:00</div>
+                    <div class="col">
+                      <div class="row justify-content-between">
+                        <img class="position-img" src="assets/icons/accept-icon-teste1.png" alt="Ícone 1">
+                        <span class="delete">x</span>
+                      </div>
+                    </div>
 
-
+                  </li>
+                  <!-- template -->
+                </ul>
+              </td>
+            </tr>
+          </tbody>
+        </table>
 
         <br><br><br>
 
@@ -66,9 +112,9 @@
               <td>
                 <button>Adicionar</button>
               </td>
-    
+
             </tr>
-       
+
         </table>
 
         <br>
@@ -87,11 +133,11 @@
                     <li id="template-li" class="row">
                       <td class="col"></td>
                       <td class="col-6">
-                        <div class="row justify-content-between">  
+                        <div class="row justify-content-between">
                             <span></span>
                             <span class="delete">x</span>
                         </div>
-                      </td>    
+                      </td>
                     </li>
                     <!-- template -->
                   </ul>
@@ -100,9 +146,39 @@
             </tbody>
           </table>
 
-          
+
+
+      <button type="submit" style="width: 150px; margin-block-start: 50px;">Criar</button>
+      <br>
+
     </form>
 
 
 
 </div>
+
+
+
+<!-- criada -->
+    <!-- executando -->
+    <!-- finalizada -->
+    <!-- rollback -->
+
+<table>
+  <thead>
+    <tr class="left;" style="padding: 7pt;"><th colspan="3">Sprints</th></tr>
+    <tr>
+      <th class="left;">Sprint</th>
+      <th class="left;">Iniciado</th>
+      <th class="left;">Finalizado</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="">
+      <td>
+         Aguardando ...
+      <td></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
