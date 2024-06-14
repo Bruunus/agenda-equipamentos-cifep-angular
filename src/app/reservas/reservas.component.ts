@@ -21,7 +21,7 @@ export class ReservasComponent implements OnInit {
   error: any;
 
 
-  constructor(private http: HttpClient, private serviceApi: ServiceApiRead, private route: ActivatedRoute ) {}
+  constructor(private http: HttpClient, private serviceApi: ServiceApiRead, private route: ActivatedRoute) {}
 
 
   ngOnInit(): void {

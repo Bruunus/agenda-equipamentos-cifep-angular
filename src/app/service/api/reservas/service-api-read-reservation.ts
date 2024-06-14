@@ -4,7 +4,10 @@ import { Injectable } from "@angular/core";
 export class ServiceApiReadReservation {
 
 
-    
+
+
+
+  //  cria um metodo que car
 
 
 }
