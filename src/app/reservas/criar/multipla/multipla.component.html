@@ -41,17 +41,17 @@
 
 
                 <td rowspan="2" style="padding-left: 10px;">
-                  <button style="height: 70px">Adicionar</button>
+                  <button (click)="adicionarAgenda($event)" style="height: 70px">Adicionar</button>
                 </td>
               </tr>
 
               <tr>
                 <td><label for="dataDevolucao">Data fim:</label></td>
-                <td><input type="date" name="dataDevolucao"></td>
+                <td><input #valid type="date" formControlName="dataDevolucao" required></td>
                 <td><label for="hr-agendamento">Hora fim:</label></td>
                 <td>
-                  <select name="horaDEvolucao">
-                    <option value="-- select --">-- select --</option>
+                  <select name="horaDEvolucao" formControlName="horaDevolucaoSelect" required>
+                    <option name="horaRetirada" *ngFor="let option of optionsHours" [value]="option.valor">{{ option.descricao }}</option>
                   </select>
                 </td>
 
@@ -63,6 +63,7 @@
 
         <br>
 
+        <!-- Tabelas de exibição das datas - template -->
         <table id="table-datas">
           <thead>
             <th style="width: 12.7em;">Retirada</th>
@@ -73,14 +74,19 @@
               <td colspan="2">
                 <ul>
                   <!-- template -->
-                  <li id="template-li-dates" class="row">
+                  <li id="template-li-dates" class="row"
+                  *ngFor="let agenda of listaAgendaApresentacao; let i = index" [attr.data-id]="agenda.id">
 
-                    <div class="col-4 pl-0 pre-agendamento">14/05/2024 às 14:00</div>
-                    <div class="col-4 pre-agendamento">14/05/2024 às 18:00</div>
-                    <div class="col">
+                    <div class="col-4 pl-0 pre-agendamento">
+                      {{agenda.dataRetirada | date: 'dd/MM/yyyy'}} às {{agenda.horaRetirada}}
+                    </div>
+                    <div class="col-5 pre-agendamento">
+                      {{agenda.dataDevolucao | date: 'dd/MM/yyyy'}} às {{agenda.horaDevolucao}}
+                    </div>
+                    <div class="col-3">
                       <div class="row justify-content-between">
                         <img class="position-img" src="assets/icons/accept-icon-teste1.png" alt="Ícone 1">
-                        <span class="delete">x</span>
+                        <span (click)="removerAgenda($event)" class="delete">x</span>
                       </div>
                     </div>
 
@@ -100,7 +106,7 @@
                 <label for="equipamento">Equipamento</label>
                 <select name="equipamento">
                   <option value=""></option>
-                  <option value="-- select --">-- select --</option>
+                  <option value="-- select --">-- select --</option>  <CONTINUAR A CONFIGURAÇÃO AQUI>
                 </select>
               </td>
               <td>

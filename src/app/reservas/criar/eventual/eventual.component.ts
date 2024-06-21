@@ -1,4 +1,10 @@
-import { EstoqueInterface } from './../../../service/model/typing-interfaces/estoque-interface';
+import { EstoquePollInterface } from './../../../service/model/typing-interfaces/equipamento/estoque-poll-interface';
+// import { EquipamentoInterface } from 'src/app/service/model/typing-interfaces/equipamento-interface';
+import { EquipamentoInterface } from 'src/app/service/model/typing-interfaces/equipamento/equipamento-interface';
+// import { EquipamentoInterface } from 'src/app/service/model/typing-interfaces/equipamento/equipamento-interface';
+
+
+import { EstoqueInterface } from '../../../service/model/typing-interfaces/equipamento/estoque-interface';
 import { FormEquipamentoValidationService } from './../../../service/model/formEquipamentoValidationService';
 import { Router } from '@angular/router';
 import { ServiceApiCreateReservation } from './../../../service/api/reservas/service-api-create-reservation';
@@ -6,12 +12,13 @@ import { FormValidation } from './../../../service/model/formValidation';
 
 import { Component, OnInit, } from '@angular/core';
 import { HorasService } from "../../../service/model/horasService";
-import { EquipamentoInterface } from 'src/app/service/model/typing-interfaces/equipamento-interface';
 import { ServiceApiReadEquipament } from 'src/app/service/api/equipamentos/service-api-read-equipament';
 import { OptionQtdService } from 'src/app/service/model/optionQtdService';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import * as moment from 'moment';
 import { Subscription } from 'rxjs';
+import { ReservaEventualInterface } from 'src/app/service/model/typing-interfaces/reservaDTO/reserva-eventual-interface';
+import { Deletar } from 'src/app/service/model/reservas/deletar';
 
 
 @Component({
@@ -28,9 +35,24 @@ export class EventualComponent implements OnInit {
   //formControl
   habilitaOutros: FormControl = new FormControl(false);
 
+  equipamentos: Array<any>[] = [];  // Tipo any por conta da manipulação do id para ficar de acordo com a regra de negócio
+
 
   // objects
-  reservaDTO = {setor: FormControl, nome: FormControl, sobrenome: FormControl, equipamentos: [{}], agenda: [{}]}
+  reservaDTO: ReservaEventualInterface = {
+    setor: new FormControl,
+    nome: new FormControl,
+    sobrenome: new FormControl,
+    equipamentos: this.equipamentos
+    ,
+    agenda: [{
+      dataRetirada: new FormControl,
+      horaRetirada: new FormControl,
+      dataDevolucao: new FormControl,
+      horaDevolucao: new FormControl
+    }]
+  }
+
   objectEquipamentos : {id: number, descricao: string, quantidade: number } = {id:0, descricao:'', quantidade:0}
   objectEquipamentosApresentacao: {id: number, descricao: string, quantidade: number } = {id:0, descricao:'', quantidade:0}
   optionsHours: { descricao: string, valor: string }[] = [] as { descricao: string, valor: string }[];
@@ -38,11 +60,10 @@ export class EventualComponent implements OnInit {
   options: { descricao: string, valor: string }[] = [] as { descricao: string, valor: string }[];
 
   // lists
-  equipamentos: EquipamentoInterface[] = [];
-  listaEquipamento: Array<any> = [];
-  listaEquipamentoApresentacao: Array<any> = [];
-  optionsListaEquipamento: EstoqueInterface[] = [];
-  listaEquipamentoQuantidade: any[] = [];
+  listaEquipamento: Array<any> = [];    // Tipo any por conta da manipulação do id para ficar de acordo com a regra de negócio
+  listaEquipamentoApresentacao: Array<any> = [];    // Tipo any por conta da manipulação do id para ficar de acordo com a regra de negócio
+  optionsListaEquipamento: EstoqueInterface[] = [{id: 0, descricao: '', valor: '', quantidade: 0}];
+  listaEquipamentoQuantidade: EstoquePollInterface[] = [];
 
   // vars
   equipamentoContId = 0;
@@ -59,7 +80,7 @@ export class EventualComponent implements OnInit {
   constructor(private horasService: HorasService, private serviceApiReadEquipament: ServiceApiReadEquipament,
     private optionQtdService: OptionQtdService, private formValidationService: FormValidation,
     private serviceApiCreateReservation: ServiceApiCreateReservation, private router: Router,
-    private formEquipamentoValidationService: FormEquipamentoValidationService
+    private formEquipamentoValidationService: FormEquipamentoValidationService, private deletarData: Deletar
   ) { this.dataAtual = moment().format('YYYY-MM-DD') }
 
 
@@ -130,15 +151,11 @@ export class EventualComponent implements OnInit {
   }
 
   /**
-   * API de carregamento dos equipamentos
+   * API de carregamento dos equipamentos direto da api onde o metodo loadListEquipaments aguarda
+   * a lista do servidor.
    */
-  private loadListEquipaments(): void {
-    this.serviceApiReadEquipament.getListEquipaments()
-      .then((lista: EstoqueInterface[]) => {
-        //  console.log(lista)   //{debug}\\
-        this.optionsListaEquipamento = lista;
-
-      })
+  private async loadListEquipaments(): Promise<void> {
+    this.optionsListaEquipamento = await this.serviceApiReadEquipament.loadListEquipaments();
   }
 
 
@@ -185,7 +202,7 @@ export class EventualComponent implements OnInit {
 
     this.subscription = this.serviceApiReadEquipament.getListEquipamentsPoll()
       .subscribe(
-        (lista: any[]) => {
+        (lista: EstoquePollInterface[]) => {
           this.listaEquipamentoQuantidade = lista
           // console.log('Recebendo lista de equipamentos... ', this.listaEquipamentoQuantidade)  //{Debug}\\
         })
@@ -207,7 +224,9 @@ export class EventualComponent implements OnInit {
         // console.log('Valor do form ', this.getQuantidadeSelect.value)    //{Debug}\\
 
         if(!this.getStatusInputHabilitado) {
-          if(this.listaEquipamentoQuantidade[i].quantidade < this.getQuantidadeSelect.value)  {
+
+          const quantidadeNumber: number = parseInt(this.getQuantidadeSelect.value, 10);
+          if(this.listaEquipamentoQuantidade[i].quantidade < quantidadeNumber)  {
             // console.log('Quantidade indisponível para reservar!')     //{Debug}\\
             alert('Quantidade indisponível para empréstimo! ')
             return false;
@@ -324,7 +343,7 @@ export class EventualComponent implements OnInit {
    * do contrário o andamento do método é bloqueado impedindo o avanço no preenchimento do
    * formulário.
    */
-  protected adicionarEquipamento(event: Event) {
+  protected adicionarEquipamento(event: Event): void {
 
     event.preventDefault()
 
@@ -402,44 +421,20 @@ export class EventualComponent implements OnInit {
   }
 
 
+
+
+
   /**
-   * Método para removar um equipamento pelo botão fechar. Remove tanto do DOM
-   * quanto da lista
+   * Método para remover um equipamento pelo botão fechar. É invocado um metodo do modelo de reservas e,
+   * realiza a remoção da lista original e da lista de apresentação
    */
-  protected removerEquipamento(event: Event) {
-
-    // alert('remover item')    //{debug}\\
-    const deletar = (event.target as HTMLElement).classList.contains('delete');
-    // console.log('O id foi datectado? ',deletar)   //{debug}\\
-
-    if (deletar) {
-      const liElement = (event.target as HTMLElement).closest('li');
-      console.log(liElement)  //{debug}\\
-
-      if (liElement) {
-            const idLi = liElement.dataset['id'];   // get id for remove
-            if (idLi !== undefined) {
-              const id = parseInt(idLi, 10);        // convert this for type number
-              // arrisquei mudar aqui
-              this.listaEquipamento.forEach((objectElements, item) => {
-                if (objectElements.id === id) {
-                    this.listaEquipamento.splice(item, 1);
-                    this.listaEquipamentoApresentacao.splice(item, 1);
-                }
-              })
-
-              console.log('Lista de equipamento após delete ',this.listaEquipamento)  //{Debug}\\
-              console.log('Lista de equipamento de apresentação após delete ',this.listaEquipamentoApresentacao)  //{Debug}\\
-              liElement.parentNode?.removeChild(liElement)
-
-            }
-        }
-    }
-
+  protected removerEquipamento(event: Event): void {
+    event.preventDefault();
+    this.deletarData.deletarElemento(event, this.listaEquipamento, this.listaEquipamentoApresentacao)
   }
 
 
-  private limpartListaDeEquipamentoSubmit() {
+  private limpartListaDeEquipamentoSubmit(): void {
     var elementsLi = document.querySelectorAll('#table-equipamento tbody tr td ul li');
 
     elementsLi.forEach(function(element) {
@@ -507,7 +502,7 @@ export class EventualComponent implements OnInit {
 
         }
 
-        // console.log(this.reservaDTO)     //{Debug}\\
+        console.log(this.reservaDTO)     //{Debug}\\
 
         try {
 
@@ -579,13 +574,11 @@ export class EventualComponent implements OnInit {
 
 // getters
 
-getListaEquipamentoRevisados() {
+getListaEquipamentoRevisados(): Array<any>[]  {
 
   this.listaEquipamento.forEach(deleteId => {
     delete deleteId.id;
   })
-
-
 
   return this.listaEquipamento;
 }
@@ -593,51 +586,50 @@ getListaEquipamentoRevisados() {
 
 
 
-get nome() {
+get nome(): AbstractControl<FormControl, any> {
   return this.formValidation.get('nome')!;
 }
 
-get sobrenome() {
+get sobrenome(): AbstractControl<FormControl, any> {
   return this.formValidation.get('sobrenome')!;
 }
 
-get setor() {
+get setor(): AbstractControl<FormControl, any> {
   return this.formValidation.get('setor')!;
 }
 
-get dataRetirada() {
+get dataRetirada(): AbstractControl<FormControl, any> {
   return this.formValidation.get('dataRetirada')!;
 }
 
-get horaInicioSelect() {
+get horaInicioSelect(): AbstractControl<FormControl, any> {
   return this.formValidation.get('horaInicioSelect')!;
 }
 
-get dataDevolucao() {
+get dataDevolucao(): AbstractControl<FormControl, any> {
   return this.formValidation.get('dataDevolucao')!;
 }
 
-get horaDevolucaoSelect() {
+get horaDevolucaoSelect(): AbstractControl<FormControl, any> {
   return this.formValidation.get('horaDevolucaoSelect')!;
 }
 
-get getEquipamentoSelect() {
+get getEquipamentoSelect(): AbstractControl<string, any> {
   return this.formValidation.get('equipamentoSelect')!;
 }
 
-get getQuantidadeSelect() {
+get getQuantidadeSelect(): AbstractControl<string, any> {
   return this.formValidation.get('quantidadeSelect')!;
 }
 
-get getOutros() {
+get getOutros(): AbstractControl<string, any> {
   return this.formValidation.get('outros')!;
 }
 
-get getEquipamentoSelectInput() {
-  return this.formValidation.get('equipamentoSelect')?.disabled;
-}
 
-get getStatusInputHabilitado() {
+
+
+get getStatusInputHabilitado(): boolean {
   return this.status_input_habilitado
 }
 

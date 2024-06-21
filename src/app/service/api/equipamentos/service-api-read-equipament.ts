@@ -1,4 +1,5 @@
-import { EstoqueInterface } from './../../model/typing-interfaces/estoque-interface';
+import { EstoquePollInterface } from './../../model/typing-interfaces/equipamento/estoque-poll-interface';
+import { EstoqueInterface } from '../../model/typing-interfaces/equipamento/estoque-interface';
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Subject, Subscription,  interval, Observable, takeUntil, switchMap, throwError, tap, delayWhen, timer } from "rxjs";
@@ -66,12 +67,12 @@ export class ServiceApiReadEquipament {
    * e modelados conforme a necessidade da classe que o invoca, podendo trabalhar de várias formas.
    * @returns lista observable
    */
-  getListEquipamentsPoll(): Observable<any[]> {
+  getListEquipamentsPoll(): Observable<EstoquePollInterface[]> {
     this.setStatus_connection = false
     return interval(1500).pipe(
       switchMap(() => {
-        return this.http.get<any[]>(this.GET_EQUIPAMENTO_ESTOQUE_LIST_URL).pipe(
-          tap((equipamentos: any[]) => {
+        return this.http.get<EstoquePollInterface[]>(this.GET_EQUIPAMENTO_ESTOQUE_LIST_URL).pipe(
+          tap((equipamentos: EstoquePollInterface[]) => {
             // Implemente o código para manipular os equipamentos recebidos
             this.setStatus_connection = true
             // console.log(equipamentos);   //{Debug}\\
@@ -87,6 +88,16 @@ export class ServiceApiReadEquipament {
   }
 
 
+  /**
+   * API de carregamento dos equipamentos
+   */
+  public async loadListEquipaments(): Promise<EstoqueInterface[]> {
+    return this.getListEquipaments()
+      .then((lista: EstoqueInterface[]) => {
+        // console.log(lista)   //{debug}\\
+        return lista;
+      });
+  }
 
 
 

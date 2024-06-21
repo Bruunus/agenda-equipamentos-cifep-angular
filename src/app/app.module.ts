@@ -10,7 +10,7 @@ import { CriarComponent } from './reservas/criar/criar.component';
 import { EditarViewComponent } from './reservas/editar-view/editar.component';
 import { HistoricoComponent } from './reservas/historico/historico.component';
 import { EditarChangeComponent } from './reservas/editar-change/editar-change.component';
-import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MultiplaComponent } from './reservas/criar/multipla/multipla.component';
 import { AnualComponent } from './reservas/criar/anual/anual.component';
 
