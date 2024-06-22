@@ -18,7 +18,7 @@ import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/fo
 import * as moment from 'moment';
 import { Subscription } from 'rxjs';
 import { ReservaEventualInterface } from 'src/app/service/model/typing-interfaces/reservaDTO/reserva-eventual-interface';
-import { Deletar } from 'src/app/service/model/reservas/deletar';
+import { DeletarService } from 'src/app/service/model/reservas/deletar-service';
 
 
 @Component({
@@ -80,7 +80,7 @@ export class EventualComponent implements OnInit {
   constructor(private horasService: HorasService, private serviceApiReadEquipament: ServiceApiReadEquipament,
     private optionQtdService: OptionQtdService, private formValidationService: FormValidation,
     private serviceApiCreateReservation: ServiceApiCreateReservation, private router: Router,
-    private formEquipamentoValidationService: FormEquipamentoValidationService, private deletarData: Deletar
+    private formEquipamentoValidationService: FormEquipamentoValidationService, private deletarData: DeletarService
   ) { this.dataAtual = moment().format('YYYY-MM-DD') }
 
 
@@ -339,8 +339,8 @@ export class EventualComponent implements OnInit {
    * salva do submit do formulário. Existe algumas validações necessárias que foram tratadas
    * diretamente na classe para melhor performance em tempo de execução. Um equipamento não pode
    * ser adicionado sem antes ser validado. Um equipamento não pode ser adicionado 2 vezes e a
-   * quantidade antes de adicionar é validada no estoque se a quantidade passada tem disponível,
-   * do contrário o andamento do método é bloqueado impedindo o avanço no preenchimento do
+   * quantidade antes de adicionar é validada no estoque, se a quantidade passada tem disponível
+   * é aceita, do contrário o andamento do método é bloqueado impedindo o avanço no preenchimento do
    * formulário.
    */
   protected adicionarEquipamento(event: Event): void {

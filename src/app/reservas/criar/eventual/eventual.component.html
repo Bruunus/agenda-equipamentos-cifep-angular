@@ -118,7 +118,8 @@
         (change)="onDescricaoValorChange(equipamentoValid.options[equipamentoValid.selectedIndex].text)">
           <option value=""></option>
           <option *ngFor="let item of optionsListaEquipamento" [value]="item.valor" >
-            {{ item.descricao }}</option>
+            {{ item.descricao }}
+          </option>
         </select>
       </td>
 

@@ -1,3 +1,4 @@
+import { OptionQtdService } from './../../../service/model/optionQtdService';
 import { ListaAgendaInterface } from './../../../service/model/typing-interfaces/agenda/lista-agenda-interface';
 
 import { EstoqueInterface } from '../../../service/model/typing-interfaces/equipamento/estoque-interface';
@@ -6,7 +7,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormControl, AbstractControl } from '@angular/forms';
 import { HorasService } from 'src/app/service/model/horasService';
 import { ReservaMultipĺaInterface } from 'src/app/service/model/typing-interfaces/reservaDTO/reserva-multipla-interface';
-import { Deletar } from 'src/app/service/model/reservas/deletar';
+import { DeletarService } from 'src/app/service/model/reservas/deletar-service';
 
 @Component({
   selector: 'app-multipla',
@@ -18,22 +19,32 @@ export class MultiplaComponent implements OnInit {
   //  angular
   formValidation!: FormGroup;
 
+  // vars API's
+  optionsListaEquipamento: EstoqueInterface[] = [{id: 0, descricao: '', valor: '', quantidade: 0}];
+
   //  model
   optionsHours: { descricao: string, valor: string }[] = [] as { descricao: string, valor: string }[];
-
+  optionQuantidade: { descricao: string, valor: string } [] = [] as { descricao: string, valor: string }[];
 
   // vars class
-
   idObjectDatas = 0;
   idObjectDatasApresentacao = 0;
-   //reservaDTO = {setor: FormControl, nome: FormControl, sobrenome: FormControl, equipamentos: [{}], agenda: [{}]} tipada
+  equipamentoContId = 0;
+  valorDescricao: string = '';
+  equipamentos: Array<any>[] = [];  // Tipo any por conta da manipulação do id para ficar de acordo com a regra de negócio
+  objectEquipamentos : {id: number, descricao: string, quantidade: number } = {id:0, descricao:'', quantidade:0}
+  objectEquipamentosApresentacao: {id: number, descricao: string, quantidade: number } = {id:0, descricao:'', quantidade:0}
+  listaEquipamento: Array<any> = [];    // Tipo any por conta da manipulação do id para ficar de acordo com a regra de negócio
+  listaEquipamentoApresentacao: Array<any> = [];    // Tipo any por conta da manipulação do id para ficar de acordo com a regra de negócio
+
   reservaDTO: ReservaMultipĺaInterface[] = [{
     nome: new FormControl,
     sobrenome: new FormControl,
     setor: new FormControl,
-    agenda: [{
-    }]
+    agenda: [{}],
+    equipamentos: this.equipamentos
   }];
+
   listaAgenda: ListaAgendaInterface[] = []
   listaAgendaApresentacao: Array<any> = [];
 
@@ -66,12 +77,12 @@ export class MultiplaComponent implements OnInit {
   }
 
 
-  // vars API's
-  optionsListaEquipamento: EstoqueInterface[] = [{id: 0, descricao: '', valor: '', quantidade: 0}];
 
+  constructor(
+    private horasService: HorasService, private deletarDataService: DeletarService, private serviceApiReadEquipament: ServiceApiReadEquipament,
+    private optionQtdService: OptionQtdService
 
-
-  constructor(private horasService: HorasService, private deletarData: Deletar, private serviceApiReadEquipament: ServiceApiReadEquipament) {
+  ) {
     this.objectDatas = {
       id: 0,
       dataRetirada: new FormControl(''),
@@ -81,8 +92,11 @@ export class MultiplaComponent implements OnInit {
     };
    }
 
+
   ngOnInit(): void {
-    this.optionsHours = this.horasService.getHoursSegAQuint();
+    this.optionsHours = this.horasService.getHoursSegAQuint()
+    this.loadListEquipaments()
+    this.getListQuantidade()
 
     this.formValidation = new FormGroup({
       nome: new FormControl('Bruno', [
@@ -99,10 +113,14 @@ export class MultiplaComponent implements OnInit {
       dataRetirada: new FormControl('', [Validators.required]),
       horaInicioSelect: new FormControl('', [Validators.required]),
       dataDevolucao: new FormControl('', [Validators.required]),
-      horaDevolucaoSelect: new FormControl('', [Validators.required])
+      horaDevolucaoSelect: new FormControl('', [Validators.required]),
+      equipamentoSelect: new FormControl('', [Validators.required]),
+      quantidadeSelect: new FormControl('')
     });
   }
 
+
+  // API's services
 
   /**
    * API de carregamento dos equipamentos direto da api onde o metodo loadListEquipaments aguarda
@@ -110,8 +128,46 @@ export class MultiplaComponent implements OnInit {
    */
   protected async loadListEquipaments(): Promise<void> {
     this.optionsListaEquipamento = await this.serviceApiReadEquipament.loadListEquipaments();
+    console.log('Lista de options API ',this.optionsListaEquipamento)
   }
 
+
+  /**
+   * Serviço de carregamento da lista de quantidade da option quantidade
+   */
+  private getListQuantidade(): Object[]   {
+    return this.optionQuantidade = this.optionQtdService.getQuantidade();
+  }
+
+  /**
+   * Método para remover um equipamento pelo botão fechar. É invocado um metodo do modelo de reservas e,
+   * realiza a remoção da lista original e da lista de apresentação
+   */
+  protected removerAgenda(event: Event): void {
+    event.preventDefault();
+    this.deletarDataService.deletarElemento(event, this.listaAgenda, this.listaAgendaApresentacao)
+  }
+
+  /**
+   * Método para remover um equipamento pelo botão fechar. É invocado um metodo do modelo de reservas e,
+   * realiza a remoção da lista original e da lista de apresentação
+   */
+  protected removerEquipamento(event: Event): void {
+    event.preventDefault();
+    this.deletarDataService.deletarElemento(event, this.listaEquipamento, this.listaEquipamentoApresentacao)
+  }
+
+
+  // Events
+
+  protected onDescricaoValorChange(descricao: string): void {
+    this.valorDescricao = descricao;
+    console.log('Valor de descricao: ',descricao)
+  }
+
+
+
+  // Methods class
 
   /**
    *
@@ -149,32 +205,67 @@ export class MultiplaComponent implements OnInit {
   }
 
 
-  /**
-   * Método para remover um equipamento pelo botão fechar. É invocado um metodo do modelo de reservas e,
-   * realiza a remoção da lista original e da lista de apresentação
+   /**
+   * Funcionalidade para adicionar um equipamento à lista de agendamento que será
+   * salva do submit do formulário. Existe algumas validações necessárias que foram tratadas
+   * diretamente na classe para melhor performance em tempo de execução. Um equipamento não pode
+   * ser adicionado sem antes ser validado. Um equipamento não pode ser adicionado 2 vezes e a
+   * quantidade antes de adicionar é validada no estoque se a quantidade passada tem disponível,
+   * do contrário o andamento do método é bloqueado impedindo o avanço no preenchimento do
+   * formulário.
    */
-  protected removerAgenda(event: Event): void {
-    event.preventDefault();
-    this.deletarData.deletarElemento(event, this.listaAgenda, this.listaAgendaApresentacao)
+   protected adicionarEquipamento(event: Event): void {
+
+    event.preventDefault()
+    this.equipamentoContId++
+
+
+    this.objectEquipamentos = {
+      id: this.equipamentoContId,
+      descricao: this.getEquipamentoSelect.value,
+      quantidade: this.getQuantidadeSelect.value
+    }
+
+     this. objectEquipamentosApresentacao = {
+      id: this.equipamentoContId,
+      descricao: this.getEquipamentoSelect.value,
+      quantidade: this.getQuantidadeSelect.value
+    }
+
+    this.listaEquipamentoApresentacao.push(this.objectEquipamentosApresentacao);
+    this.listaEquipamento.push(this.objectEquipamentos)
+
+  // console.log('Valor adicionado a lista original ', this.listaEquipamento);  //{Debug}\\
+
   }
 
 
 
-  // services
 
 
+
+
+
+
+
+
+
+
+/**
+   * Método final para salvar a reserva
+   */
   protected processForm(): void {
 
-    this.reservaDTO = [{
-      nome: this.nome.value,
-      sobrenome: this.sobrenome.value,
-      setor: this.setor.value,
-      agenda: [this.listaAgenda]
+  this.reservaDTO = [{
+    nome: this.nome.value,
+    sobrenome: this.sobrenome.value,
+    setor: this.setor.value,
+    agenda: [this.listaAgenda],
+    equipamentos: this.listaEquipamento
+  }]
 
-    }]
 
-
-    console.log(this.reservaDTO)
+  console.log(this.reservaDTO)
 
 
 
@@ -212,7 +303,13 @@ export class MultiplaComponent implements OnInit {
     return this.formValidation.get('horaDevolucaoSelect')!;
   }
 
+  get getEquipamentoSelect(): AbstractControl<string, any> {
+    return this.formValidation.get('equipamentoSelect')!;
+  }
 
+  get getQuantidadeSelect(): AbstractControl<number, any> {
+    return this.formValidation.get('quantidadeSelect')!;
+  }
 
 
 

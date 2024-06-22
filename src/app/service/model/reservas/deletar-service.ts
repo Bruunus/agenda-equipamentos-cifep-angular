@@ -1,4 +1,4 @@
-export class Deletar {
+export class DeletarService {
 
 
   /**

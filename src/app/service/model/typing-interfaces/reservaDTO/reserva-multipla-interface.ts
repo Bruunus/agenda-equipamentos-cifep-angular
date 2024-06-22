@@ -5,6 +5,7 @@ export interface ReservaMultipĺaInterface {
   nome: FormControl;
   sobrenome: FormControl;
   setor: FormControl;
-  agenda: [{}]
+  agenda: [{}];
+  equipamentos: Array<any>[]
 
 }

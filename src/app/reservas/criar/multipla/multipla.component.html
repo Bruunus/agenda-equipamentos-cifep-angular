@@ -104,19 +104,25 @@
             <tr>
               <td>
                 <label for="equipamento">Equipamento</label>
-                <select name="equipamento">
+
+                <select #equipamentoValid  name="equipamento" formControlName="equipamentoSelect"
+                (change)="onDescricaoValorChange(equipamentoValid.options[equipamentoValid.selectedIndex].text)">
                   <option value=""></option>
-                  <option value="-- select --">-- select --</option>  <CONTINUAR A CONFIGURAÇÃO AQUI>
+                  <option *ngFor="let item of optionsListaEquipamento" [value]="item.valor" >
+                    {{ item.descricao }}
+                  </option>
                 </select>
+
+
               </td>
               <td>
                 <label for="quantidade">Quantidade</label>
-                <select  name="selectedOptionListaQuantidade">
-                    <option value="-- select --">-- select --</option>
+                <select #quantidadeValid formControlName="quantidadeSelect" >
+                  <option name="selectedOptionListaQuantidade" *ngFor="let qtd of optionQuantidade" [value]="qtd.valor">{{ qtd.descricao }}</option>
                 </select>
               </td>
               <td>
-                <button>Adicionar</button>
+                <button (click)="adicionarEquipamento($event)">Adicionar</button>
               </td>
 
             </tr>
@@ -136,12 +142,13 @@
                 <td colspan="2">
                   <ul>
                     <!-- template -->
-                    <li id="template-li" class="row">
-                      <td class="col"></td>
+                    <li id="template-li" class="row"
+                    *ngFor="let equipamento of listaEquipamentoApresentacao; let i = index" [attr.data-id]="equipamento.id">
+                      <td class="col">{{ equipamento.descricao }}</td>
                       <td class="col-6">
                         <div class="row justify-content-between">
-                            <span></span>
-                            <span class="delete">x</span>
+                          <span>{{ equipamento.quantidade }}</span>
+                          <span (click)="removerEquipamento($event)" class="delete">x</span>
                         </div>
                       </td>
                     </li>
