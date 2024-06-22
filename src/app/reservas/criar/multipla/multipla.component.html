@@ -2,22 +2,53 @@
 <div>
     <h3>Reservas Múltiplas</h3>
 
-    <form style="margin-bottom: 7em;" (ngSubmit)="processForm()" [formGroup]="formValidation" #formDir="ngForm">
+    <form style="margin-bottom: 7em;" (ngSubmit)="processForm()" [formGroup]="formValidationGroup" #formDir="ngForm">
 
       <label for="responsavel">Nome</label> &nbsp;
       <input type="text" name="nome" formControlName="nome" required maxlength="40">
 
+      <div *ngIf="nome!.invalid && formDir.submitted" class="validation-error">
+        <p *ngIf="nome.errors?.['required']" style="font-size: 0.8rem; color: tomato;">
+          Nome obrigatório
+        </p>
+        <p *ngIf="nome.errors?.['minlength']" style="font-size: 0.8rem; color: tomato;">
+          Descrição de nome inválido
+        </p>
+        <!-- <p *ngIf="nome.errors?.['maxlength']">Até 30 caracter</p> -->
+      </div>
+
+
       <br>
+
 
       <label for="sobrenome">Sobrenome</label> &nbsp;
       <input #valid type="text" name="sobrenome" formControlName="sobrenome" required maxlength="40">
 
+      <div *ngIf="sobrenome!.invalid && formDir.submitted" class="validation-error">
+        <p *ngIf="sobrenome.errors?.['required']" style="font-size: 0.8rem; color: tomato;">
+          Sobrenome obrigatório
+        </p>
+        <p *ngIf="nome.errors?.['minlength']" style="font-size: 0.8rem; color: tomato;">
+          Descrição de nome inválido
+        </p>
+
+      </div>
+
+
       <br>
+
 
       <label for="setor">Setor</label> &nbsp;
       <input #valid type="text" name="setor" formControlName="setor" required maxlength="40">
+      <div *ngIf="setor!.invalid && formDir.submitted" class="validation-error">
+        <p *ngIf="setor.errors?.['required']" style="font-size: 0.8rem; color: tomato;">
+          Setor obrigatório
+        </p>
+        <!-- <p *ngIf="nome.errors?.['maxlength']">Até 30 caracter</p> -->
+      </div>
 
       <br><br>
+
 
         <table>
 
@@ -28,15 +59,30 @@
             <tbody>
 
               <tr>
-                <td><label for="dataRetirada">Data início:</label></td>
-                <td><input #valid type="date" formControlName="dataRetirada" required></td>
+                <td><label for="dataRetirada">Data retirada:</label></td>
+                <td>
+                  <input #valid type="date" formControlName="dataRetirada" required>
+                  <div *ngIf="dataRetirada!.invalid && formDir.submitted" class="validation-error">
+                    <span *ngIf="dataRetirada.errors?.['required']" style="font-size: 0.8rem; color: tomato;">
+                      Insira a data de início da reserva
+                    </span>
+                    <!-- <p *ngIf="nome.errors?.['maxlength']">Até 30 caracter</p> -->
+                  </div>
+                </td>
 
 
-                <td><label for="hr-agendamento">Hora início:</label></td>
+
+                <td><label for="hr-agendamento">Horário retirada:</label></td>
                 <td>
                   <select #valid name="horaRetirada"  formControlName="horaInicioSelect" required>
                     <option name="horaRetirada" *ngFor="let option of optionsHours" [value]="option.valor">{{ option.descricao }}</option>
                   </select>
+                  <div *ngIf="horaInicioSelect!.invalid && formDir.submitted" class="validation-error">
+                    <span *ngIf="horaInicioSelect.errors?.['required']" style="font-size: 0.8rem; color: tomato;">
+                      Insira o horário da retirada
+                    </span>
+                    <!-- <p *ngIf="nome.errors?.['maxlength']">Até 30 caracter</p> -->
+                  </div>
                 </td>
 
 
@@ -46,13 +92,30 @@
               </tr>
 
               <tr>
-                <td><label for="dataDevolucao">Data fim:</label></td>
-                <td><input #valid type="date" formControlName="dataDevolucao" required></td>
-                <td><label for="hr-agendamento">Hora fim:</label></td>
+                <td><label for="dataDevolucao">Data devolução:</label></td>
+                <td>
+                  <input #valid type="date" formControlName="dataDevolucao" required>
+                  <div *ngIf="dataDevolucao!.invalid && formDir.submitted" class="validation-error">
+                    <span *ngIf="dataDevolucao.errors?.['required']" style="font-size: 0.8rem; color: tomato;">
+                      Insira a data de devolução da reserva
+                    </span>
+                    <!-- <p *ngIf="nome.errors?.['maxlength']">Até 30 caracter</p> -->
+                  </div>
+                </td>
+
+
+
+                <td><label for="hr-agendamento">Horário devolução:</label></td>
                 <td>
                   <select name="horaDEvolucao" formControlName="horaDevolucaoSelect" required>
                     <option name="horaRetirada" *ngFor="let option of optionsHours" [value]="option.valor">{{ option.descricao }}</option>
                   </select>
+                  <div *ngIf="horaDevolucaoSelect!.invalid && formDir.submitted" class="validation-error">
+                    <span *ngIf="horaDevolucaoSelect.errors?.['required']" style="font-size: 0.8rem; color: tomato;">
+                      Insira o horário da devolução
+                    </span>
+                    <!-- <p *ngIf="nome.errors?.['maxlength']">Até 30 caracter</p> -->
+                  </div>
                 </td>
 
               </tr>
@@ -129,8 +192,15 @@
 
         </table>
 
-        <br>
 
+        <tr>
+          <td colspan="3">
+            <label for="">Outros equipamentos</label>
+            <input type="text" formControlName="outros" id="">
+            <input style="margin-left: 8pt;" type="checkbox" formControlName="habilitaOutros" maxlength="40">
+            <label style="margin-left: 8pt;">Adicionar</label>
+          </td>
+        </tr>
 
         <table id="table-equipamento">
             <thead>
@@ -173,11 +243,12 @@
 
 
 <!-- criada -->
-    <!-- executando -->
-    <!-- finalizada -->
-    <!-- rollback -->
+<!-- executando -->
+<!-- finalizada -->
+<!-- rollback -->
 
-<table>
+
+<table class="sprint">
   <thead>
     <tr class="left;" style="padding: 7pt;"><th colspan="3">Sprints</th></tr>
     <tr>
@@ -187,11 +258,101 @@
     </tr>
   </thead>
   <tbody>
-    <tr class="">
+
+    <tr class="criada">
       <td>
-         Aguardando ...
-      <td></td>
+        Os campos: Nome, Sobrenome, Setor, Dt Início, Data fim, Hora Início e hora fim não podem estar
+        vazios ao dar submit
+      <td>22/jun/2024 - 18:59</td>
       <td></td>
     </tr>
+
+    <tr class="criada">
+      <td>
+        Ao salvar verificar se as listas de datas e de equipamentos estão vazias, caso verdadeiro retorne erro informando que é necessário adicionar uma agenda e um equipamento
+      <td>22/jun/2024 - 19:00</td>
+      <td></td>
+    </tr>
+
+    <tr>Criar validação para <b>adicionar data agendada</b>
+      <ul><br>
+
+        <ul>
+          <b>Para data de retirada</b>
+          <li class="criada">A data de inicio não pode ser menor que a data atual do sistema</li>
+          <li class="criada">Ao inserir a data de inicio o mesmo valor deve ser adicionado na data fim</li>
+        </ul>
+
+
+        <ul>
+          <b class="criada">Para de devolução</b>
+          <li class="criada">A data fim não pode ser menor que a data de início</li>
+        </ul>
+
+        <ul>
+          <b>Para hora de devolução</b>
+          <li class="criada">Se a hora de devolução for menor que a hora de retirada então a devolução não é no mesmo dia. Para isso
+            <ul>
+              <li class="criada">o sistema deve colher as datas de retirada e data de devolução, se caso
+                <ul>
+
+                  <li  class="criada">as duas foram iguais então o sistema deve:
+                    <ul>
+                      <li class="criada">Verificar em que dia da semana cai esta data, se caso:
+                        <ul>
+                          <li class="criada">Cair na sexta-feira - o Sistema deve modificar a data de devolução para a próxima segunda-feira (+ 3 dias)</li>
+                          <li class="criada">Se cair entre segunda-feira até quinta-feira o sistema deve modificar a data de devolução para o dia seguinte</li>
+                        </ul>
+                      </li>
+                    </ul>
+                  </li>
+
+                  <li class="criada">
+
+                      a data de devolução for maior e diferente da data de retirada (ou seja, a devolução não é para o mesmo dia) então o sistema nãi faz nada
+                        e pode computar o valor inserido na data de devolução normalmente.
+
+                  </li>
+
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+
+
+        <li class="criada">Não pode uma data de devolução ser menor que a data de retirada</li>
+        <li class="criada">Não pode fazer um agendamento com datas anteriores ao dia atual<</li>
+        <li class="criada">
+
+            Se caso a hora de devolução for menor que a hora de inicio o sistema deve alterar a data de devlução
+            para o dia seguinte pega referenciando a data de início
+
+        </li>
+
+
+      </ul>
+    </tr>
+
   </tbody>
 </table>
+
+
+
+
+ <!-- criada -->
+    <!-- executando -->
+    <!-- finalizada -->
+    <!-- rollback -->
+    <!-- <tr class="finalizada">
+      <td>
+          Construir o radar, deixar o esquelo pronto
+      <td>24/05/2024 - 14:38</td>
+      <td>24/05/2024 - 15:39</td>
+    </tr>
+    <tr class="finalizada">
+      <td>
+          Carregar o estoque de reserva atrelado a cada equipamento.
+      <td>24/05/2024 - 15:42</td>
+      <td>28/05/2024 - 11:00</td>
+    </tr> -->

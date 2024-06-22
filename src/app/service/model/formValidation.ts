@@ -1,3 +1,4 @@
+import { FormGroup } from '@angular/forms';
 import { Injectable } from '@angular/core';
 import { HorasService } from './horasService';
 import * as moment from 'moment';
@@ -157,6 +158,16 @@ export class FormValidation {
     // Adicionar mensagem de erro e log de erro
     return false;
 
+  }
+
+
+  /**
+   * Tentativa de fazer todas as validações em um só método
+   * @returns
+   */
+  validationFormFull(items: any[]): boolean {
+
+    return true;
   }
 
 

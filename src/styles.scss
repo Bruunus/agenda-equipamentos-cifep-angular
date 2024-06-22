@@ -9,6 +9,27 @@ $COLOR-SYSTEM: #000e3f;
 }
 
 
+.sprint, .sprint th,.sprint tr, .sprint td {
+  @extend .t_table;
+  border-color: #efefef;
+  text-align: left;
+
+}
+
+
+
+.criada { color: #575757; }
+.executando { color: blue; }
+.finalizada {
+text-decoration: line-through;
+color: green;
+background-color: lightgray;
+}
+.rollback {
+color: #dd9001;
+}
+
+
 
 
 

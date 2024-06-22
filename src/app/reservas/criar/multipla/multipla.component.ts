@@ -1,3 +1,4 @@
+import { FormValidation } from './../../../service/model/formValidation';
 import { OptionQtdService } from './../../../service/model/optionQtdService';
 import { ListaAgendaInterface } from './../../../service/model/typing-interfaces/agenda/lista-agenda-interface';
 
@@ -17,7 +18,7 @@ import { DeletarService } from 'src/app/service/model/reservas/deletar-service';
 export class MultiplaComponent implements OnInit {
 
   //  angular
-  formValidation!: FormGroup;
+  formValidationGroup!: FormGroup;
 
   // vars API's
   optionsListaEquipamento: EstoqueInterface[] = [{id: 0, descricao: '', valor: '', quantidade: 0}];
@@ -31,6 +32,7 @@ export class MultiplaComponent implements OnInit {
   idObjectDatasApresentacao = 0;
   equipamentoContId = 0;
   valorDescricao: string = '';
+  status_input_habilitado: boolean = false; // não habilitado
   equipamentos: Array<any>[] = [];  // Tipo any por conta da manipulação do id para ficar de acordo com a regra de negócio
   objectEquipamentos : {id: number, descricao: string, quantidade: number } = {id:0, descricao:'', quantidade:0}
   objectEquipamentosApresentacao: {id: number, descricao: string, quantidade: number } = {id:0, descricao:'', quantidade:0}
@@ -80,7 +82,7 @@ export class MultiplaComponent implements OnInit {
 
   constructor(
     private horasService: HorasService, private deletarDataService: DeletarService, private serviceApiReadEquipament: ServiceApiReadEquipament,
-    private optionQtdService: OptionQtdService
+    private optionQtdService: OptionQtdService, private formValidation: FormValidation
 
   ) {
     this.objectDatas = {
@@ -98,8 +100,8 @@ export class MultiplaComponent implements OnInit {
     this.loadListEquipaments()
     this.getListQuantidade()
 
-    this.formValidation = new FormGroup({
-      nome: new FormControl('Bruno', [
+    this.formValidationGroup = new FormGroup({
+      nome: new FormControl('', [
         Validators.required,
         Validators.minLength(4),
         Validators.maxLength(40)
@@ -115,7 +117,9 @@ export class MultiplaComponent implements OnInit {
       dataDevolucao: new FormControl('', [Validators.required]),
       horaDevolucaoSelect: new FormControl('', [Validators.required]),
       equipamentoSelect: new FormControl('', [Validators.required]),
-      quantidadeSelect: new FormControl('')
+      quantidadeSelect: new FormControl(''),
+      outros: new FormControl({value: '', disabled: true}, Validators.maxLength(40)),
+      habilitaOutros: new FormControl('')
     });
   }
 
@@ -256,13 +260,33 @@ export class MultiplaComponent implements OnInit {
    */
   protected processForm(): void {
 
-  this.reservaDTO = [{
-    nome: this.nome.value,
-    sobrenome: this.sobrenome.value,
-    setor: this.setor.value,
-    agenda: [this.listaAgenda],
-    equipamentos: this.listaEquipamento
-  }]
+    const listaDeItemParaValidacao: any[] = [];
+    let validacaoDeTodosOsItems: boolean = true;
+
+
+
+
+
+
+
+    validacaoDeTodosOsItems = this.formValidation.validationFormFull(listaDeItemParaValidacao)
+
+
+    if(this.formValidationGroup.invalid || !validacaoDeTodosOsItems) {
+      return;
+    } else {
+
+      this.reservaDTO = [{
+        nome: this.nome.value,
+        sobrenome: this.sobrenome.value,
+        setor: this.setor.value,
+        agenda: [this.listaAgenda],
+        equipamentos: this.listaEquipamento
+      }]
+
+    }
+
+
 
 
   console.log(this.reservaDTO)
@@ -276,41 +300,53 @@ export class MultiplaComponent implements OnInit {
   // getters e setters
 
   get nome(): AbstractControl<FormControl, any> {
-    return this.formValidation.get('nome')!;
+    return this.formValidationGroup.get('nome')!;
   }
 
   get sobrenome(): AbstractControl<FormControl, any> {
-    return this.formValidation.get('sobrenome')!;
+    return this.formValidationGroup.get('sobrenome')!;
   }
 
   get setor(): AbstractControl<FormControl, any> {
-    return this.formValidation.get('setor')!;
+    return this.formValidationGroup.get('setor')!;
   }
 
   get dataRetirada(): AbstractControl<FormControl, any> {
-    return this.formValidation.get('dataRetirada')!;
+    return this.formValidationGroup.get('dataRetirada')!;
   }
 
   get horaInicioSelect(): AbstractControl<FormControl, any> {
-    return this.formValidation.get('horaInicioSelect')!;
+    return this.formValidationGroup.get('horaInicioSelect')!;
   }
 
   get dataDevolucao(): AbstractControl<FormControl, any> {
-    return this.formValidation.get('dataDevolucao')!;
+    return this.formValidationGroup.get('dataDevolucao')!;
   }
 
   get horaDevolucaoSelect(): AbstractControl<FormControl, any> {
-    return this.formValidation.get('horaDevolucaoSelect')!;
+    return this.formValidationGroup.get('horaDevolucaoSelect')!;
   }
 
   get getEquipamentoSelect(): AbstractControl<string, any> {
-    return this.formValidation.get('equipamentoSelect')!;
+    return this.formValidationGroup.get('equipamentoSelect')!;
   }
 
   get getQuantidadeSelect(): AbstractControl<number, any> {
-    return this.formValidation.get('quantidadeSelect')!;
+    return this.formValidationGroup.get('quantidadeSelect')!;
   }
 
+  get getOutros(): AbstractControl<string, any> {
+    return this.formValidationGroup.get('outros')!;
+  }
+
+
+  get getStatusInputHabilitado(): boolean {
+    return this.status_input_habilitado;
+  }
+
+  set setStatusInputHabilitado(status: boolean) {
+    this.status_input_habilitado = status;
+  }
 
 
 

@@ -172,21 +172,6 @@ export class EventualComponent implements OnInit {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   /**
    * Esse método recebe em intervalo de tempo uma nova lista atualizada do servidor para poder
    * realizar a checagem de equipamento em tempo de execução recebendo o valor mais exato.
@@ -375,13 +360,19 @@ export class EventualComponent implements OnInit {
         if (validacaoDoCampoOutros) {
           alert('Este equipamento não será monitorado no painel de estoque. Para isso cadastre esse novo equipamentos em \"Configurações > Adicionar novo equipamento\"')
           equipamentoEscolhido =  this.getOutros.value;
-          equipamentoEscolhido.toUpperCase()
-          let valorCampoOutros = this.getOutros.value;
-          equipamentoEscolhidoApresentacao = this.formatacaoDeTextoApresentacaoOutros(valorCampoOutros);
-          // console.log('Valor do campo Outros coletado: ', equipamentoEscolhido);   //{Debug}\\
-        } else {
-          return;
-        }
+
+          if(equipamentoEscolhido === null || equipamentoEscolhido === '') {
+            alert('Adicione um equipamento não monitorado')
+            return;
+          } else {
+            equipamentoEscolhido.toUpperCase()
+            let valorCampoOutros = this.getOutros.value;
+            equipamentoEscolhidoApresentacao = this.formatacaoDeTextoApresentacaoOutros(valorCampoOutros);
+            // console.log('Valor do campo Outros coletado: ', equipamentoEscolhido);   //{Debug}\\
+          }
+
+
+        } else { return; }
       } else {
         equipamentoEscolhido = valorEquipamentoSelecionado;
         equipamentoEscolhidoApresentacao = this.valorDescricao;
