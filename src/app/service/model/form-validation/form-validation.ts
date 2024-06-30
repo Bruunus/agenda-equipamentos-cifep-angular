@@ -1,7 +1,9 @@
-import { FormGroup } from '@angular/forms';
+import { ListaAgendaInterface } from '../typing-interfaces/agenda/lista-agenda-interface';
+import { FormGroup, AbstractControl } from '@angular/forms';
 import { Injectable } from '@angular/core';
-import { HorasService } from './horasService';
+import { HorasService } from '../horasService';
 import * as moment from 'moment';
+import { empty } from 'rxjs';
 
 @Injectable()
 export class FormValidation {
@@ -25,12 +27,90 @@ export class FormValidation {
   }
 
 
+
+  /**
+   * Método validador final de todos os outro submodulos validadores da classe EventualComponent, retorna verdadeiro se todas as condições
+   * forem verdadeiras segundo a regra de negócio.
+   * @param horaFim
+   * @param horaInicio
+   * @param dataInicio
+   * @param dataFim
+   * @param list
+   * @returns
+   */
+  public validationFormFullEventual(horaFim: string, horaInicio: string, dataInicio: string, dataFim: string, list: Array<any>): boolean {
+    // console.log('Análise de data de devolução: ',dataFim)    //{Debug}\\
+
+    const validarSeListaDeEquipamentosEstaVazia = this.validationListEquipmentEmpty(list)
+    const dataInicioNaoPodeSerMenorADoSistema = this.validacaoDataMenorParaDataAtual(dataInicio, dataFim)
+    const dataFimNaoPodeSerManiorADataInicio = this.validacaoDataMaiorEMenor(dataFim, dataInicio)
+    const validacaoHoraFim = this.validacaoHoraFim(horaFim, horaInicio, dataInicio, dataFim)
+    const horasIguaisNãoPodem = this.horasNãoPodemSerIguais(horaInicio, horaFim, dataInicio, dataFim)
+
+
+    if (
+      dataInicioNaoPodeSerMenorADoSistema && dataFimNaoPodeSerManiorADataInicio && validacaoHoraFim &&
+      validarSeListaDeEquipamentosEstaVazia && horasIguaisNãoPodem
+    ) {
+      return true
+    }
+    // Adicionar mensagem de erro e log de erro
+    return false;
+
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  /**
+   * Metodo responsável por verificar se a data de retirada fornecia cai em uma sexta-feira com retorno booleano
+   */
+  public programacaoDeHorasParaSextaFeiraDataInicio(dataRetirada: string): boolean {
+    const dataRetiradaMoment = moment(dataRetirada, 'YYYY-MM-DD');
+    const dataRetiradaToString = dataRetiradaMoment.format('dddd');
+    // console.log('Dia recebido foi ', dataRetiradaToString)  //{Debug}\\
+    if(dataRetiradaToString === 'Friday') {
+      return true
+    } else {
+      return false
+    }
+  }
+
+  /**
+   * Metodo responsável por verificar se a data de devolução fornecia cai em uma sexta-feira com retorno booleano
+   */
+  public programacaoDeHorasParaSextaFeiraDataFim(dataDevolucao: string): boolean {
+    // console.log('Alterado data de devolução {Debug}')  //{Debug}\\
+    const dataDevolucaoMoment = moment(dataDevolucao, 'YYYY-MM-DD');
+    const dataDevolucaoToString = dataDevolucaoMoment.format('dddd');
+    // console.log('Dia recebido foi ', dataDevolucaoToString)  //{Debug}\\
+    if(dataDevolucaoToString === 'Friday') {
+      return true
+    } else {
+      return false
+    }
+  }
+
+
+
+
   /**
    * Método validador da lista de equipamentos, o processo não pode seguir
    * caso a lista esteja vazia. É obrigatório adicionar no mínimo um
    * equipamento na reserva.
    */
-  private validationListEmpty(list: Array<any>): boolean {
+  public validationListEquipmentEmpty(list: Array<any>): boolean {
 
     if(list.length === 0) {
       console.error("A lista está vazia", list);
@@ -43,6 +123,31 @@ export class FormValidation {
     return true;
 
   }
+
+
+  public validationListAgendaEmpty(list: ListaAgendaInterface[]): boolean {
+    if(list.length === 0) {
+      console.error("A lista está vazia", list);
+      alert('Adicione um agendamento para realizar a reserva')
+      return false;
+    }
+    return true;
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   /**
    * Método validador onde a data de devolução não pode ser menor que a data de retirada
@@ -129,43 +234,16 @@ export class FormValidation {
   }
 
 
-  /**
-   * Método validador final de todos os outro submodulos validadores, retorna verdadeiro se todas as condições
-   * forem verdadeiras segundo a regra de negócio.
-   * @param horaFim
-   * @param horaInicio
-   * @param dataInicio
-   * @param dataFim
-   * @param list
-   * @returns
-   */
-  validacaoHoraMaiorEMenor(horaFim: string, horaInicio: string, dataInicio: string, dataFim: string, list: Array<any>): boolean {
-    // console.log('Análise de data de devolução: ',dataFim)    //{Debug}\\
 
-    const validarSeListaDeEquipamentosEstaVazia = this.validationListEmpty(list)
-    const dataInicioNaoPodeSerMenorADoSistema = this.validacaoDataMenorParaDataAtual(dataInicio, dataFim)
-    const dataFimNaoPodeSerManiorADataInicio = this.validacaoDataMaiorEMenor(dataFim, dataInicio)
-    const validacaoHoraFim = this.validacaoHoraFim(horaFim, horaInicio, dataInicio, dataFim)
-    const horasIguaisNãoPodem = this.horasNãoPodemSerIguais(horaInicio, horaFim, dataInicio, dataFim)
-
-
-    if (
-      dataInicioNaoPodeSerMenorADoSistema && dataFimNaoPodeSerManiorADataInicio && validacaoHoraFim &&
-      validarSeListaDeEquipamentosEstaVazia && horasIguaisNãoPodem
-    ) {
-      return true
-    }
-    // Adicionar mensagem de erro e log de erro
-    return false;
-
-  }
 
 
   /**
    * Tentativa de fazer todas as validações em um só método
    * @returns
    */
-  validationFormFull(items: any[]): boolean {
+  validationFormFullT(items: any[]): boolean {
+
+
 
     return true;
   }
@@ -213,40 +291,10 @@ export class FormValidation {
 
 
 
-
-  /**
-   * Metodo responsável por verificar se a data de retirada fornecia cai em uma sexta-feira com retorno booleano
-   */
-  programacaoDeHorasParaSextaFeiraDataInicio(dataRetirada: string): boolean {
-    const dataRetiradaMoment = moment(dataRetirada, 'YYYY-MM-DD');
-    const dataRetiradaToString = dataRetiradaMoment.format('dddd');
-    // console.log('Dia recebido foi ', dataRetiradaToString)  //{Debug}\\
-    if(dataRetiradaToString === 'Friday') {
-      return true
-    } else {
-      return false
-    }
-  }
-
-  /**
-   * Metodo responsável por verificar se a data de devolução fornecia cai em uma sexta-feira com retorno booleano
-   */
-  programacaoDeHorasParaSextaFeiraDataFim(dataDevolucao: string): boolean {
-    // console.log('Alterado data de devolução {Debug}')  //{Debug}\\
-    const dataDevolucaoMoment = moment(dataDevolucao, 'YYYY-MM-DD');
-    const dataDevolucaoToString = dataDevolucaoMoment.format('dddd');
-    // console.log('Dia recebido foi ', dataDevolucaoToString)  //{Debug}\\
-    if(dataDevolucaoToString === 'Friday') {
-      return true
-    } else {
-      return false
-    }
-  }
-
-
   private horasNãoPodemSerIguais(horaInicio: string, horaFim: string, dataInicio: string, dataFim: string): boolean {
     if (dataInicio === dataFim  && horaFim === horaInicio) {
       alert('A hora de retirada não pode ser igual a hora de devolução se a devolução é para o mesmo em que foi retirado.')
+      console.log('hora devolução ', horaFim, ' hora de retirada ', horaInicio)
       return false;
     } else {
       return true;

@@ -1,4 +1,5 @@
-import { FormValidation } from './../../../service/model/formValidation';
+import { HorasService } from 'src/app/service/model/horasService';
+import { FormValidation } from '../../../service/model/form-validation/form-validation';
 import { OptionQtdService } from './../../../service/model/optionQtdService';
 import { ListaAgendaInterface } from './../../../service/model/typing-interfaces/agenda/lista-agenda-interface';
 
@@ -6,9 +7,9 @@ import { EstoqueInterface } from '../../../service/model/typing-interfaces/equip
 import { ServiceApiReadEquipament } from 'src/app/service/api/equipamentos/service-api-read-equipament';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormControl, AbstractControl } from '@angular/forms';
-import { HorasService } from 'src/app/service/model/horasService';
 import { ReservaMultipĺaInterface } from 'src/app/service/model/typing-interfaces/reservaDTO/reserva-multipla-interface';
 import { DeletarService } from 'src/app/service/model/reservas/deletar-service';
+import { FormValidationMultipla } from 'src/app/service/model/form-validation/form-validation-multipla';
 
 @Component({
   selector: 'app-multipla',
@@ -52,45 +53,45 @@ export class MultiplaComponent implements OnInit {
 
   objectDatas:  {
     id: number,
-    dataRetirada: FormControl,
-    horaRetirada: FormControl,
-    dataDevolucao: FormControl,
-    horaDevolucao: FormControl
+    dataRetirada: string,
+    horaRetirada: string,
+    dataDevolucao: string,
+    horaDevolucao: string
   } = {
     id: 0,
-    dataRetirada: new FormControl(),
-    horaRetirada: new FormControl(),
-    dataDevolucao: new FormControl(),
-    horaDevolucao: new FormControl()
+    dataRetirada: '',
+    horaRetirada: '',
+    dataDevolucao: '',
+    horaDevolucao: ''
   };
 
   objectDatasApresentacao: {
     id: number,
-    dataRetirada: FormControl,
-    horaRetirada: FormControl,
-    dataDevolucao: FormControl,
-    horaDevolucao: FormControl
+    dataRetirada: string,
+    horaRetirada: string,
+    dataDevolucao: string,
+    horaDevolucao: string
   } = {
     id: 0,
-    dataRetirada: new FormControl(),
-    horaRetirada: new FormControl(),
-    dataDevolucao: new FormControl(),
-    horaDevolucao: new FormControl()
+    dataRetirada: '',
+    horaRetirada: '',
+    dataDevolucao: '',
+    horaDevolucao: ''
   }
 
 
 
   constructor(
     private horasService: HorasService, private deletarDataService: DeletarService, private serviceApiReadEquipament: ServiceApiReadEquipament,
-    private optionQtdService: OptionQtdService, private formValidation: FormValidation
+    private optionQtdService: OptionQtdService, private formValidation: FormValidationMultipla
 
   ) {
     this.objectDatas = {
       id: 0,
-      dataRetirada: new FormControl(''),
-      horaRetirada: new FormControl(''),
-      dataDevolucao: new FormControl(''),
-      horaDevolucao: new FormControl('')
+      dataRetirada: '',
+      horaRetirada: '',
+      dataDevolucao: '',
+      horaDevolucao: ''
     };
    }
 
@@ -101,7 +102,7 @@ export class MultiplaComponent implements OnInit {
     this.getListQuantidade()
 
     this.formValidationGroup = new FormGroup({
-      nome: new FormControl('', [
+      nome: new FormControl('Bruno', [
         Validators.required,
         Validators.minLength(4),
         Validators.maxLength(40)
@@ -180,30 +181,54 @@ export class MultiplaComponent implements OnInit {
   protected adicionarAgenda(event: Event): void {
     event.preventDefault();
 
-    this.idObjectDatas++
-    this.idObjectDatasApresentacao++
 
-    this.objectDatas = {
-      id: this.idObjectDatas,
-      dataRetirada: this.dataRetirada.value,
-      horaRetirada: this.horaInicioSelect.value,
-      dataDevolucao: this.dataDevolucao.value,
-      horaDevolucao: this.horaDevolucaoSelect.value
+    const validacaoCompletaDaAgenda = this.formValidation.validacaoCompletaDaAgendaMultipla(
+      this.dataRetirada.value,
+      this.dataDevolucao.value,
+      this.horaInicioSelect.value,
+      this.horaDevolucaoSelect.value
+    );
+
+
+    if(!validacaoCompletaDaAgenda) {
+      return;
+    } else {
+
+      this.idObjectDatas++
+      this.idObjectDatasApresentacao++
+
+
+      this.objectDatas = {
+        id: this.idObjectDatas,
+        dataRetirada: this.dataRetirada.value,
+        horaRetirada: this.horaInicioSelect.value,
+        dataDevolucao: this.dataDevolucao.value,
+        horaDevolucao: this.horaDevolucaoSelect.value
+      }
+
+      this.objectDatasApresentacao = {
+        id: this.idObjectDatasApresentacao,
+        dataRetirada: this.dataRetirada.value,
+        horaRetirada: this.horaInicioSelect.value,
+        dataDevolucao: this.dataDevolucao.value,
+        horaDevolucao: this.horaDevolucaoSelect.value
+      }
+
+      this.listaAgenda.push(this.objectDatas);
+      this.listaAgendaApresentacao.push(this.objectDatasApresentacao);
+
+
+      console.log('listaAgenda ', this.listaAgenda)   //{Debug}\\
+
+
     }
 
-     this.objectDatasApresentacao = {
-      id: this.idObjectDatasApresentacao,
-      dataRetirada: this.dataRetirada.value,
-      horaRetirada: this.horaInicioSelect.value,
-      dataDevolucao: this.dataDevolucao.value,
-      horaDevolucao: this.horaDevolucaoSelect.value
-    }
-
-    this.listaAgenda.push(this.objectDatas);
-    this.listaAgendaApresentacao.push(this.objectDatasApresentacao);
 
 
-    console.log('listaAgenda ', this.listaAgenda)   //{Debug}\\
+
+
+
+
 
 
   }
@@ -260,19 +285,11 @@ export class MultiplaComponent implements OnInit {
    */
   protected processForm(): void {
 
-    const listaDeItemParaValidacao: any[] = [];
-    let validacaoDeTodosOsItems: boolean = true;
+    const verificacaoDaListaDeEquipamentos: boolean = this.formValidation.validationListEquipmentEmpty(this.listaEquipamento);
+    const verificacaoDaListaDeAgenda: boolean = this.formValidation.validationListAgendaEmpty(this.listaAgenda);
 
 
-
-
-
-
-
-    validacaoDeTodosOsItems = this.formValidation.validationFormFull(listaDeItemParaValidacao)
-
-
-    if(this.formValidationGroup.invalid || !validacaoDeTodosOsItems) {
+    if(this.formValidationGroup.invalid || !verificacaoDaListaDeEquipamentos || !verificacaoDaListaDeAgenda) {
       return;
     } else {
 
@@ -311,19 +328,19 @@ export class MultiplaComponent implements OnInit {
     return this.formValidationGroup.get('setor')!;
   }
 
-  get dataRetirada(): AbstractControl<FormControl, any> {
+  get dataRetirada(): AbstractControl<string, any> {
     return this.formValidationGroup.get('dataRetirada')!;
   }
 
-  get horaInicioSelect(): AbstractControl<FormControl, any> {
+  get horaInicioSelect(): AbstractControl<string, any> {
     return this.formValidationGroup.get('horaInicioSelect')!;
   }
 
-  get dataDevolucao(): AbstractControl<FormControl, any> {
+  get dataDevolucao(): AbstractControl<string, any> {
     return this.formValidationGroup.get('dataDevolucao')!;
   }
 
-  get horaDevolucaoSelect(): AbstractControl<FormControl, any> {
+  get horaDevolucaoSelect(): AbstractControl<string, any> {
     return this.formValidationGroup.get('horaDevolucaoSelect')!;
   }
 

@@ -14,9 +14,10 @@ import { ServiceApiDeleteReservation } from './api/reservas/service-api-delete-r
 import { ServiceApiReadReservation } from './api/reservas/service-api-read-reservation';
 import { ServiceApiUpdateReservation } from './api/reservas/service-api-update-reservation';
 import { OptionQtdService } from './model/optionQtdService';
-import { FormValidation } from './model/formValidation';
+import { FormValidation } from './model/form-validation/form-validation';
 import { DatePipe } from '@angular/common';
 import { DeletarService } from './model/reservas/deletar-service';
+import { FormValidationMultipla } from './model/form-validation/form-validation-multipla';
 
 
 
@@ -27,7 +28,7 @@ import { DeletarService } from './model/reservas/deletar-service';
   providers: [
     HorasService, ServiceApiCreateEquipament, ServiceApiDeleteEquipament, ServiceApiReadEquipament, ServiceApiUpdateEquipament,
     ServiceApiCreateReservation, ServiceApiDeleteReservation, ServiceApiReadReservation, ServiceApiUpdateReservation, OptionQtdService,
-    FormValidation, ServiceApiRead, FormEquipamentoValidationService, ErroServiceService, DatePipe, DeletarService
+    FormValidation, ServiceApiRead, FormEquipamentoValidationService, ErroServiceService, DatePipe, DeletarService, FormValidationMultipla
   ]
 })
 export class ServiceModule {}

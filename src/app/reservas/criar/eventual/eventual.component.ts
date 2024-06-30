@@ -8,7 +8,7 @@ import { EstoqueInterface } from '../../../service/model/typing-interfaces/equip
 import { FormEquipamentoValidationService } from './../../../service/model/formEquipamentoValidationService';
 import { Router } from '@angular/router';
 import { ServiceApiCreateReservation } from './../../../service/api/reservas/service-api-create-reservation';
-import { FormValidation } from './../../../service/model/formValidation';
+import { FormValidation } from '../../../service/model/form-validation/form-validation';
 
 import { Component, OnInit, } from '@angular/core';
 import { HorasService } from "../../../service/model/horasService";
@@ -468,7 +468,7 @@ export class EventualComponent implements OnInit {
     } else {
 
       const validation = this.formValidationService
-        .validacaoHoraMaiorEMenor(horaFim, horaInicio, dataIncio, dataFim, this.listaEquipamento);
+        .validationFormFullEventual(horaFim, horaInicio, dataIncio, dataFim, this.listaEquipamento);
       // console.log("A lista não está vazia", this.listaEquipamento)     //{Debug}\\
 
       // Retorna o campo dataDevolucao ajustada caso o valor de horas seja inaceitável
