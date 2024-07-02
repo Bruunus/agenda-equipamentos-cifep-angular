@@ -46,69 +46,7 @@
 
   <br><br>
 
-  <label for="dataRetirada">Data retirada:</label> &nbsp;
-  <input #valid type="date" formControlName="dataRetirada" required> &nbsp;
-  <div *ngIf="dataRetirada!.invalid && formDir.submitted" class="validation-error">
-    <span *ngIf="dataRetirada.errors?.['required']" style="font-size: 0.8rem; color: tomato;">
-      Insira a data de início da reserva
-    </span>
-    <!-- <p *ngIf="nome.errors?.['maxlength']">Até 30 caracter</p> -->
-  </div>
 
-
-
-
-  <label for="hr-agendamento">Horário retirada:</label>
-  <select #valid name="horaRetirada"  formControlName="horaInicioSelect" required>
-      <option name="horaRetirada" *ngFor="let option of optionsHours" [value]="option.valor">{{ option.descricao }}</option>
-  </select>
-  <div *ngIf="horaInicioSelect!.invalid && formDir.submitted" class="validation-error">
-    <span *ngIf="horaInicioSelect.errors?.['required']" style="font-size: 0.8rem; color: tomato;">
-      Insira o horário da retirada
-    </span>
-    <!-- <p *ngIf="nome.errors?.['maxlength']">Até 30 caracter</p> -->
-  </div>
-
-
-
-  <div class="row">
-    <div class="col">
-
-      <label for="dt-agendamento">Data devolução:</label> &nbsp;
-      <input #valid style="margin-left: 1.06em;" type="date" name="dataDevolucao" formControlName="dataDevolucao" required> &nbsp;
-      <div *ngIf="dataDevolucao!.invalid && formDir.submitted" class="validation-error">
-        <span *ngIf="dataDevolucao.errors?.['required']" style="font-size: 0.8rem; color: tomato;">
-          Insira a data de devolução da reserva
-        </span>
-        <!-- <p *ngIf="nome.errors?.['maxlength']">Até 30 caracter</p> -->
-      </div>
-
-      <!-- Validador de datas -->
-      <!-- <div *ngIf="formValidation.controls['dataDevolucao'].value < formValidation.controls['dataRetirada'].value">
-        <span style="font-size: 0.8rem; color: tomato;">
-          A data de devolução não pode ser menor que a data de retirada
-        </span>
-      </div> -->
-
-
-      <label for="hr-agendamento">Horário devolução:</label> &nbsp;
-      <select #valid name="horaDevolucaoSelect" formControlName="horaDevolucaoSelect" required>
-        <option name="horaDevolucao" *ngFor="let option of optionsHours" [value]="option.valor">{{ option.descricao }}</option>
-      </select>
-      <div *ngIf="horaDevolucaoSelect!.invalid && formDir.submitted" class="validation-error">
-        <span *ngIf="horaDevolucaoSelect.errors?.['required']" style="font-size: 0.8rem; color: tomato;">
-          Insira o horário da devolução
-        </span>
-        <!-- <p *ngIf="nome.errors?.['maxlength']">Até 30 caracter</p> -->
-      </div>
-
-
-
-
-
-
-      </div>
-  </div>
 
   <table id="table-adicionar" >
     <tr>
@@ -182,6 +120,70 @@
 
 
     <br><br>
+
+    <label for="dataRetirada">Data retirada:</label> &nbsp;
+  <input #valid type="date" formControlName="dataRetirada" required> &nbsp;
+  <div *ngIf="dataRetirada!.invalid && formDir.submitted" class="validation-error">
+    <span *ngIf="dataRetirada.errors?.['required']" style="font-size: 0.8rem; color: tomato;">
+      Insira a data de início da reserva
+    </span>
+    <!-- <p *ngIf="nome.errors?.['maxlength']">Até 30 caracter</p> -->
+  </div>
+
+
+
+
+  <label for="hr-agendamento">Horário retirada:</label>
+  <select #valid name="horaRetirada"  formControlName="horaInicioSelect" required>
+      <option name="horaRetirada" *ngFor="let option of optionsHours" [value]="option.valor">{{ option.descricao }}</option>
+  </select>
+  <div *ngIf="horaInicioSelect!.invalid && formDir.submitted" class="validation-error">
+    <span *ngIf="horaInicioSelect.errors?.['required']" style="font-size: 0.8rem; color: tomato;">
+      Insira o horário da retirada
+    </span>
+    <!-- <p *ngIf="nome.errors?.['maxlength']">Até 30 caracter</p> -->
+  </div>
+
+
+
+  <div class="row">
+    <div class="col">
+
+      <label for="dt-agendamento">Data devolução:</label> &nbsp;
+      <input #valid style="margin-left: 1.06em;" type="date" name="dataDevolucao" formControlName="dataDevolucao" required> &nbsp;
+      <div *ngIf="dataDevolucao!.invalid && formDir.submitted" class="validation-error">
+        <span *ngIf="dataDevolucao.errors?.['required']" style="font-size: 0.8rem; color: tomato;">
+          Insira a data de devolução da reserva
+        </span>
+        <!-- <p *ngIf="nome.errors?.['maxlength']">Até 30 caracter</p> -->
+      </div>
+
+      <!-- Validador de datas -->
+      <!-- <div *ngIf="formValidation.controls['dataDevolucao'].value < formValidation.controls['dataRetirada'].value">
+        <span style="font-size: 0.8rem; color: tomato;">
+          A data de devolução não pode ser menor que a data de retirada
+        </span>
+      </div> -->
+
+
+      <label for="hr-agendamento">Horário devolução:</label> &nbsp;
+      <select #valid name="horaDevolucaoSelect" formControlName="horaDevolucaoSelect" required>
+        <option name="horaDevolucao" *ngFor="let option of optionsHours" [value]="option.valor">{{ option.descricao }}</option>
+      </select>
+      <div *ngIf="horaDevolucaoSelect!.invalid && formDir.submitted" class="validation-error">
+        <span *ngIf="horaDevolucaoSelect.errors?.['required']" style="font-size: 0.8rem; color: tomato;">
+          Insira o horário da devolução
+        </span>
+        <!-- <p *ngIf="nome.errors?.['maxlength']">Até 30 caracter</p> -->
+      </div>
+
+
+
+
+
+
+      </div>
+  </div>
 
    <button type="submit" style="width: 150px; margin-block-start: 50px;">Criar</button>
 
