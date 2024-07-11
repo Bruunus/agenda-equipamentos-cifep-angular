@@ -1,8 +1,8 @@
 import { EstoquePollInterface } from './../../model/typing-interfaces/equipamento/estoque-poll-interface';
 import { EstoqueInterface } from '../../model/typing-interfaces/equipamento/estoque-interface';
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Subject, Subscription,  interval, Observable, takeUntil, switchMap, throwError, tap, delayWhen, timer } from "rxjs";
+import { Subject, Subscription,  interval, Observable, catchError, switchMap, throwError, tap, delayWhen, map } from "rxjs";
 import { retryWhen } from 'rxjs/operators';
 
 @Injectable()
@@ -11,6 +11,7 @@ export class ServiceApiReadEquipament {
 
   private GET_EQUIPAMENTO_LIST_URL: string = 'http://localhost:8080/load/getestoque';
   private GET_EQUIPAMENTO_ESTOQUE_LIST_URL: string = 'http://localhost:8080/load/getestoquequantidade';
+  private GET_RESERVAS_DE_ESTOQUE_FUTURO: string = 'http://localhost:8080/load/pesquisa-reservas-futuras';
 
   private pollInterval: number = 5000;                            // Intervalo de atualização em milissegundos (5 segundos)
   private unsubscribe$: Subject<void> = new Subject<void>();      // Observable para cancelar a assinatura
@@ -89,6 +90,30 @@ export class ServiceApiReadEquipament {
 
 
   /**
+   * Método que realiza uma API em modo assíncrono para o servidor para trazer todas
+   * as reservas agendadas em uma lista de reservas
+   * @param datas
+   * @returns
+   */
+  getReservasFuturas(datas: any[]): Observable<any> {
+    const payload = JSON.stringify(datas);
+    return this.http.post(this.GET_RESERVAS_DE_ESTOQUE_FUTURO, payload, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).pipe(
+      map((response: any) => {
+        return response;
+      }),
+      catchError((error: any) => {
+        console.error('Erro na requisição:', error);
+        throw error;
+      })
+    );
+  }
+
+
+  /**
    * API de carregamento dos equipamentos
    */
   public async loadListEquipaments(): Promise<EstoqueInterface[]> {
@@ -98,6 +123,11 @@ export class ServiceApiReadEquipament {
         return lista;
       });
   }
+
+
+
+
+
 
 
 

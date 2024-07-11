@@ -1,9 +1,10 @@
+import { ServiceApiReadEquipament } from 'src/app/service/api/equipamentos/service-api-read-equipament';
 import { ListaAgendaInterface } from '../typing-interfaces/agenda/lista-agenda-interface';
 import { FormGroup, AbstractControl } from '@angular/forms';
 import { Injectable } from '@angular/core';
 import { HorasService } from '../horasService';
 import * as moment from 'moment';
-import { empty } from 'rxjs';
+import { empty, Subject, takeUntil } from 'rxjs';
 
 @Injectable()
 export class FormValidationMultipla {
@@ -14,11 +15,11 @@ export class FormValidationMultipla {
   private year: number;
   private month: string;
   private day: string;
-
   private dataAtual: string;
+  private unsubscribe$ = new Subject<void>();
 
 
-  public constructor(private horasService: HorasService) {
+  public constructor(private horasService: HorasService, private service_api_read_equipament: ServiceApiReadEquipament) {
     this.year = this.today.getFullYear();
     this.month = String(this.today.getMonth() + 1).padStart(2, '0');
     this.day = String(this.today.getDate()).padStart(2, '0');
@@ -26,6 +27,8 @@ export class FormValidationMultipla {
     this.dataAtual = moment().format('YYYY-MM-DD');
 
   }
+
+
 
 
   /**
@@ -38,7 +41,9 @@ export class FormValidationMultipla {
    * @param list
    * @returns
    */
-  public validacaoCompletaDaAgendaMultipla(dataRetirada: string, dataFim: string, horaInicio: string,  horaFim: string): boolean {
+  public validacaoCompletaDaAgendaMultipla(
+    dataRetirada: string, dataFim: string, horaInicio: string,  horaFim: string
+  ): boolean {
 
     const validacaoDasDatas = this.validationAgendaCamposDeDatas(dataRetirada, dataFim);
     const validacoesDosSelects = this.validationAgendaHorarios(horaInicio, horaFim);
@@ -46,7 +51,7 @@ export class FormValidationMultipla {
     const dataFimNaoPodeSerManiorADataInicio = this.validacaoDataMaiorEMenor(dataFim, dataRetirada)
     const validacaoHoraFim = this.validacaoHoraFim(horaFim, horaInicio, dataRetirada, dataFim)
     const horasIguaisNãoPodem = this.horasNãoPodemSerIguais(horaInicio, horaFim, dataRetirada, dataFim)
-    // (horaInicio: string, horaFim: string, dataInicio: string, dataFim: string)
+
 
     if (
       validacaoDasDatas && validacoesDosSelects && dataInicioNaoPodeSerMenorADoSistema &&
@@ -59,6 +64,19 @@ export class FormValidationMultipla {
     return false;
 
   }
+
+  public async pesquisaDisponibilidadeDeAgendamento(dataRetirada: any[], listaEquipamentos: any[]): Promise<boolean> {
+    const verificarAgenda = await this.validacaoDeEstoqueDisponivelMULTIPLA(dataRetirada, listaEquipamentos)
+
+    if(verificarAgenda) {
+      return true;
+    }
+      return false;
+
+
+  }
+
+
 
 
   /**
@@ -259,6 +277,65 @@ export class FormValidationMultipla {
 
   }
 
+
+
+  /**
+   * Método de validação de disponibilidade junto ao estoque do banco para
+   * descobrir disponibilidade
+   */
+  async validacaoDeEstoqueDisponivelMULTIPLA(datas: any[], listaEquipamento: Array<any> = []): Promise<boolean> {
+    return new Promise<boolean>((resolve) => {
+      this.service_api_read_equipament.getReservasFuturas(datas).pipe(
+        takeUntil(this.unsubscribe$)
+      ).subscribe(
+        (listaInsuficiente: any) => {
+          console.log('Disponibilizador da datas agendas');
+          console.log(listaInsuficiente);
+
+
+          // let correspondenciaEncontrada = true; // Variável para rastrear se uma correspondência foi encontrada
+
+          // for (let itemInsuficiente of listaInsuficiente) {
+          //   let correspondenciaEquipamentoEncontrada = false; // Variável para rastrear se uma correspondência específica foi encontrada
+          //   for (let equipamento of listaEquipamento) {
+          //     if (equipamento.descricao === itemInsuficiente.descricao) {
+          //       let msn = `O equipamento ${itemInsuficiente.descricao} não possui disponibilidade reservar para a data ${itemInsuficiente.dataRetirada} agendada.`;
+          //       alert(msn);
+          //       correspondenciaEquipamentoEncontrada = true;
+          //       break;
+          //     }
+          //   }
+          //   if (correspondenciaEquipamentoEncontrada) {
+          //     correspondenciaEncontrada = false;
+          //     break;
+          //   }
+          // }
+
+          // if (correspondenciaEncontrada) {
+          //   console.log('Agenda e equipamentos permitidos');
+          //   resolve(true);
+          // } else {
+          //   resolve(false);
+          // }
+        },
+        (error: any) => {
+          console.error('Erro ao invocar o método:', error);
+          resolve(false);
+        }
+      );
+    });
+  }
+
+
+
+
+
+
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
 
 
 

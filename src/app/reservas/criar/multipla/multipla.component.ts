@@ -1,5 +1,5 @@
 import { HorasService } from 'src/app/service/model/horasService';
-import { FormValidation } from '../../../service/model/form-validation/form-validation';
+import { FormValidationEventual } from '../../../service/model/form-validation/form-validation-eventual';
 import { OptionQtdService } from './../../../service/model/optionQtdService';
 import { ListaAgendaInterface } from './../../../service/model/typing-interfaces/agenda/lista-agenda-interface';
 
@@ -34,6 +34,10 @@ export class MultiplaComponent implements OnInit {
   equipamentoContId = 0;
   valorDescricao: string = '';
   status_input_habilitado: boolean = false; // não habilitado
+  AGUARDANDO:  string = 'AGUARDANDO';
+  DISPONIVEL: string = 'DISPONIVEL';
+  INDISPONIVEL: string = 'INDISPONIVEL';
+  status_verificador_agenda: string = 'AGUARDANDO'; // AGUARDANDO - DISPONIVEL - INDISPONIVEL
   equipamentos: Array<any>[] = [];  // Tipo any por conta da manipulação do id para ficar de acordo com a regra de negócio
   objectEquipamentos : {id: number, descricao: string, quantidade: number } = {id:0, descricao:'', quantidade:0}
   objectEquipamentosApresentacao: {id: number, descricao: string, quantidade: number } = {id:0, descricao:'', quantidade:0}
@@ -122,6 +126,9 @@ export class MultiplaComponent implements OnInit {
       outros: new FormControl({value: '', disabled: true}, Validators.maxLength(40)),
       habilitaOutros: new FormControl('')
     });
+
+
+    this.onInputValueDataDevolucao()
   }
 
 
@@ -132,7 +139,7 @@ export class MultiplaComponent implements OnInit {
    * a lista do servidor.
    */
   protected async loadListEquipaments(): Promise<void> {
-    this.optionsListaEquipamento = await this.serviceApiReadEquipament.loadListEquipaments();
+    this.optionsListaEquipamento = await this.serviceApiReadEquipament.getListEquipaments();
     console.log('Lista de options API ',this.optionsListaEquipamento)
   }
 
@@ -165,6 +172,19 @@ export class MultiplaComponent implements OnInit {
 
   // Events
 
+
+  /**
+   * Evento criado para copiar a data de retirada para o campo de data de devolução.
+   *
+   */
+  private onInputValueDataDevolucao(): void {
+    this.formValidationGroup.controls['dataRetirada'].valueChanges.subscribe((value) => {
+      if (value) {
+        this.formValidationGroup.controls['dataDevolucao'].patchValue(value);
+      }
+    });
+  }
+
   protected onDescricaoValorChange(descricao: string): void {
     this.valorDescricao = descricao;
     console.log('Valor de descricao: ',descricao)
@@ -172,7 +192,49 @@ export class MultiplaComponent implements OnInit {
 
 
 
+
+
+
+
   // Methods class
+
+
+
+  /**
+   * Funcionalidade para adicionar um equipamento à lista de agendamento que será
+   * salva do submit do formulário. Existe algumas validações necessárias que foram tratadas
+   * diretamente na classe para melhor performance em tempo de execução. Um equipamento não pode
+   * ser adicionado sem antes ser validado. Um equipamento não pode ser adicionado 2 vezes e a
+   * quantidade antes de adicionar é validada no estoque se a quantidade passada tem disponível,
+   * do contrário o andamento do método é bloqueado impedindo o avanço no preenchimento do
+   * formulário.
+   */
+  protected adicionarEquipamento(event: Event): void {
+
+    event.preventDefault()
+    this.equipamentoContId++
+
+
+    this.objectEquipamentos = {
+      id: this.equipamentoContId,
+      descricao: this.getEquipamentoSelect.value,
+      quantidade: this.getQuantidadeSelect.value
+    }
+
+     this. objectEquipamentosApresentacao = {
+      id: this.equipamentoContId,
+      descricao: this.getEquipamentoSelect.value,
+      quantidade: this.getQuantidadeSelect.value
+    }
+
+    this.listaEquipamentoApresentacao.push(this.objectEquipamentosApresentacao);
+    this.listaEquipamento.push(this.objectEquipamentos)
+
+  console.log('Valor adicionado a lista original ', this.listaEquipamento);  //{Debug}\\
+
+  }
+
+
 
   /**
    *
@@ -186,11 +248,32 @@ export class MultiplaComponent implements OnInit {
       this.dataRetirada.value,
       this.dataDevolucao.value,
       this.horaInicioSelect.value,
-      this.horaDevolucaoSelect.value
+      this.horaDevolucaoSelect.value,
+
     );
 
 
-    if(!validacaoCompletaDaAgenda) {
+
+
+    console.log('Verificando disponibilidade da agenda')
+
+
+    const dataRetirada = this.dataRetirada.value
+
+
+
+    // if(!status_solicitacao) {
+    //   this.status_verificador_agenda = this.INDISPONIVEL
+    // } else {
+    //   this.status_verificador_agenda = this.AGUARDANDO
+    // }
+
+    const status_solicitacao = this.formValidation.pesquisaDisponibilidadeDeAgendamento([dataRetirada], this.listaEquipamento);
+
+
+
+    if(!validacaoCompletaDaAgenda && !status_solicitacao) {
+      this.status_verificador_agenda = this.INDISPONIVEL
       return;
     } else {
 
@@ -217,6 +300,13 @@ export class MultiplaComponent implements OnInit {
       this.listaAgenda.push(this.objectDatas);
       this.listaAgendaApresentacao.push(this.objectDatasApresentacao);
 
+      this.status_verificador_agenda = this.DISPONIVEL
+
+
+
+
+
+
 
       console.log('listaAgenda ', this.listaAgenda)   //{Debug}\\
 
@@ -234,39 +324,9 @@ export class MultiplaComponent implements OnInit {
   }
 
 
-   /**
-   * Funcionalidade para adicionar um equipamento à lista de agendamento que será
-   * salva do submit do formulário. Existe algumas validações necessárias que foram tratadas
-   * diretamente na classe para melhor performance em tempo de execução. Um equipamento não pode
-   * ser adicionado sem antes ser validado. Um equipamento não pode ser adicionado 2 vezes e a
-   * quantidade antes de adicionar é validada no estoque se a quantidade passada tem disponível,
-   * do contrário o andamento do método é bloqueado impedindo o avanço no preenchimento do
-   * formulário.
-   */
-   protected adicionarEquipamento(event: Event): void {
-
-    event.preventDefault()
-    this.equipamentoContId++
 
 
-    this.objectEquipamentos = {
-      id: this.equipamentoContId,
-      descricao: this.getEquipamentoSelect.value,
-      quantidade: this.getQuantidadeSelect.value
-    }
 
-     this. objectEquipamentosApresentacao = {
-      id: this.equipamentoContId,
-      descricao: this.getEquipamentoSelect.value,
-      quantidade: this.getQuantidadeSelect.value
-    }
-
-    this.listaEquipamentoApresentacao.push(this.objectEquipamentosApresentacao);
-    this.listaEquipamento.push(this.objectEquipamentos)
-
-  // console.log('Valor adicionado a lista original ', this.listaEquipamento);  //{Debug}\\
-
-  }
 
 
 

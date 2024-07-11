@@ -1,3 +1,4 @@
+import { ListaAgendaInterface } from './typing-interfaces/agenda/lista-agenda-interface';
 import { ServiceApiReadEquipament } from 'src/app/service/api/equipamentos/service-api-read-equipament';
 import { Injectable } from '@angular/core';
 import { Observable, timer, switchMap, takeUntil, tap } from 'rxjs';
@@ -11,7 +12,10 @@ export class FormEquipamentoValidationService {
     equipamentoSelecionado: string, quantidadeSelecionada: string, lista: Array<any>, campoHabilitado: boolean
   ): boolean {
 
+
     const validacaoEquipamentoIgual = this.naoPodeEquipamentoIgual(equipamentoSelecionado, lista);
+
+
     const equipamentoEQuantidadeVazios =
       this.equipamentoEQuantidadeNaoPodemEstarVazios(equipamentoSelecionado, quantidadeSelecionada, campoHabilitado)
 
@@ -62,12 +66,21 @@ export class FormEquipamentoValidationService {
    * Método validador que no formulário realiza a validação
    */
   private naoPodeEquipamentoIgual(equipamentoSelecionado: string, lista: Array<any>): boolean {
-    for (const equipamento of lista) {
-      if (equipamento.descricao === equipamentoSelecionado) {
-        alert('Este equipamento já foi adicionado.')
-        return false;
+
+    if(lista.length === 0) {
+      // console.log('A lista está vazia')  //{Debug}\\
+      return true
+    } else {
+      // console.log('A lista não está vazia\nAinda tem item nela', lista)  //{Debug}\\
+      for (const equipamento of lista) {
+        if (equipamento.descricao === equipamentoSelecionado) {
+          alert('Este equipamento já foi adicionado.')
+          return false;
+        }
       }
     }
+
+
     return true
   }
 

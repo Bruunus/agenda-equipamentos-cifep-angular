@@ -23,13 +23,16 @@ export class DeletarService {
                 if (objectElements.id === id) {
                     listaEquipamento.splice(item, 1);
                     listaEquipamentoApresentacao.splice(item, 1);
+
                 }
               })
-
               // console.log('Lista de equipamento após delete ',listaEquipamento)  //{Debug}\\
               // console.log('Lista de equipamento de apresentação após delete ',listaEquipamentoApresentacao)  //{Debug}\\
               liElement.parentNode?.removeChild(liElement)
+              listaEquipamento.length = 0; // Zera a lista listaEquipamento
+              listaEquipamentoApresentacao.length = 0; // Zera a lista listaEquipamentoApresentacao
 
+              // console.log('tentativa de zerar a lista - resultado => ',listaEquipamento)   //{Debug}\\
             }
         }
     }

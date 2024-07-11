@@ -1,23 +1,25 @@
+import { ServiceApiReadEquipament } from 'src/app/service/api/equipamentos/service-api-read-equipament';
 import { ListaAgendaInterface } from '../typing-interfaces/agenda/lista-agenda-interface';
 import { FormGroup, AbstractControl } from '@angular/forms';
 import { Injectable } from '@angular/core';
 import { HorasService } from '../horasService';
 import * as moment from 'moment';
-import { empty } from 'rxjs';
+import { Subject, takeUntil, Subscription } from 'rxjs';
+import { compileDeclareClassMetadata } from '@angular/compiler';
 
 @Injectable()
-export class FormValidation {
+export class FormValidationEventual {
 
   private dataFimValidation: string = '';
   private today: Date = new Date();
   private year: number;
   private month: string;
   private day: string;
-
+  private unsubscribe$ = new Subject<void>();
   private dataAtual: string;
 
 
-  public constructor(private horasService: HorasService) {
+  public constructor(private horasService: HorasService, private service_api_read_equipament: ServiceApiReadEquipament) {
     this.year = this.today.getFullYear();
     this.month = String(this.today.getMonth() + 1).padStart(2, '0');
     this.day = String(this.today.getDate()).padStart(2, '0');
@@ -46,11 +48,16 @@ export class FormValidation {
     const dataFimNaoPodeSerManiorADataInicio = this.validacaoDataMaiorEMenor(dataFim, dataInicio)
     const validacaoHoraFim = this.validacaoHoraFim(horaFim, horaInicio, dataInicio, dataFim)
     const horasIguaisNãoPodem = this.horasNãoPodemSerIguais(horaInicio, horaFim, dataInicio, dataFim)
+    let validadorDeAgenda = null;
+
+    if(this.dataAtual != dataInicio) {
+      validadorDeAgenda = this.validacaoDeEstoqueDisponivelEVETUAL([dataInicio], list)
+    }
 
 
     if (
       dataInicioNaoPodeSerMenorADoSistema && dataFimNaoPodeSerManiorADataInicio && validacaoHoraFim &&
-      validarSeListaDeEquipamentosEstaVazia && horasIguaisNãoPodem
+      validarSeListaDeEquipamentosEstaVazia && horasIguaisNãoPodem && validadorDeAgenda
     ) {
       return true
     }
@@ -125,14 +132,53 @@ export class FormValidation {
   }
 
 
+  /**
+   * Antes de fazer a validação é verificado se a lista está vazia, se sim emite um
+   * alerta para adicionar um agendamento
+   */
   public validationListAgendaEmpty(list: ListaAgendaInterface[]): boolean {
     if(list.length === 0) {
-      console.error("A lista está vazia", list);
+      // console.error("A lista está vazia", list);
       alert('Adicione um agendamento para realizar a reserva')
       return false;
     }
     return true;
   }
+
+  /**
+   * Método de validação de disponibilidade junto ao estoque do banco para
+   * descobrir disponibilidade
+   */
+  validacaoDeEstoqueDisponivelEVETUAL(datas: any[], listaEquipamento: Array<any> = []): Promise<boolean> {
+    return new Promise<boolean>((resolve) => {
+      this.service_api_read_equipament.getReservasFuturas(datas).pipe(
+        takeUntil(this.unsubscribe$)
+      ).subscribe(
+        (listaInsuficiente: any) => {
+          console.log(listaInsuficiente);
+
+          console.log('Data solicitada');
+          for (let itemInsuficiente of listaInsuficiente) {
+            for (let equipamento of listaEquipamento) {
+              if (equipamento.descricao === itemInsuficiente.descricao) {
+                let msn = `O equipamento ${itemInsuficiente.descricao} não possui disponibilidade reservar para a data ${itemInsuficiente.dataRetirada}.`;
+                alert(msn);
+                resolve(false);
+              }
+            }
+          }
+
+          resolve(true);
+        },
+        (error: any) => {
+          console.error('Erro ao invocar o método:', error);
+          resolve(false);
+        }
+      );
+    });
+  }
+
+
 
 
 
@@ -237,17 +283,6 @@ export class FormValidation {
 
 
 
-  /**
-   * Tentativa de fazer todas as validações em um só método
-   * @returns
-   */
-  validationFormFullT(items: any[]): boolean {
-
-
-
-    return true;
-  }
-
 
 
 
@@ -302,6 +337,12 @@ export class FormValidation {
   }
 
 
+
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
 
   //sessão de getters e setters
 

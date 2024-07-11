@@ -15,7 +15,7 @@ export class ErroServiceService {
     if(error.status === 500 && error.error.trace.includes('EstoqueInsuficienteException')) {
       const msn: string = `Erro: ${this.er0001} - Quantidade em estoque insuficiente para o(s) equipamento(s) selecionados. `+
       'Favor atualizar o estoque, verifique o radar de equipamentos e tente novamente.'
-      alert(msn)
+      console.error(msn)
     }
   }
 }

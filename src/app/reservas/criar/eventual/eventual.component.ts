@@ -8,7 +8,7 @@ import { EstoqueInterface } from '../../../service/model/typing-interfaces/equip
 import { FormEquipamentoValidationService } from './../../../service/model/formEquipamentoValidationService';
 import { Router } from '@angular/router';
 import { ServiceApiCreateReservation } from './../../../service/api/reservas/service-api-create-reservation';
-import { FormValidation } from '../../../service/model/form-validation/form-validation';
+import { FormValidationEventual } from '../../../service/model/form-validation/form-validation-eventual';
 
 import { Component, OnInit, } from '@angular/core';
 import { HorasService } from "../../../service/model/horasService";
@@ -55,6 +55,7 @@ export class EventualComponent implements OnInit {
 
   objectEquipamentos : {id: number, descricao: string, quantidade: number } = {id:0, descricao:'', quantidade:0}
   objectEquipamentosApresentacao: {id: number, descricao: string, quantidade: number } = {id:0, descricao:'', quantidade:0}
+  objectTeste: {} = {}
   optionsHours: { descricao: string, valor: string }[] = [] as { descricao: string, valor: string }[];
   optionQuantidade: { descricao: string, valor: string } [] = [] as { descricao: string, valor: string }[];
   options: { descricao: string, valor: string }[] = [] as { descricao: string, valor: string }[];
@@ -62,6 +63,7 @@ export class EventualComponent implements OnInit {
   // lists
   listaEquipamento: Array<any> = [];    // Tipo any por conta da manipulação do id para ficar de acordo com a regra de negócio
   listaEquipamentoApresentacao: Array<any> = [];    // Tipo any por conta da manipulação do id para ficar de acordo com a regra de negócio
+  listaTeste: Array<any> = [];
   optionsListaEquipamento: EstoqueInterface[] = [{id: 0, descricao: '', valor: '', quantidade: 0}];
   listaEquipamentoQuantidade: EstoquePollInterface[] = [];
 
@@ -78,7 +80,7 @@ export class EventualComponent implements OnInit {
 
 
   constructor(private horasService: HorasService, private serviceApiReadEquipament: ServiceApiReadEquipament,
-    private optionQtdService: OptionQtdService, private formValidationService: FormValidation,
+    private optionQtdService: OptionQtdService, private formValidationService: FormValidationEventual,
     private serviceApiCreateReservation: ServiceApiCreateReservation, private router: Router,
     private formEquipamentoValidationService: FormEquipamentoValidationService, private deletarData: DeletarService
   ) { this.dataAtual = moment().format('YYYY-MM-DD') }
@@ -89,6 +91,10 @@ export class EventualComponent implements OnInit {
     this.loadListEquipaments()
     this.getListQuantidade()
     this.validacaoDeQuantidade()
+
+
+
+
 
 
     this.formValidation = new FormGroup({
@@ -123,6 +129,16 @@ export class EventualComponent implements OnInit {
     this.onCheckboxOutrosChange()
 
 
+    // TESTE DA FUNCIONALIDADE DE PESQUISA DA AGENDA - (TEMPORARIA AQUI)
+    // let datas: string[] = ["2024-07-04"];
+    // console.log('Impressão das datas')
+
+    // this.objectTeste = {
+    //   descricao: '',
+    //   quantidade: ''
+    // }
+
+    // this.formValidationService.validacaoDeEstoqueDisponivelEVETUAL(datas, this.listaTeste)
 
   }
 
@@ -394,8 +410,6 @@ export class EventualComponent implements OnInit {
         descricao: equipamentoEscolhidoApresentacao,
         quantidade: quantidade
       }
-
-
 
 
       // this.formatadorDeListaParaApresentacao(this.objectEquipamentosApresentacao)

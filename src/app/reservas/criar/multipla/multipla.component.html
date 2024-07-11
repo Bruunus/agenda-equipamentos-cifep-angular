@@ -47,8 +47,76 @@
         <!-- <p *ngIf="nome.errors?.['maxlength']">Até 30 caracter</p> -->
       </div>
 
-      <br><br>
+      <br><br><br>
 
+        <table id="table-adicionar">
+            <tr>
+              <td>
+                <label for="equipamento">Equipamento</label>
+
+                <select #equipamentoValid  name="equipamento" formControlName="equipamentoSelect"
+                (change)="onDescricaoValorChange(equipamentoValid.options[equipamentoValid.selectedIndex].text)">
+                  <option value=""></option>
+                  <option *ngFor="let item of optionsListaEquipamento" [value]="item.valor" >
+                    {{ item.descricao }}
+                  </option>
+                </select>
+
+
+              </td>
+              <td>
+                <label for="quantidade">Quantidade</label>
+                <select #quantidadeValid formControlName="quantidadeSelect" >
+                  <option name="selectedOptionListaQuantidade" *ngFor="let qtd of optionQuantidade" [value]="qtd.valor">{{ qtd.descricao }}</option>
+                </select>
+              </td>
+              <td>
+                <button (click)="adicionarEquipamento($event)">Adicionar</button>
+              </td>
+
+            </tr>
+
+        </table>
+
+
+        <tr>
+          <td colspan="3">
+            <label for="">Outros equipamentos</label>
+            <input type="text" formControlName="outros" id="">
+            <input style="margin-left: 8pt;" type="checkbox" formControlName="habilitaOutros" maxlength="40">
+            <label style="margin-left: 8pt;">Adicionar</label>
+          </td>
+        </tr>
+
+        <table id="table-equipamento">
+            <thead>
+              <th>Equipamento</th>
+              <th>Quantidade</th>
+            </thead>
+            <tbody>
+              <tr>
+                <td colspan="2">
+                  <ul>
+                    <!-- template -->
+                    <li id="template-li" class="row"
+                    *ngFor="let equipamento of listaEquipamentoApresentacao; let i = index" [attr.data-id]="equipamento.id">
+                      <td class="col">{{ equipamento.descricao }}</td>
+                      <td class="col-6">
+                        <div class="row justify-content-between">
+                          <span>{{ equipamento.quantidade }}</span>
+                          <span (click)="removerEquipamento($event)" class="delete">x</span>
+                        </div>
+                      </td>
+                    </li>
+                    <!-- template -->
+                  </ul>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+
+        <br> <br>
 
         <table>
 
@@ -148,7 +216,21 @@
                     </div>
                     <div class="col-3">
                       <div class="row justify-content-between">
-                        <img class="position-img" src="assets/icons/accept-icon-teste1.png" alt="Ícone 1">
+
+                        <!-- Implantando funcionalidade ainda  -->
+                        <div>
+                          <div *ngIf="status_verificador_agenda === 'AGUARDANDO'">
+                            <img class="loading-status" src="assets/loading.gif" alt="Icone 2">
+                          </div>
+                          <div *ngIf="status_verificador_agenda === 'INDISPONIVEL'">
+                            <span style="color: tomato; font-weight: bold; font-size: 15px;">Indisponível</span>
+                          </div>
+                          <div *ngIf="status_verificador_agenda === 'DISPONIVEL'">
+                            <img class="position-img" src="assets/icons/accept-icon-teste1.png" alt="Ícone 1">
+                          </div>
+                        </div>
+
+
                         <span (click)="removerAgenda($event)" class="delete">x</span>
                       </div>
                     </div>
@@ -161,73 +243,7 @@
           </tbody>
         </table>
 
-        <br><br><br>
-
-        <table id="table-adicionar">
-            <tr>
-              <td>
-                <label for="equipamento">Equipamento</label>
-
-                <select #equipamentoValid  name="equipamento" formControlName="equipamentoSelect"
-                (change)="onDescricaoValorChange(equipamentoValid.options[equipamentoValid.selectedIndex].text)">
-                  <option value=""></option>
-                  <option *ngFor="let item of optionsListaEquipamento" [value]="item.valor" >
-                    {{ item.descricao }}
-                  </option>
-                </select>
-
-
-              </td>
-              <td>
-                <label for="quantidade">Quantidade</label>
-                <select #quantidadeValid formControlName="quantidadeSelect" >
-                  <option name="selectedOptionListaQuantidade" *ngFor="let qtd of optionQuantidade" [value]="qtd.valor">{{ qtd.descricao }}</option>
-                </select>
-              </td>
-              <td>
-                <button (click)="adicionarEquipamento($event)">Adicionar</button>
-              </td>
-
-            </tr>
-
-        </table>
-
-
-        <tr>
-          <td colspan="3">
-            <label for="">Outros equipamentos</label>
-            <input type="text" formControlName="outros" id="">
-            <input style="margin-left: 8pt;" type="checkbox" formControlName="habilitaOutros" maxlength="40">
-            <label style="margin-left: 8pt;">Adicionar</label>
-          </td>
-        </tr>
-
-        <table id="table-equipamento">
-            <thead>
-              <th>Equipamento</th>
-              <th>Quantidade</th>
-            </thead>
-            <tbody>
-              <tr>
-                <td colspan="2">
-                  <ul>
-                    <!-- template -->
-                    <li id="template-li" class="row"
-                    *ngFor="let equipamento of listaEquipamentoApresentacao; let i = index" [attr.data-id]="equipamento.id">
-                      <td class="col">{{ equipamento.descricao }}</td>
-                      <td class="col-6">
-                        <div class="row justify-content-between">
-                          <span>{{ equipamento.quantidade }}</span>
-                          <span (click)="removerEquipamento($event)" class="delete">x</span>
-                        </div>
-                      </td>
-                    </li>
-                    <!-- template -->
-                  </ul>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+        <br><br>
 
 
 
@@ -259,17 +275,29 @@
   </thead>
   <tbody>
 
-    <tr class="criada">
+    <tr class="finalizada">
       <td>
         Os campos: Nome, Sobrenome, Setor, Dt Início, Data fim, Hora Início e hora fim não podem estar
         vazios ao dar submit
       <td>22/jun/2024 - 18:59</td>
-      <td></td>
+      <td>30/jun/2024 - 17:00</td>
     </tr>
 
-    <tr class="criada">
+    <tr class="finalizada">
       <td>
         Ao salvar verificar se as listas de datas e de equipamentos estão vazias, caso verdadeiro retorne erro informando que é necessário adicionar uma agenda e um equipamento
+      <td>22/jun/2024 - 19:00</td>
+      <td>30/jun/2024 - 17:00</td>
+    </tr>
+
+    <tr class="executando">
+      <td>
+        Ao adicionar um agendamento o sistema deve verificar junto ao banco dentro da agenda se nessa data os
+        equipamentos solicitados possuem disponibilidade para reservar, do contrário o sistema adicionar um
+        status no item da agenda recém adicionada de 'data indisponível' e no final o ao dar submit o sistema
+        deve verificar na agenda se existe algum item com status indisponível, se sim não pode prosseguir a
+        não ser cancelando aquele agendamento.
+
       <td>22/jun/2024 - 19:00</td>
       <td></td>
     </tr>
@@ -279,14 +307,14 @@
 
         <ul>
           <b>Para data de retirada</b>
-          <li class="criada">A data de inicio não pode ser menor que a data atual do sistema</li>
-          <li class="criada">Ao inserir a data de inicio o mesmo valor deve ser adicionado na data fim</li>
+          <li class="finalizada">A data de inicio não pode ser menor que a data atual do sistema</li>
+          <li class="finalizada">Ao inserir a data de inicio o mesmo valor deve ser adicionado na data fim</li>
         </ul>
 
 
         <ul>
-          <b class="criada">Para de devolução</b>
-          <li class="criada">A data fim não pode ser menor que a data de início</li>
+          <b class="finalizada">Para de devolução</b>
+          <li class="finalizada">A data fim não pode ser menor que a data de início</li>
         </ul>
 
         <ul>
