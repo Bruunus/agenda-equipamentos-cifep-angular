@@ -1,8 +1,17 @@
+import * as moment from "moment";
+
 export class HorasService {
+
+  dataAtual: string = '';
+  optionsHours: { descricao: string, valor: string }[] = [] as { descricao: string, valor: string }[];
 
   constructor() {  }
 
 
+  /**
+   *
+   * @returns Prenchimento dos selects
+   */
   getHoursSegAQuint(): { descricao: string, valor: string }[] {
     return [
       { descricao: '-- select --', valor: '' },
@@ -22,6 +31,10 @@ export class HorasService {
     ];
   }
 
+  /**
+   *
+   * @returns Prenchimento dos selects
+   */
   getHoursSexta(): { descricao: string, valor: string }[] {
     return [
       { descricao: '-- select --', valor: '' },
@@ -38,28 +51,33 @@ export class HorasService {
     ];
   }
 
+  // getOptionSelecionado(event: Event): string {
+  //   const element = event.target as HTMLSelectElement;
+  //   const opcaoSelecionada = element.value;
+  //   console.log('opção: ',opcaoSelecionada)
+  //   return opcaoSelecionada;
+  // }
 
 
-  getOptionSelecionado(event: Event): string {
-    const element = event.target as HTMLSelectElement;
-    const opcaoSelecionada = element.value;
-    console.log('opção: ',opcaoSelecionada)
-    return opcaoSelecionada;
+  /**
+   * Serviço de carregamento das options conferindo pelo dia da
+   * semana.
+   */
+  loadOptionsDay(): void {
+    const dataAtualMoment = moment(this.dataAtual, 'YYYY-MM-DD');
+    const dataAtualMomentValue = dataAtualMoment.format('dddd');
+
+    if(dataAtualMomentValue !== 'Friday') {
+      // console.log('Hoje não sexta   {Debug}') //{Debug}\\
+      this.optionsHours = this.getHoursSegAQuint();
+    } else {
+      // console.log('Hoje é sexta   {Debug}') //{Debug}\\
+      this.optionsHours = this.getHoursSexta();
+    }
+
   }
 
 
-  getValidationData(dataInicio:string, dataFim:string): boolean {
-
-    // verifique se para comparar Datas pode ser em string, do contrário faça o parse para number
-
-
-    return true;
-  }
-
-
-  getValidationHours(horaInicio:string, horaFim:string): boolean {
-    return true;
-  }
 
 
 

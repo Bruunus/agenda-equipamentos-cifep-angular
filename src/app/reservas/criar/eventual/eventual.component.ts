@@ -1,8 +1,4 @@
 import { EstoquePollInterface } from '../../../service/model/interfaces/equipamento/estoque-poll-interface';
-// import { EquipamentoInterface } from 'src/app/service/model/typing-interfaces/equipamento-interface';
-import { EquipamentoInterface } from 'src/app/service/model/interfaces/equipamento/equipamento-interface';
-// import { EquipamentoInterface } from 'src/app/service/model/typing-interfaces/equipamento/equipamento-interface';
-
 
 import { EstoqueInterface } from '../../../service/model/interfaces/equipamento/estoque-interface';
 import { FormEquipamentoValidationService } from '../../../validators/equipamento/formEquipamentoValidationService';
@@ -87,7 +83,7 @@ export class EventualComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.loadOptionsDay()
+    this.horasService.loadOptionsDay()
     this.loadListEquipaments()
     this.getListQuantidade()
     this.validacaoDeQuantidade()
@@ -152,19 +148,22 @@ export class EventualComponent implements OnInit {
    * Serviço de carregamento das options conferindo pelo dia da
    * semana.
    */
-  private loadOptionsDay(): void {
-    const dataAtualMoment = moment(this.dataAtual, 'YYYY-MM-DD');
-    const dataAtualMomentValue = dataAtualMoment.format('dddd');
+  // private loadOptionsDay(): void {
+  //   const dataAtualMoment = moment(this.dataAtual, 'YYYY-MM-DD');
+  //   const dataAtualMomentValue = dataAtualMoment.format('dddd');
+  //   if(dataAtualMomentValue !== 'Friday') {
+  //     // console.log('Hoje não sexta   {Debug}') //{Debug}\\
+  //     this.optionsHours = this.horasService.getHoursSegAQuint();
+  //   } else {
+  //     // console.log('Hoje é sexta   {Debug}') //{Debug}\\
+  //     this.optionsHours = this.horasService.getHoursSexta();
+  //   }
+  // }
 
-    if(dataAtualMomentValue !== 'Friday') {
-      // console.log('Hoje não sexta   {Debug}') //{Debug}\\
-      this.optionsHours = this.horasService.getHoursSegAQuint();
-    } else {
-      // console.log('Hoje é sexta   {Debug}') //{Debug}\\
-      this.optionsHours = this.horasService.getHoursSexta();
-    }
 
-  }
+
+
+
 
   /**
    * API de carregamento dos equipamentos direto da api onde o metodo loadListEquipaments aguarda

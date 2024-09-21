@@ -6,7 +6,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ReservasComponent } from './reservas/reservas.component';
 import { HttpClientModule } from '@angular/common/http';
-import { CriarComponent } from './reservas/criar/criar.component';
 import { EditarViewComponent } from './reservas/editar-view/editar.component';
 import { HistoricoComponent } from './reservas/historico/historico.component';
 import { EditarChangeComponent } from './reservas/editar-change/editar-change.component';
@@ -28,7 +27,6 @@ import { RadarComponent } from './reservas/radar/radar.component';
     AppComponent,
     ReservasComponent,
 
-    CriarComponent,
     EditarViewComponent,
     HistoricoComponent,
     EditarChangeComponent,
