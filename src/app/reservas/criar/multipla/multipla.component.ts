@@ -7,7 +7,7 @@ import { EstoqueInterface } from '../../../service/model/interfaces/equipamento/
 import { ServiceApiReadEquipament } from 'src/app/service/api/equipamentos/service-api-read-equipament';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormControl, AbstractControl } from '@angular/forms';
-import { ReservaMultipĺaInterface } from 'src/app/service/model/interfaces/reservaDTO/reserva-multipla-interface';
+import { ReservaMultipĺaInterface } from 'src/app/service/model/interfaces/reserva/reserva-multipla-interface';
 import { FormValidationMultipla } from 'src/app/validators/reserva/form-validation-multipla';
 import { Deletar } from '../utilits/deletar';
 

@@ -16,7 +16,7 @@ import { ServiceApiReadEquipament } from 'src/app/service/api/equipamentos/servi
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import * as moment from 'moment';
 import { Subscription } from 'rxjs';
-import { ReservaEventualInterface } from 'src/app/service/model/interfaces/reservaDTO/reserva-eventual-interface';
+import { ReservaEventualInterface } from 'src/app/service/model/interfaces/reserva/reserva-eventual-interface';
 import { Deletar } from '../utilits/deletar';
 import { OptionQtdService } from '../utilits/optionQtdService';
 
