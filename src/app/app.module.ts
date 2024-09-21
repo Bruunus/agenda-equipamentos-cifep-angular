@@ -12,7 +12,6 @@ import { HistoricoComponent } from './reservas/historico/historico.component';
 import { EditarChangeComponent } from './reservas/editar-change/editar-change.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MultiplaComponent } from './reservas/criar/multipla/multipla.component';
-import { AnualComponent } from './reservas/criar/anual/anual.component';
 
 
 import { ConfiguracaoComponent } from './configuracao/configuracao.component';
@@ -20,8 +19,6 @@ import { ServiceModule } from './service/service-module';
 import { FinalizarComponent } from './reservas/finalizar/finalizar.component';
 import { AgendaComponent } from './reservas/agenda/agenda.component';
 import { EventualComponent } from './reservas/criar/eventual/eventual.component';
-import { SuporteComponent } from './reservas/suporte/suporte.component';
-import { DatepickerComponent } from './reservas/suporte/datepicker/datepicker.component';
 import { RadarComponent } from './reservas/radar/radar.component';
 
 
@@ -37,13 +34,10 @@ import { RadarComponent } from './reservas/radar/radar.component';
     EditarChangeComponent,
     EventualComponent,
     MultiplaComponent,
-    AnualComponent,
     RedirectedComponent,
     ConfiguracaoComponent,
     FinalizarComponent,
     AgendaComponent,
-    SuporteComponent,
-    DatepickerComponent,
     RadarComponent
 
 
