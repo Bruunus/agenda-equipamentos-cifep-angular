@@ -1,15 +1,15 @@
-import { HorasService } from 'src/app/service/model/horasService';
-import { FormValidationEventual } from '../../../service/model/form-validation/form-validation-eventual';
-import { OptionQtdService } from './../../../service/model/optionQtdService';
-import { ListaAgendaInterface } from './../../../service/model/typing-interfaces/agenda/lista-agenda-interface';
+import { HorasService } from 'src/app/reservas/criar/utilits/horasService';
+import { FormValidationEventual } from '../../../validators/reserva/form-validation-eventual';
+import { OptionQtdService } from '../utilits/optionQtdService';
+import { ListaAgendaInterface } from '../../../service/model/interfaces/agenda/lista-agenda-interface';
 
-import { EstoqueInterface } from '../../../service/model/typing-interfaces/equipamento/estoque-interface';
+import { EstoqueInterface } from '../../../service/model/interfaces/equipamento/estoque-interface';
 import { ServiceApiReadEquipament } from 'src/app/service/api/equipamentos/service-api-read-equipament';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormControl, AbstractControl } from '@angular/forms';
-import { ReservaMultipĺaInterface } from 'src/app/service/model/typing-interfaces/reservaDTO/reserva-multipla-interface';
-import { DeletarService } from 'src/app/service/model/reservas/deletar-service';
-import { FormValidationMultipla } from 'src/app/service/model/form-validation/form-validation-multipla';
+import { ReservaMultipĺaInterface } from 'src/app/service/model/interfaces/reservaDTO/reserva-multipla-interface';
+import { FormValidationMultipla } from 'src/app/validators/reserva/form-validation-multipla';
+import { Deletar } from '../utilits/deletar';
 
 @Component({
   selector: 'app-multipla',
@@ -86,7 +86,7 @@ export class MultiplaComponent implements OnInit {
 
 
   constructor(
-    private horasService: HorasService, private deletarDataService: DeletarService, private serviceApiReadEquipament: ServiceApiReadEquipament,
+    private horasService: HorasService, private deletarDataService: Deletar, private serviceApiReadEquipament: ServiceApiReadEquipament,
     private optionQtdService: OptionQtdService, private formValidation: FormValidationMultipla
 
   ) {

@@ -1,24 +1,24 @@
-import { EstoquePollInterface } from './../../../service/model/typing-interfaces/equipamento/estoque-poll-interface';
+import { EstoquePollInterface } from '../../../service/model/interfaces/equipamento/estoque-poll-interface';
 // import { EquipamentoInterface } from 'src/app/service/model/typing-interfaces/equipamento-interface';
-import { EquipamentoInterface } from 'src/app/service/model/typing-interfaces/equipamento/equipamento-interface';
+import { EquipamentoInterface } from 'src/app/service/model/interfaces/equipamento/equipamento-interface';
 // import { EquipamentoInterface } from 'src/app/service/model/typing-interfaces/equipamento/equipamento-interface';
 
 
-import { EstoqueInterface } from '../../../service/model/typing-interfaces/equipamento/estoque-interface';
-import { FormEquipamentoValidationService } from './../../../service/model/formEquipamentoValidationService';
+import { EstoqueInterface } from '../../../service/model/interfaces/equipamento/estoque-interface';
+import { FormEquipamentoValidationService } from '../../../validators/equipamento/formEquipamentoValidationService';
 import { Router } from '@angular/router';
 import { ServiceApiCreateReservation } from './../../../service/api/reservas/service-api-create-reservation';
-import { FormValidationEventual } from '../../../service/model/form-validation/form-validation-eventual';
+import { FormValidationEventual } from '../../../validators/reserva/form-validation-eventual';
 
 import { Component, OnInit, } from '@angular/core';
-import { HorasService } from "../../../service/model/horasService";
+import { HorasService } from "../utilits/horasService";
 import { ServiceApiReadEquipament } from 'src/app/service/api/equipamentos/service-api-read-equipament';
-import { OptionQtdService } from 'src/app/service/model/optionQtdService';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import * as moment from 'moment';
 import { Subscription } from 'rxjs';
-import { ReservaEventualInterface } from 'src/app/service/model/typing-interfaces/reservaDTO/reserva-eventual-interface';
-import { DeletarService } from 'src/app/service/model/reservas/deletar-service';
+import { ReservaEventualInterface } from 'src/app/service/model/interfaces/reservaDTO/reserva-eventual-interface';
+import { Deletar } from '../utilits/deletar';
+import { OptionQtdService } from '../utilits/optionQtdService';
 
 
 @Component({
@@ -82,7 +82,7 @@ export class EventualComponent implements OnInit {
   constructor(private horasService: HorasService, private serviceApiReadEquipament: ServiceApiReadEquipament,
     private optionQtdService: OptionQtdService, private formValidationService: FormValidationEventual,
     private serviceApiCreateReservation: ServiceApiCreateReservation, private router: Router,
-    private formEquipamentoValidationService: FormEquipamentoValidationService, private deletarData: DeletarService
+    private formEquipamentoValidationService: FormEquipamentoValidationService, private deletarData: Deletar
   ) { this.dataAtual = moment().format('YYYY-MM-DD') }
 
 

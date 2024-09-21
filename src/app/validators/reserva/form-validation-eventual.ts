@@ -1,8 +1,8 @@
 import { ServiceApiReadEquipament } from 'src/app/service/api/equipamentos/service-api-read-equipament';
-import { ListaAgendaInterface } from '../typing-interfaces/agenda/lista-agenda-interface';
+import { ListaAgendaInterface } from '../../service/model/interfaces/agenda/lista-agenda-interface';
 import { FormGroup, AbstractControl } from '@angular/forms';
 import { Injectable } from '@angular/core';
-import { HorasService } from '../horasService';
+import { HorasService } from '../../reservas/criar/utilits/horasService';
 import * as moment from 'moment';
 import { Subject, takeUntil, Subscription } from 'rxjs';
 import { compileDeclareClassMetadata } from '@angular/compiler';

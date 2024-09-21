@@ -1,4 +1,4 @@
-import { ListaAgendaInterface } from './typing-interfaces/agenda/lista-agenda-interface';
+import { ListaAgendaInterface } from '../../service/model/interfaces/agenda/lista-agenda-interface';
 import { ServiceApiReadEquipament } from 'src/app/service/api/equipamentos/service-api-read-equipament';
 import { Injectable } from '@angular/core';
 import { Observable, timer, switchMap, takeUntil, tap } from 'rxjs';

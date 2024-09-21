@@ -1,5 +1,5 @@
-import { EstoquePollInterface } from './../../model/typing-interfaces/equipamento/estoque-poll-interface';
-import { EstoqueInterface } from '../../model/typing-interfaces/equipamento/estoque-interface';
+import { EstoquePollInterface } from '../../model/interfaces/equipamento/estoque-poll-interface';
+import { EstoqueInterface } from '../../model/interfaces/equipamento/estoque-interface';
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Subject, Subscription,  interval, Observable, catchError, switchMap, throwError, tap, delayWhen, map } from "rxjs";
@@ -12,6 +12,7 @@ export class ServiceApiReadEquipament {
   private GET_EQUIPAMENTO_LIST_URL: string = 'http://localhost:8080/load/getestoque';
   private GET_EQUIPAMENTO_ESTOQUE_LIST_URL: string = 'http://localhost:8080/load/getestoquequantidade';
   private GET_RESERVAS_DE_ESTOQUE_FUTURO: string = 'http://localhost:8080/load/pesquisa-reservas-futuras';
+  private GET_RESERVAS_DO_DIA: string = 'http://localhost:8080/load/current-day/reservas';
 
   private pollInterval: number = 5000;                            // Intervalo de atualização em milissegundos (5 segundos)
   private unsubscribe$: Subject<void> = new Subject<void>();      // Observable para cancelar a assinatura
@@ -127,6 +128,12 @@ export class ServiceApiReadEquipament {
 
 
 
+  /**
+   * API para carregar as reservas do dia
+   */
+  loadReservasOfDay() {
+    return this.http.get<any[]>(this.GET_RESERVAS_DO_DIA);
+  }
 
 
 

@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { ServiceApiRead } from '../service/service-api-read';
 import { ActivatedRoute } from '@angular/router';
+import { ServiceApiReadReservation } from '../service/api/reservas/service-api-read-reservation';
 
 
 
@@ -21,7 +21,7 @@ export class ReservasComponent implements OnInit {
   error: any;
 
 
-  constructor(private http: HttpClient, private serviceApi: ServiceApiRead, private route: ActivatedRoute) {}
+  constructor(private http: HttpClient, private serviceApi: ServiceApiReadReservation, private route: ActivatedRoute) {}
 
 
   ngOnInit(): void {
