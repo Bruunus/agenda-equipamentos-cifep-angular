@@ -83,14 +83,11 @@ export class EventualComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.horasService.loadOptionsDay()
+
+    this.horasService.loadOptionsDay()  /* PAUSA - Precisa vir como uma lista para preencher o select */
     this.loadListEquipaments()
     this.getListQuantidade()
     this.validacaoDeQuantidade()
-
-
-
-
 
 
     this.formValidation = new FormGroup({
