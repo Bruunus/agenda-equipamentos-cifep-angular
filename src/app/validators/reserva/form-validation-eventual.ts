@@ -40,34 +40,32 @@ export class FormValidationEventual {
    * @param list
    * @returns
    */
-  public validationFormFullEventual(horaFim: string, horaInicio: string, dataInicio: string, dataFim: string, list: Array<any>): boolean {
+  // public validationFormFullEventual(horaFim: string, horaInicio: string, dataInicio: string, dataFim: string, list: Array<any>): boolean {
     // console.log('Análise de data de devolução: ',dataFim)    //{Debug}\\
 
-    const validarSeListaDeEquipamentosEstaVazia = this.validationListEquipmentEmpty(list)
-    const dataInicioNaoPodeSerMenorADoSistema = this.validacaoDataMenorParaDataAtual(dataInicio, dataFim)
-    const dataFimNaoPodeSerManiorADataInicio = this.validacaoDataMaiorEMenor(dataFim, dataInicio)
-    const validacaoHoraFim = this.validacaoHoraFim(horaFim, horaInicio, dataInicio, dataFim)
-    const horasIguaisNãoPodem = this.horasNãoPodemSerIguais(horaInicio, horaFim, dataInicio, dataFim)
-    let validadorDeAgenda = null;
+    // const validarSeListaDeEquipamentosEstaVazia = this.validationListEquipmentEmpty(list)
 
-    if(this.dataAtual != dataInicio) {
-      validadorDeAgenda = this.validacaoDeEstoqueDisponivelEVETUAL([dataInicio], list)
-    }
+    // const dataInicioNaoPodeSerMenorADoSistema = this.validacaoDataMenorParaDataAtual(dataInicio, dataFim)
+    // const dataFimNaoPodeSerManiorADataInicio = this.validacaoDataMaiorEMenor(dataFim, dataInicio)
+    // const validacaoHoraFim = this.validacaoHoraFim(horaFim, horaInicio, dataInicio, dataFim)
+    // const horasIguaisNãoPodem = this.horasNãoPodemSerIguais(horaInicio, horaFim, dataInicio, dataFim)
+    // let validadorDeAgenda = null;
 
-
-    if (
-      dataInicioNaoPodeSerMenorADoSistema && dataFimNaoPodeSerManiorADataInicio && validacaoHoraFim &&
-      validarSeListaDeEquipamentosEstaVazia && horasIguaisNãoPodem && validadorDeAgenda
-    ) {
-      return true
-    }
-    // Adicionar mensagem de erro e log de erro
-    return false;
-
-  }
+    // if(this.dataAtual != dataInicio) {
+    //   validadorDeAgenda = this.validacaoDeEstoqueDisponivelEVETUAL([dataInicio], list)
+    // }
 
 
+  //   if (
+  //     // dataInicioNaoPodeSerMenorADoSistema && dataFimNaoPodeSerManiorADataInicio && validacaoHoraFim &&
+  //     // validarSeListaDeEquipamentosEstaVazia /*&& horasIguaisNãoPodem && validadorDeAgenda*/
+  //   ) {
+  //     return true
+  //   }
+  //   // Adicionar mensagem de erro e log de erro
+  //   return false;
 
+  // }
 
 
 
@@ -80,70 +78,9 @@ export class FormValidationEventual {
 
 
 
-  /**
-   * Metodo responsável por verificar se a data de retirada fornecia cai em uma sexta-feira com retorno booleano
-   */
-  public programacaoDeHorasParaSextaFeiraDataInicio(dataRetirada: string): boolean {
-    const dataRetiradaMoment = moment(dataRetirada, 'YYYY-MM-DD');
-    const dataRetiradaToString = dataRetiradaMoment.format('dddd');
-    // console.log('Dia recebido foi ', dataRetiradaToString)  //{Debug}\\
-    if(dataRetiradaToString === 'Friday') {
-      return true
-    } else {
-      return false
-    }
-  }
-
-  /**
-   * Metodo responsável por verificar se a data de devolução fornecia cai em uma sexta-feira com retorno booleano
-   */
-  public programacaoDeHorasParaSextaFeiraDataFim(dataDevolucao: string): boolean {
-    // console.log('Alterado data de devolução {Debug}')  //{Debug}\\
-    const dataDevolucaoMoment = moment(dataDevolucao, 'YYYY-MM-DD');
-    const dataDevolucaoToString = dataDevolucaoMoment.format('dddd');
-    // console.log('Dia recebido foi ', dataDevolucaoToString)  //{Debug}\\
-    if(dataDevolucaoToString === 'Friday') {
-      return true
-    } else {
-      return false
-    }
-  }
 
 
 
-
-  /**
-   * Método validador da lista de equipamentos, o processo não pode seguir
-   * caso a lista esteja vazia. É obrigatório adicionar no mínimo um
-   * equipamento na reserva.
-   */
-  public validationListEquipmentEmpty(list: Array<any>): boolean {
-
-    if(list.length === 0) {
-      console.error("A lista está vazia", list);
-      alert('Adicione um equipamento para realizar a reserva')
-      // Adicionar mensagem de erro e log de erro
-      return false;
-
-    }
-
-    return true;
-
-  }
-
-
-  /**
-   * Antes de fazer a validação é verificado se a lista está vazia, se sim emite um
-   * alerta para adicionar um agendamento
-   */
-  public validationListAgendaEmpty(list: ListaAgendaInterface[]): boolean {
-    if(list.length === 0) {
-      // console.error("A lista está vazia", list);
-      alert('Adicione um agendamento para realizar a reserva')
-      return false;
-    }
-    return true;
-  }
 
   /**
    * Método de validação de disponibilidade junto ao estoque do banco para
@@ -346,7 +283,7 @@ export class FormValidationEventual {
 
   //sessão de getters e setters
 
-  get dataFimValidationReturn(): string {
+  get   dataFimValidationReturn(): string {
     return this.dataFimValidation;
 
   }

@@ -199,156 +199,194 @@
 <p>QUANTIDADE: </p>
 
 
-<br><br><br>
+<!-- criada -->
+<!-- executando -->
+<!-- finalizada -->
+<!-- rollback -->
 
-<h4>Sprint</h4>
 
-<ul style="color: tomato;">
-  <li style="color: green;">Ao salvar verificar se a lista está vazia, caso verdadeiro retorne erro</li>
-  <li style="color: green;"><s>Limpar todos os campos após clicar no botão "Criar"</s></li>
-  <li style="color: green;"><s>Criar validação: Nenhum campo pode estar vazio</s></li>
-  <li>Criar validação para <b>adicionar data agendada</b>
-    <ul><br>
 
+<table>
+  <tr><th colspan="4">Exemplo</th></tr>
+  <tr>
+    <td class="criada">criada</td>
+    <td class="executando">executando</td>
+    <td class="finalizada">finalizada</td>
+    <td class="rollback">rollback</td>
+  </tr>
+</table>
+
+
+<table class="sprint">
+  <thead>
+    <tr class="left;" style="padding: 7pt;"><th colspan="3">Sprints</th></tr>
+    <tr>
+      <th class="left;">Sprint</th>
+      <th class="left;">Iniciado</th>
+      <th class="left;">Finalizado</th>
+    </tr>
+
+  </thead>
+  <tbody>
+    <tr class="finalizada">
+      <td>
+        Ao salvar verificar se a lista está vazia, caso verdadeiro retorne erro
+      <td>24/09/2024 - 19:00</td>
+      <td>24/09/2024 - 20:00</td>
+    </tr>
+
+    <tr class="rollback">
+      <td>
+        Limpar todos os campos após clicar no botão "Criar"
+      <td>24/09/2024 - 19:00</td>
+      <td></td>
+    </tr>
+
+    <tr class="finalizada">
+      <td>
+        Criar validação: Nenhum campo pode estar vazio
+      <td>24/09/2024 - 19:00</td>
+      <td></td>
+    </tr>
+
+    <tr class="rollback">
+      Criar validação para adicionar data agendada:
+      <td>
+      <td>24/09/2024 - 19:00</td>
+      <td></td>
+    </tr>
+
+    <tr class="rollback" colspan="3">
       <ul>
-        <b>Para data de retirada</b>
-        <li style="color: green;"><s>A data de inicio não pode ser menor que a data atual do sistema</s></li>
-        <li style="color: green;"><s>Ao inserir a data de inicio o mesmo valor deve ser adicionado na data fim</s></li>
-      </ul>
-
-
-      <ul>
-        <b style="color: green;">Para de devolução</b>
-        <li style="color: green;"><s>A data fim não pode ser menor que a data de início</s></li>
-      </ul>
-
-      <ul>
-        <b>Para hora de devolução</b>
-        <li style="color: green;"><s>Se a hora de devolução for menor que a hora de retirada então a devolução não é no mesmo dia. Para isso</s>
+        <li>
+          <b>Para data de retirada</b>
           <ul>
-            <li style="color: green;"><s>o sistema deve colher as datas de retirada e data de devolução, se caso</s>
+            <li>data de inicio não pode ser menor que a data atual do sistema</li>
+            <li>Ao inserir a data de inicio o mesmo valor deve ser adicionado na data fim</li>
+          </ul>
+        </li>
+      </ul>
+    </tr>
+
+    <tr class="rollback" colspan="3">
+      <ul>
+        <li>
+          <b>Para de devolução</b>
+          <ul>
+            <li>A data fim não pode ser menor que a data de início</li>
+          </ul>
+        </li>
+      </ul>
+    </tr>
+
+    <tr class="rollback" colspan="3">
+      <ul>
+        <li>
+          <b>Para hora de devolução</b>
+          <ul>
+            <li>
+              Se a hora de devolução for menor que a hora de retirada então a devolução não é no mesmo dia. Para isso
+              o sistema deve colher as datas de retirada e data de devolução, se caso as duas foram iguais então o
+              sistema deve:
               <ul>
+                <li>Verificar em que dia da semana cai esta data, se caso:</li>
+                <ul>
+                  <li>Cair na sexta-feira - o Sistema deve modificar a data de devolução para a próxima segunda-feira (+ 3 dias)</li>
+                  <li>Se cair entre segunda-feira até quinta-feira o sistema deve modificar a data de devolução para o dia seguinte</li>
+                </ul>
+              </ul>
 
-                <li style="color: green;"><s>as duas foram iguais então o sistema deve:</s>
-                  <ul>
-                    <li style="color: green;"><s>Verificar em que dia da semana cai esta data, se caso:</s>
-                      <ul>
-                        <li style="color: green;"><s>Cair na sexta-feira - o Sistema deve modificar a data de devolução para a próxima segunda-feira (+ 3 dias)</s></li>
-                        <li style="color: green;"><s>Se cair entre segunda-feira até quinta-feira o sistema deve modificar a data de devolução para o dia seguinte</s></li>
-                      </ul>
-                    </li>
-                  </ul>
+              a data de devolução for maior e diferente da data de retirada (ou seja, a devolução não é para o mesmo dia)
+              então o sistema nãi faz nada e pode computar o valor inserido na data de devolução normalmente.
+              <ul>
+                <li>Não pode uma data de devolução ser menor que a data de retirada</li>
+                <li>Não pode fazer um agendamento com datas anteriores ao dia atual <br>
+                  Se caso a hora de devolução for menor que a hora de inicio o sistema deve alterar a data de devlução
+                  para o dia seguinte pega referenciando a data de início
                 </li>
-
-                <li style="color: green;">
-                  <s>
-                    a data de devolução for maior e diferente da data de retirada (ou seja, a devolução não é para o mesmo dia) então o sistema nãi faz nada
-                      e pode computar o valor inserido na data de devolução normalmente.
-                  </s>
-                </li>
-
               </ul>
             </li>
           </ul>
         </li>
       </ul>
+    </tr>
 
 
-      <li style="color: green;"><s>Não pode uma data de devolução ser menor que a data de retirada</s></li>
-      <li style="color: green;"><s>Não pode fazer um agendamento com datas anteriores ao dia atual</s></li>
-      <li style="color: green;">
-        <s>
-          Se caso a hora de devolução for menor que a hora de inicio o sistema deve alterar a data de devlução
-          para o dia seguinte pega referenciando a data de início
-        </s>
-      </li>
+    <tr class="rollback">
+      <td>
+        Criar validação para <b>adicionar equipamento</b>:
+      <td>24/09/2024 - 19:00</td>
+      <td></td>
+    </tr>
 
-
-    </ul>
-  </li>
-  <li>Criar validação para <b>adicionar equipamento</b>:
+    <tr class="rollback" colspan="3">
       <ul>
-        <li style="color: green;"><s>Não pode adicionar um equipamento sem quantidade</s></li>
-        <li style="color: green;"><s>Não pode adicionar uma quantidade sem equipamento</s></li>
-        <li style="color: green;"><s>Não pode adicionar o mesmo equipamento 2x</s></li>
-        <li style="color: green">
-          <s>Validade a quantidade solicitada ao adicionar com o estoque disponível, caso não tiver disponível emita o aviso
-            e não deixa passar o formulário</s>
-          <ul>
-            <li><s>Data início: 01/jun/2024</s></li>
-            <li><s>Data término: 04/jun/2024</s></li>
-          </ul>
-        </li>
+        <li>Não pode adicionar um equipamento sem quantidade</li>
+        <li>Não pode adicionar uma quantidade sem equipamento</li>
+        <li>Não pode adicionar o mesmo equipamento 2x</li>
+        <li>Validade a quantidade solicitada ao adicionar com o estoque disponível, caso não tiver disponível emita o aviso
+          e não deixa passar o formulário</li>
       </ul>
-  </li>
-  <li style="color: green;">
-    <s>Liberar o campo 'sobrenome' na classe eventual.compoent.ts quando o backend estiver ajustado</s>
-  </li>
-  <li style="color: green;">
-    <s>Tratar do [option] 'Outros' => Ao ser selecionado junto com a quantidade, dentro da tabela de equipamentos
-      deve aparecer um input para o usuário fornecer a descrição do equipamento. <br>
-      Salve este valor no banco e forneça um aviso "Este equipamento não será monitorado no painel de estoque.
-      para isso adicione esse novo equipamentos em Configurações > Adicionar novo equipamento"</s>
-      <ul>
-        <li><s>Data início: maio/2024</s></li>
-        <li><s>Data término: 05/jun/2024</s></li>
-      </ul>
-  </li>
-  <li style="color: green;">
-    <s>
-      Ao dar submit para criar a reserva, o sistema precisa fazer uma nova busca dos dados e comparação novamente para
-      saber se nesse meio tempo teve alteração no estoque. Se sim deve sinalizar o equipamento esgotado e notificar
-    </s>
-    <ul>
-      <li>
-        <s>
-          Cria no backend um validador de quantidade de estoque, que antes de salver no banco ele precisa realizar
-          uma última verificação de disponibilidade. Caso não tenha deve lançar uma exception
-        </s>
-      </li>
-    </ul>
-    <ul>
-      <li><s>Data início: 05/06/2024</s></li>
-      <li><s>Data término: 06/06/2024</s><li>
-    </ul>
-  </li>
+    </tr>
 
-  <li style="color: green;">
-    <s>Limpar a lista de equipamentos visual -  Quando o submit der certo limpe a lista.</s>
-    <ul>
-      <li><s>Data início: 05/06/2024</s></li>
-      <li><s>Data término: 06/06/2024</s><li>
-    </ul>
-  </li>
+    <tr class="rollback">
+      <td>
+        Liberar o campo 'sobrenome' na classe eventual.compoent.ts quando o backend estiver ajustado
+      <td>24/09/2024 - 19:00</td>
+      <td></td>
+    </tr>
 
-  <li style="color: green;">
-    <s>Criar um classe de sistema de erros de logs com com "nome da funcionalidade e código de erro "er0001" "</s>
-    <ul>
-      <li><s>Data início: 05/06/2024</s></li>
-      <li><s>Data término: 06/06/2024</s><li>
-    </ul>
-  </li>
+    <tr class="rollback">
+      <td>
+        Tratar do [option] 'Outros' => Ao ser selecionado junto com a quantidade, dentro da tabela de equipamentos
+        deve aparecer um input para o usuário fornecer a descrição do equipamento. <br>
+        Salve este valor no banco e forneça um aviso "Este equipamento não será monitorado no painel de estoque.
+        para isso adicione esse novo equipamentos em Configurações > Adicionar novo equipamento"
+      <td>24/09/2024 - 19:00</td>
+      <td></td>
+    </tr>
 
-  <li style="color: green;">
-    <s>
-      Aplicar o regex nos campos impust e criar validações para os campos (Verifique também a capacidade máxima de caracteres
-      definidas nas tabelas)
-    </s>
-    <ul>
-      <li><s>Data início: 07/06/2024</s></li>
-      <li><s>Data término: 07/06/2024</s><li>
-    </ul>
-  </li>
+    <tr class="rollback">
+      <td>
+        Ao dar submit para criar a reserva, o sistema precisa fazer uma nova busca dos dados e comparação novamente para
+        saber se nesse meio tempo teve alteração no estoque. Se sim deve sinalizar o equipamento esgotado e notificar.
+        <br>
+        Cria no backend um validador de quantidade de estoque, que antes de salver no banco ele precisa realizar
+        uma última verificação de disponibilidade. Caso não tenha deve lançar uma exception
+      <td>24/09/2024 - 19:00</td>
+      <td></td>
+    </tr>
 
-  <li style="color: blue;">
-    A hora de retirada não pode ser igual a hora de devolução
-    <ul>
-      <li>Data início: </li>
-      <li>Data término: <li>
-    </ul>
-  </li>
+    <tr class="rollback">
+      <td>
+        Limpar a lista de equipamentos visual -  Quando o submit der certo limpe a lista.
+      <td>24/09/2024 - 19:00</td>
+      <td></td>
+    </tr>
+
+    <tr class="rollback">
+      <td>
+        Criar um classe de sistema de erros de logs com com "nome da funcionalidade e código de erro "er0001" "
+      <td>24/09/2024 - 19:00</td>
+      <td></td>
+    </tr>
+
+    <tr class="rollback">
+      <td>
+        Aplicar o regex nos campos impust e criar validações para os campos (Verifique também a capacidade máxima de caracteres
+        definidas nas tabelas)
+      <td>24/09/2024 - 19:00</td>
+      <td></td>
+    </tr>
+
+    <tr class="rollback">
+      <td>
+        A hora de retirada não pode ser igual a hora de devolução
+      <td>24/09/2024 - 19:00</td>
+      <td></td>
+    </tr>
 
 
-
-</ul>
+  </tbody>
+</table>
 

@@ -15,6 +15,7 @@ import { Subscription } from 'rxjs';
 import { ReservaEventualInterface } from 'src/app/service/model/interfaces/reserva/reserva-eventual-interface';
 import { Deletar } from '../utilits/deletar';
 import { OptionQtdService } from '../utilits/optionQtdService';
+import { FormValidationApp } from 'src/app/validators/reserva/form-validation-app';
 
 
 @Component({
@@ -52,7 +53,9 @@ export class EventualComponent implements OnInit {
   objectEquipamentos : {id: number, descricao: string, quantidade: number } = {id:0, descricao:'', quantidade:0}
   objectEquipamentosApresentacao: {id: number, descricao: string, quantidade: number } = {id:0, descricao:'', quantidade:0}
   objectTeste: {} = {}
-  optionsHours: { descricao: string, valor: string }[] = [] as { descricao: string, valor: string }[];
+
+  optionsHours: { descricao: string, valor: string }[] = [];
+
   optionQuantidade: { descricao: string, valor: string } [] = [] as { descricao: string, valor: string }[];
   options: { descricao: string, valor: string }[] = [] as { descricao: string, valor: string }[];
 
@@ -76,7 +79,7 @@ export class EventualComponent implements OnInit {
 
 
   constructor(private horasService: HorasService, private serviceApiReadEquipament: ServiceApiReadEquipament,
-    private optionQtdService: OptionQtdService, private formValidationService: FormValidationEventual,
+    private optionQtdService: OptionQtdService, private formValidationApp: FormValidationApp,
     private serviceApiCreateReservation: ServiceApiCreateReservation, private router: Router,
     private formEquipamentoValidationService: FormEquipamentoValidationService, private deletarData: Deletar
   ) { this.dataAtual = moment().format('YYYY-MM-DD') }
@@ -84,7 +87,10 @@ export class EventualComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.horasService.loadOptionsDay()  /* PAUSA - Precisa vir como uma lista para preencher o select */
+    this.optionsHours = this.horasService.loadOptionsDay()  /* PAUSA - Precisa vir como uma lista para preencher o select */
+
+
+
     this.loadListEquipaments()
     this.getListQuantidade()
     this.validacaoDeQuantidade()
@@ -140,22 +146,6 @@ export class EventualComponent implements OnInit {
 
 
 
-
-  /**
-   * Serviço de carregamento das options conferindo pelo dia da
-   * semana.
-   */
-  // private loadOptionsDay(): void {
-  //   const dataAtualMoment = moment(this.dataAtual, 'YYYY-MM-DD');
-  //   const dataAtualMomentValue = dataAtualMoment.format('dddd');
-  //   if(dataAtualMomentValue !== 'Friday') {
-  //     // console.log('Hoje não sexta   {Debug}') //{Debug}\\
-  //     this.optionsHours = this.horasService.getHoursSegAQuint();
-  //   } else {
-  //     // console.log('Hoje é sexta   {Debug}') //{Debug}\\
-  //     this.optionsHours = this.horasService.getHoursSexta();
-  //   }
-  // }
 
 
 
@@ -260,7 +250,7 @@ export class EventualComponent implements OnInit {
    */
   private onDataInicioChange(): void {
     this.formValidation.get('dataRetirada')?.valueChanges.subscribe((value) => {
-      const isSexta = this.formValidationService.programacaoDeHorasParaSextaFeiraDataInicio(value);
+      const isSexta = this.formValidationApp.programacaoDeHorasParaSextaFeiraDataInicio(value);
       if (isSexta) {
         this.optionsHours = this.horasService.getHoursSexta()
       } else {
@@ -280,7 +270,7 @@ export class EventualComponent implements OnInit {
    */
   private onDataDevolucaoChange(): void {
     this.formValidation.get('dataDevolucao')?.valueChanges.subscribe((value) => {
-      const isSexta = this.formValidationService.programacaoDeHorasParaSextaFeiraDataFim(value);
+      const isSexta = this.formValidationApp.programacaoDeHorasParaSextaFeiraDataFim(value);
       if (isSexta) {
         this.optionsHours = this.horasService.getHoursSexta()
       } else {
@@ -471,23 +461,37 @@ export class EventualComponent implements OnInit {
     const horaInicio = this.formValidation.get('horaInicioSelect')?.value;
     const horaFim = this.formValidation.get('horaDevolucaoSelect')?.value;
 
+
+
+
+
+
+
     if(this.formValidation.invalid) {
+
     // Prende na validação
      return;
 
     } else {
 
-      const validation = this.formValidationService
-        .validationFormFullEventual(horaFim, horaInicio, dataIncio, dataFim, this.listaEquipamento);
-      // console.log("A lista não está vazia", this.listaEquipamento)     //{Debug}\\
+      // const validation = this.formValidationApp
+      //   .validationFormFullEventual(horaFim, horaInicio, dataIncio, dataFim, this.listaEquipamento);
+
+      const listaVazia = this.formValidationApp.validationListEquipmentEmpty(this.listaEquipamento);
+
+
+
+
+
+      console.log("A lista não está vazia", this.listaEquipamento)     //{Debug}\\
 
       // Retorna o campo dataDevolucao ajustada caso o valor de horas seja inaceitável
       if (this.formValidation.controls.hasOwnProperty('dataDevolucao')) {
-        let dataDevolucaoReformada = this.formValidationService.dataFimValidationReturn;
+        let dataDevolucaoReformada = this.formValidationApp.dataFimValidationReturn;
         this.formValidation.controls['dataDevolucao'].setValue(dataDevolucaoReformada);
       }
 
-      if(validation) {
+      if(listaVazia) {
 
         this.reservaDTO = {
           setor: this.setor.value,
@@ -512,7 +516,7 @@ export class EventualComponent implements OnInit {
           this.serviceApiCreateReservation.createEventualReservation(this.reservaDTO)
             .then(() => {
               // Lógica para lidar com a resposta do servidor, se necessário
-            this.formValidation.reset('nome')  // Limpar campos
+            this.formValidation.reset('nome')  // VALIDAR SE ESTÁ LIMPANDA (ROLLBACK 24/09)
             this.formValidation.reset('sobrenome')
             this.formValidation.reset('setor')
             this.formValidation.reset('dataRetirada')
@@ -540,7 +544,7 @@ export class EventualComponent implements OnInit {
         }
 
 
-        // console.log(this.reservaDTO)     //{Debug}\\
+        console.log(this.reservaDTO)     //{Debug}\\
 
       } else {
         console.error('Falha na validação dos métodos')

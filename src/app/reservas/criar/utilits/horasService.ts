@@ -63,16 +63,16 @@ export class HorasService {
    * Serviço de carregamento das options conferindo pelo dia da
    * semana.
    */
-  loadOptionsDay(): void {
+  loadOptionsDay(): { descricao: string, valor: string }[] {
     const dataAtualMoment = moment(this.dataAtual, 'YYYY-MM-DD');
     const dataAtualMomentValue = dataAtualMoment.format('dddd');
 
     if(dataAtualMomentValue !== 'Friday') {
       // console.log('Hoje não sexta   {Debug}') //{Debug}\\
-      this.optionsHours = this.getHoursSegAQuint();
+      return this.optionsHours = this.getHoursSegAQuint();
     } else {
       // console.log('Hoje é sexta   {Debug}') //{Debug}\\
-      this.optionsHours = this.getHoursSexta();
+      return this.optionsHours = this.getHoursSexta();
     }
 
   }

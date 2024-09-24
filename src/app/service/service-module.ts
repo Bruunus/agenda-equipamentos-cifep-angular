@@ -17,6 +17,8 @@ import { FormValidationEventual } from '../validators/reserva/form-validation-ev
 import { DatePipe } from '@angular/common';
 import { Deletar } from '../reservas/criar/utilits/deletar';
 import { FormValidationMultipla } from '../validators/reserva/form-validation-multipla';
+import { FormValidationApp } from '../validators/reserva/form-validation-app';
+import { Utilits } from '../reservas/criar/utilits/utilits';
 
 
 
@@ -27,7 +29,8 @@ import { FormValidationMultipla } from '../validators/reserva/form-validation-mu
   providers: [
     HorasService, ServiceApiCreateEquipament, ServiceApiDeleteEquipament, ServiceApiReadEquipament, ServiceApiUpdateEquipament,
     ServiceApiCreateReservation, ServiceApiDeleteReservation, ServiceApiReadReservation, ServiceApiUpdateReservation, OptionQtdService,
-    FormValidationEventual, FormEquipamentoValidationService, ErroServiceService, DatePipe, Deletar, FormValidationMultipla
+    FormValidationEventual, FormEquipamentoValidationService, ErroServiceService, DatePipe, Deletar, FormValidationMultipla, FormValidationApp,
+    Utilits
   ]
 })
 export class ServiceModule {}
