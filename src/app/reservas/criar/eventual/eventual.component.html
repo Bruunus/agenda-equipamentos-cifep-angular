@@ -69,20 +69,33 @@
         </select>
       </td>
 
-      <td>
+
+      <td >
         <button (click)="adicionarEquipamento($event)">Adicionar</button>
       </td>
 
     </tr>
-
-
     <tr>
-      <td colspan="3">
+      <td>
         <label for="">Outros equipamentos</label>
         <input type="text" formControlName="outros" id="">
-        <input style="margin-left: 8pt;" type="checkbox" formControlName="habilitaOutros" maxlength="40">
-        <label style="margin-left: 8pt;">Adicionar</label>
       </td>
+
+      <td>
+        <label for="quantidade-outros">Quantidade</label>
+
+        <select #quantidadeValid formControlName="quantidadeSelectOutros" >
+          <option name="selectedOptionListaQuantidadeOutros" *ngFor="let qtd of optionQuantidade" [value]="qtd.valor">{{ qtd.descricao }}</option>
+        </select>
+      </td>
+
+      <td>
+        <input style="margin-left: 8pt;" name="habilitaOutros" type="checkbox" formControlName="habilitaOutros" maxlength="40">
+        <label for="habilitaOutros" style="margin-left: 8pt;">Adicionar</label>
+      </td>
+
+
+
     </tr>
 
   </table>
@@ -319,13 +332,15 @@
       <td></td>
     </tr>
 
-    <tr class="rollback" colspan="3">
+    <tr class="finalizada" colspan="3">
       <ul>
-        <li>Não pode adicionar um equipamento sem quantidade</li>
-        <li>Não pode adicionar uma quantidade sem equipamento</li>
-        <li>Não pode adicionar o mesmo equipamento 2x</li>
-        <li>Validade a quantidade solicitada ao adicionar com o estoque disponível, caso não tiver disponível emita o aviso
-          e não deixa passar o formulário</li>
+        <li><s>Não pode adicionar um equipamento sem quantidade</s></li>
+        <li><s>Não pode adicionar uma quantidade sem equipamento</s></li>
+        <li><s>Não pode adicionar o mesmo equipamento 2x</s></li>
+        <li><s>
+          Validade a quantidade solicitada ao adicionar com o estoque disponível, caso não tiver disponível emita o aviso
+            e não deixa passar o formulário
+        </s></li>
       </ul>
     </tr>
 

@@ -115,6 +115,7 @@ export class EventualComponent implements OnInit {
       equipamentoSelect: new FormControl(''),
       quantidadeSelect: new FormControl(''),
       outros: new FormControl({value: '', disabled: true}, Validators.maxLength(40)),
+      quantidadeSelectOutros: new FormControl({value: '', disabled: true}),
       habilitaOutros: new FormControl('')
 
     })
@@ -215,7 +216,7 @@ export class EventualComponent implements OnInit {
           const quantidadeNumber: number = parseInt(this.getQuantidadeSelect.value, 10);
           if(this.listaEquipamentoQuantidade[i].quantidade < quantidadeNumber)  {
             // console.log('Quantidade indisponível para reservar!')     //{Debug}\\
-            alert('Quantidade indisponível para empréstimo! ')
+            alert('Quantidade indisponível para empréstimo deste equipamento! ')
             return false;
           }
         }
@@ -224,6 +225,8 @@ export class EventualComponent implements OnInit {
     }
     return true;
   }
+
+
 
 
   // events
@@ -280,6 +283,7 @@ export class EventualComponent implements OnInit {
   }
 
   /**
+   * Ativa o input do campo  "Outros Equipamentos" através do checkbox
    * Evento do checkbox para permitir adicionar um equipamento que não esteja incluso na lista.
    * O FormControl nos permite atribuir um evento pelo estado por um valor boleano do checkbox,
    * dessa forma retornando verdadeiro desabilitamos o select para a lista de equipamentos e
@@ -288,25 +292,34 @@ export class EventualComponent implements OnInit {
    */
   protected onCheckboxOutrosChange(): boolean {
 
-    const habilitaOutrosControl = this.formValidation.get('outros')
-    const selectEquipamentos = this.formValidation.get('equipamentoSelect')
+    const habilitaOutrosControl = this.formValidation.get('outros');
+    const habilitarSelectOutrosControl = this.formValidation.get('quantidadeSelectOutros');
+    const selectEquipamentos = this.formValidation.get('equipamentoSelect');
+    const selectQuantidade = this.formValidation.get('quantidadeSelect');
 
     this.formValidation.get('habilitaOutros')?.valueChanges.subscribe((value) => {
 
       if (value) {
         // console.log('habilitado')  //{Debug}\\
-        selectEquipamentos?.disable()
-        selectEquipamentos?.reset()
-        habilitaOutrosControl?.enable()
-        this.setStatusInputHabilitado = true
+        selectEquipamentos?.disable();
+        selectEquipamentos?.reset();
+        selectQuantidade?.disable();
+        selectQuantidade?.reset();
+
+        habilitaOutrosControl?.enable();
+        habilitarSelectOutrosControl?.enable();
+        this.setStatusInputHabilitado = true;
         // console.log('status do input outros ', this.getStatusInputHabilitado)  //{Debug}\\
         return true;
       } else {
         // console.log('desabilitado')  //{Debug}\\
-        selectEquipamentos?.enable()
-        habilitaOutrosControl?.reset()
-        habilitaOutrosControl?.disable()
-        this.setStatusInputHabilitado = false
+        selectEquipamentos?.enable();
+        selectQuantidade?.enable();
+
+        habilitaOutrosControl?.reset();
+        habilitaOutrosControl?.disable();
+        habilitarSelectOutrosControl?.disable();
+        this.setStatusInputHabilitado = false;
         // console.log('status do input outros ', this.getStatusInputHabilitado)  //{Debug}\\
         return false;
       }
@@ -324,66 +337,100 @@ export class EventualComponent implements OnInit {
   /**
    * Funcionalidade para adicionar um equipamento à lista de agendamento que será
    * salva do submit do formulário. Existe algumas validações necessárias que foram tratadas
-   * diretamente na classe para melhor performance em tempo de execução. Um equipamento não pode
-   * ser adicionado sem antes ser validado. Um equipamento não pode ser adicionado 2 vezes e a
-   * quantidade antes de adicionar é validada no estoque, se a quantidade passada tem disponível
-   * é aceita, do contrário o andamento do método é bloqueado impedindo o avanço no preenchimento do
-   * formulário.
+   * diretamente na classe para melhor performance em tempo de execução.
+   *  * Um equipamento não pode ser adicionado sem antes ser validado
+   *  * Um equipamento não pode ser adicionado 2 vezes e a quantidade antes de adicionar é validada no estoque,
+   *  se a quantidade passada tem disponível é aceita, do contrário o andamento do método é bloqueado impedindo
+   *  o avanço no preenchimento do formulário.
    */
   protected adicionarEquipamento(event: Event): void {
 
-    event.preventDefault()
+    event.preventDefault();
 
+    // vars de bloco
     let valorEquipamentoSelecionado = this.getEquipamentoSelect.value;
     let valorQuantidadeSelecionada = this.getQuantidadeSelect.value;
-    let validacaoQuantidade = this.validacaoDeQuantidade();
+
     this.onCheckboxOutrosChange();
     let equipamentoEscolhido = '';
     let equipamentoEscolhidoApresentacao = '';
-    let campoHabilitado = this.getStatusInputHabilitado;
+    let inputOutroEquipamento = this.getStatusInputHabilitado;
 
-    const validacaoDoCampoOutros =
-      this.formEquipamentoValidationService.validacaoFormCampoOutros(valorQuantidadeSelecionada)
 
-    // console.log('valor retornado ', teste)
+    /*** [Testado - OK] ***/
+    const equipEQtdNaoPodemEstarVazios =
+      this.formEquipamentoValidationService.equipamentoEQuantidadeNaoPodemEstarVazios(
+        valorEquipamentoSelecionado,
+        valorQuantidadeSelecionada,
+        inputOutroEquipamento);
 
-    const validation = this.formEquipamentoValidationService.validacaoFormAdicionarEquipamento(
-      valorEquipamentoSelecionado, valorQuantidadeSelecionada, this.listaEquipamento, campoHabilitado
-    )
+    /*** [Testado - OK] ***/
+    const naoPodeAdicionarEquipDuasVezes =
+        this.formEquipamentoValidationService.naoPodeAddEquip2Vezes(
+          valorEquipamentoSelecionado,
+          this.listaEquipamento
+        );
 
-    if (!validation || !validacaoQuantidade) {
+    /*** [Testado - OK] ***/
+    const verificarEstoqueDisponivel = this.validacaoDeQuantidade();
+
+
+
+
+
+
+    if (
+      !equipEQtdNaoPodemEstarVazios || !naoPodeAdicionarEquipDuasVezes || !verificarEstoqueDisponivel
+
+    ) {
      return;
     }
+
+
+
+
+
+
+
+
     else {
-      // console.log('Validação quantidade passou')
-      // console.log('Entrado no else após validação de quantidade');
+      console.log('Validação quantidade passou')
+      console.log('Entrado no else após validação de quantidade');
 
-      if(campoHabilitado) {
-        if (validacaoDoCampoOutros) {
-          alert('Este equipamento não será monitorado no painel de estoque. Para isso cadastre esse novo equipamentos em \"Configurações > Adicionar novo equipamento\"')
-          equipamentoEscolhido =  this.getOutros.value;
+      // if(inputOutroEquipamento === true) {
 
-          if(equipamentoEscolhido === null || equipamentoEscolhido === '') {
-            alert('Adicione um equipamento não monitorado')
-            return;
-          } else {
-            equipamentoEscolhido.toUpperCase()
-            let valorCampoOutros = this.getOutros.value;
-            equipamentoEscolhidoApresentacao = this.formatacaoDeTextoApresentacaoOutros(valorCampoOutros);
-            // console.log('Valor do campo Outros coletado: ', equipamentoEscolhido);   //{Debug}\\
-          }
+      //   // Esse bloco vai pro utilits
+
+      //   // if (validacaoDoCampoOutros) {
+      //   //   alert('Este equipamento não será monitorado no painel de estoque. Para isso cadastre esse novo equipamentos em \"Configurações > Adicionar novo equipamento\"')
+      //   //   equipamentoEscolhido =  this.getOutros.value;
+
+      //   //   if(equipamentoEscolhido === null || equipamentoEscolhido === '') {
+      //   //     alert('Adicione um equipamento não monitorado')
+      //   //     return;
+      //   //   } else {
+      //   //     equipamentoEscolhido.toUpperCase()
+      //   //     let valorCampoOutros = this.getOutros.value;
+      //   //     equipamentoEscolhidoApresentacao = this.formatacaoDeTextoApresentacaoOutros(valorCampoOutros);
+      //   //     // console.log('Valor do campo Outros coletado: ', equipamentoEscolhido);   //{Debug}\\
+      //   //   }
 
 
-        } else { return; }
-      } else {
-        equipamentoEscolhido = valorEquipamentoSelecionado;
-        equipamentoEscolhidoApresentacao = this.valorDescricao;
-        // console.log(this.valorDescricao) //{Debug}\\
-      }
+      //   // } else { return; }
+      // } else {
+      //   // equipamentoEscolhido = valorEquipamentoSelecionado;
+      //   // equipamentoEscolhidoApresentacao = this.valorDescricao;
+      //   // console.log(this.valorDescricao) //{Debug}\\
+      // }
 
+
+      equipamentoEscolhido = valorEquipamentoSelecionado;
+      equipamentoEscolhidoApresentacao = this.valorDescricao;
 
       this.equipamentoContId++
       const quantidade = parseInt(valorQuantidadeSelecionada, 10);
+
+
 
       this.objectEquipamentos = {
         id: this.equipamentoContId,
@@ -391,7 +438,7 @@ export class EventualComponent implements OnInit {
         quantidade: quantidade
       }
 
-       this. objectEquipamentosApresentacao = {
+       this.objectEquipamentosApresentacao = {
         id: this.equipamentoContId,
         descricao: equipamentoEscolhidoApresentacao,
         quantidade: quantidade
@@ -405,10 +452,15 @@ export class EventualComponent implements OnInit {
 
       // console.log('Valor adicionado a lista original ', this.listaEquipamento);  //{Debug}\\
 
+      console.log('Caiu dentro do else')
       this.formValidation.get('equipamentoSelect')!.reset();
       this.formValidation.get('quantidadeSelect')!.reset();
       this.formValidation.get('outros')!.reset();
+
     }
+
+
+
   }
 
 
@@ -425,6 +477,9 @@ export class EventualComponent implements OnInit {
   }
 
 
+  /**
+   * Limpa a lista de equipamento de apresentação do usuário
+   */
   private limpartListaDeEquipamentoSubmit(): void {
     var elementsLi = document.querySelectorAll('#table-equipamento tbody tr td ul li');
 
@@ -434,6 +489,11 @@ export class EventualComponent implements OnInit {
     // console.log('Lista de LI ',elementLi)  //{Debug}\\
   }
 
+
+
+  /**
+   *
+   */
   private formatacaoDeTextoApresentacaoOutros(texto: string): string {
     console.log('Entrado na formatação do campo \'Outros\' com o valor passado: ',texto)
     var espaco = texto.split(' ')
@@ -491,6 +551,10 @@ export class EventualComponent implements OnInit {
         this.formValidation.controls['dataDevolucao'].setValue(dataDevolucaoReformada);
       }
 
+      /**
+       * Aqui na validação precisa entrar um ultima validação de estoque de equipamento
+       */
+
       if(listaVazia) {
 
         this.reservaDTO = {
@@ -509,39 +573,39 @@ export class EventualComponent implements OnInit {
 
         console.log(this.reservaDTO)     //{Debug}\\
 
-        try {
+        // try {
 
 
 
-          this.serviceApiCreateReservation.createEventualReservation(this.reservaDTO)
-            .then(() => {
-              // Lógica para lidar com a resposta do servidor, se necessário
-            this.formValidation.reset('nome')  // VALIDAR SE ESTÁ LIMPANDA (ROLLBACK 24/09)
-            this.formValidation.reset('sobrenome')
-            this.formValidation.reset('setor')
-            this.formValidation.reset('dataRetirada')
-            this.formValidation.reset('horaInicioSelect')
-            this.formValidation.reset('dataDevolucao')
-            this.formValidation.reset('horaDevolucaoSelect')
-            this.formValidation.reset('equipamentoSelect')
-            this.formValidation.reset('quantidadeSelect')
+        //   this.serviceApiCreateReservation.createEventualReservation(this.reservaDTO)
+        //     .then(() => {
+        //       // Lógica para lidar com a resposta do servidor, se necessário
+        //     this.formValidation.reset('nome')  // VALIDAR SE ESTÁ LIMPANDA (ROLLBACK 24/09)
+        //     this.formValidation.reset('sobrenome')
+        //     this.formValidation.reset('setor')
+        //     this.formValidation.reset('dataRetirada')
+        //     this.formValidation.reset('horaInicioSelect')
+        //     this.formValidation.reset('dataDevolucao')
+        //     this.formValidation.reset('horaDevolucaoSelect')
+        //     this.formValidation.reset('equipamentoSelect')
+        //     this.formValidation.reset('quantidadeSelect')
 
-            this.limpartListaDeEquipamentoSubmit()
+        //     this.limpartListaDeEquipamentoSubmit()
 
-            alert('Reserva realizada com sucesso !!!')
+        //     alert('Reserva realizada com sucesso !!!')
 
-            // console.log('Resposta do servidor:', response);
-            this.router.navigate(['reservas/redirect']).then(() => {
-              window.location.reload();
-            });
+        //     // console.log('Resposta do servidor:', response);
+        //     this.router.navigate(['reservas/redirect']).then(() => {
+        //       window.location.reload();
+        //     });
 
 
 
-            })
-        } catch (error) {
-          // Lógica para lidar com exceções caso ocorram
-          console.error('Erro ao tentar criar reserva:', error);
-        }
+        //     })
+        // } catch (error) {
+        //   // Lógica para lidar com exceções caso ocorram
+        //   console.error('Erro ao tentar criar reserva:', error);
+        // }
 
 
         console.log(this.reservaDTO)     //{Debug}\\
@@ -564,8 +628,11 @@ export class EventualComponent implements OnInit {
 
 
   ngOnDestroy(): void {
+
     if (this.subscription) {
+      console.log('ngOnDestroy chamado');
       this.subscription.unsubscribe();
+
     }
 
     if (this.interval) {
@@ -629,6 +696,10 @@ get getQuantidadeSelect(): AbstractControl<string, any> {
 
 get getOutros(): AbstractControl<string, any> {
   return this.formValidation.get('outros')!;
+}
+
+get getQuantidadeSelectOutros(): AbstractControl<string, any> {
+  return this.formValidation.get('quantidadeSelectOutros')!;
 }
 
 

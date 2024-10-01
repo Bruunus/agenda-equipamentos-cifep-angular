@@ -3,7 +3,7 @@ import { EstoqueInterface } from '../../model/interfaces/equipamento/estoque-int
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Subject, Subscription,  interval, Observable, catchError, switchMap, throwError, tap, delayWhen, map } from "rxjs";
-import { retryWhen } from 'rxjs/operators';
+import { delay, retry, retryWhen } from 'rxjs/operators';
 
 @Injectable()
 export class ServiceApiReadEquipament {
@@ -79,11 +79,7 @@ export class ServiceApiReadEquipament {
             this.setStatus_connection = true
             // console.log(equipamentos);   //{Debug}\\
 
-          }),
-          retryWhen(errors => errors.pipe(
-            delayWhen(() => throwError('Erro ao conectar ao servidor. Tentando novamente em 5 segundos...'),
-          this.getListEquipamentsPoll()),
-          ))
+          })
         );
       })
     );
@@ -171,6 +167,9 @@ export class ServiceApiReadEquipament {
 
 
   ngOnDestroy(): void {
+
+
+
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
