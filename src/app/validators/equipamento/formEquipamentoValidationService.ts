@@ -68,25 +68,36 @@ export class FormEquipamentoValidationService {
 
 
   /**
-   * Método validador que no formulário realiza a validação
+   * Validação para não permitir adicionar dois equipamentos iguais na reserva.
+   * Essa lógica do if é para evitar de apresentar 2 mensagens de erro em seguida, se o select de
+   * quantidade de equipamento estiver vazio, então este metodo retorna true para que a outra
+   * validação cuide da correção, esta validação só é aplicada caso tenha o equipamento igual
+   * e que a quantidade seja definida, ou seja, que não tenha um valor zero ou nulo.
+   * @param equipamentoSelecionado
+   * @param quantidadeEquipamento
+   * @param lista
+   * @returns
    */
-  public naoPodeAddEquip2Vezes(equipamentoSelecionado: string, lista: Array<any>): boolean {
+  public naoPodeAddEquip2Vezes(equipamentoSelecionado: string, quantidadeEquipamento: string, lista: Array<any> = []): boolean {
 
-    if(lista.length === 0) {
-      // console.log('A lista está vazia,  autorizado !')  //{Debug}\\
-      return true;
-    } else {
-      // console.log('A lista não está vazia\nAinda tem item nela', lista)  //{Debug}\\
-      for (const equipamento of lista) {
-          // console.log('Itens da lista: ', equipamento)   //{Debug}\\
-        if (equipamento.descricao === equipamentoSelecionado) {
-          alert('Este equipamento já foi adicionado.')
-          return false;
-        }
+    let equipamentoJaAdicionado = false;
+
+    for (let i = 0; i < lista.length; i++) {
+
+      if (lista[i].descricao === equipamentoSelecionado &&
+          (quantidadeEquipamento !== '' && quantidadeEquipamento !== null))
+      {
+        alert('Este equipamento já foi adicionado.');
+        equipamentoJaAdicionado = true;
+        break;
       }
+    }
+
+    if (equipamentoJaAdicionado) {
       return false;
     }
 
+    return true;
 
   }
 
@@ -109,8 +120,31 @@ export class FormEquipamentoValidationService {
         if(quantidade === '' || quantidade === null) {
           alert('Selecione uma quantidade')
           return false;
-        }
-        return true;
+      }
+      return true;
+    }
+    return true;
+  }
+
+  /**
+   * Validação que não permite adicionar um equipamento sem definir a sua quantidade na criação da reserva e vise
+   * e versa dos campos de "Outros Equipamentos".
+   *
+   * @param equipamento
+   * @param quantidade
+   * @returns
+   */
+  public equipamentoOutrosEQuantidadeOutrosNaoPodemEstarVazios(equipamento: string, quantidade: string, campoHabilitado: boolean): boolean {
+    if(campoHabilitado) {
+      if(equipamento === '' || equipamento === null) {
+        alert('Insira um equipamento para reservar')
+        return false;
+      } else
+        if(quantidade === '' || quantidade === null) {
+          alert('Selecione uma quantidade')
+          return false;
+      }
+      return true;
     }
     return true;
   }
@@ -128,58 +162,6 @@ export class FormEquipamentoValidationService {
 
 
 
-  /**
-   * Esse método recebe em intervalo de tempo uma nova lista atualizada do servidor para poder
-   * realizar a checagem de equipamento em tempo de execução recebendo o valor mais exato.
-   * Iteramos sobre a lista para procurar o valor passado pelo usuário com o valor da lista,
-   * tendo uma igualdade fazemos uma cerificação do campo select de equipamento se caso o
-   * usuário não desabilito-o acionando o campo de "outros de equipamentos" que não estão na lista.
-   * A sequência só prosegue daqui se estiver habilitado, o campo estando habilitado então é
-   * realizado a lógica do estoque onde o valor do usuário não pode ultrapassar o valor disponível
-   * em estoque, o valor sendo ultrapassado o formulário gera um aviso não permite prosseguir até
-   * um novo valor ser passado novamente.
-   */
-  public validacaoDeQuantidadeAPI(listaEquipamentoQuantidade: EstoquePollInterface[] = [], getEquipamentoSelect:string,
-    getStatusInputHabilitado: boolean, getQuantidadeSelect: string
-  ): boolean {
-
-    this.subscription = this.serviceApiReadEquipament.getListEquipamentsPoll()
-      .subscribe(
-        (lista: EstoquePollInterface[]) => {
-          listaEquipamentoQuantidade = lista
-          // console.log('Recebendo lista de equipamentos... ', this.listaEquipamentoQuantidade)  //{Debug}\\
-        })
-
-    // console.log(this.listaEquipamentoQuantidade)   //{Debug}\\
-
-
-    for(let i = 0; i < listaEquipamentoQuantidade.length; i++) {
-      if(listaEquipamentoQuantidade[i].valor === getEquipamentoSelect) {
-        // {Debugger}
-        // console.log(
-        //   'Achado valor igual ', this.listaEquipamentoQuantidade[i].valor ,
-        //   ' Com o valor = ', this.getEquipamentoSelect.value, '\n',
-        //   'Qtd. estoque = ', this.listaEquipamentoQuantidade[i].quantidade,
-        //   ' Com Qtd. solicitada = ', this.getQuantidadeSelect.value
-        // )
-
-        // console.log('Valor do banco ', this.listaEquipamentoQuantidade[i].quantidade)  //{Debug}\\
-        // console.log('Valor do form ', this.getQuantidadeSelect.value)    //{Debug}\\
-
-        if(!getStatusInputHabilitado) {
-
-          const quantidadeNumber: number = parseInt(getQuantidadeSelect, 10);
-          if(listaEquipamentoQuantidade[i].quantidade < quantidadeNumber)  {
-            // console.log('Quantidade indisponível para reservar!')     //{Debug}\\
-            alert('Quantidade indisponível para empréstimo deste equipamento! ')
-            return false;
-          }
-        }
-
-      }
-    }
-    return true;
-  }
 
 
 

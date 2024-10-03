@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import { ServiceApiCreateReservation } from './../../../service/api/reservas/service-api-create-reservation';
 import { FormValidationEventual } from '../../../validators/reserva/form-validation-eventual';
 
-import { Component, OnInit, } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, } from '@angular/core';
 import { HorasService } from "../utilits/horasService";
 import { ServiceApiReadEquipament } from 'src/app/service/api/equipamentos/service-api-read-equipament';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
@@ -81,7 +81,8 @@ export class EventualComponent implements OnInit {
   constructor(private horasService: HorasService, private serviceApiReadEquipament: ServiceApiReadEquipament,
     private optionQtdService: OptionQtdService, private formValidationApp: FormValidationApp,
     private serviceApiCreateReservation: ServiceApiCreateReservation, private router: Router,
-    private formEquipamentoValidationService: FormEquipamentoValidationService, private deletarData: Deletar
+    private formEquipamentoValidationService: FormEquipamentoValidationService, private deletarData: Deletar,
+    private cdr: ChangeDetectorRef
   ) { this.dataAtual = moment().format('YYYY-MM-DD') }
 
 
@@ -114,7 +115,7 @@ export class EventualComponent implements OnInit {
       horaDevolucaoSelect: new FormControl('',[Validators.required]),
       equipamentoSelect: new FormControl(''),
       quantidadeSelect: new FormControl(''),
-      outros: new FormControl({value: '', disabled: true}, Validators.maxLength(40)),
+      inputOutros: new FormControl({value: '', disabled: true}, Validators.maxLength(40)),
       quantidadeSelectOutros: new FormControl({value: '', disabled: true}),
       habilitaOutros: new FormControl('')
 
@@ -292,7 +293,7 @@ export class EventualComponent implements OnInit {
    */
   protected onCheckboxOutrosChange(): boolean {
 
-    const habilitaOutrosControl = this.formValidation.get('outros');
+    const habilitaOutrosControl = this.formValidation.get('inputOutros');
     const habilitarSelectOutrosControl = this.formValidation.get('quantidadeSelectOutros');
     const selectEquipamentos = this.formValidation.get('equipamentoSelect');
     const selectQuantidade = this.formValidation.get('quantidadeSelect');
@@ -347,101 +348,89 @@ export class EventualComponent implements OnInit {
 
     event.preventDefault();
 
-    // vars de bloco
-    let valorEquipamentoSelecionado = this.getEquipamentoSelect.value;
-    let valorQuantidadeSelecionada = this.getQuantidadeSelect.value;
+    const statusInputOutroEquipamento = this.getStatusInputHabilitado;
 
-    this.onCheckboxOutrosChange();
-    let equipamentoEscolhido = '';
-    let equipamentoEscolhidoApresentacao = '';
-    let inputOutroEquipamento = this.getStatusInputHabilitado;
+    console.log('Entrado no metodo ')
+    console.log('Segunda linha após ...')
 
 
-    /*** [Testado - OK] ***/
-    const equipEQtdNaoPodemEstarVazios =
-      this.formEquipamentoValidationService.equipamentoEQuantidadeNaoPodemEstarVazios(
-        valorEquipamentoSelecionado,
-        valorQuantidadeSelecionada,
-        inputOutroEquipamento);
+    if(statusInputOutroEquipamento) {
+      /** Sessão Adicionar Outros Equipamentos **/
 
-    /*** [Testado - OK] ***/
-    const naoPodeAdicionarEquipDuasVezes =
-        this.formEquipamentoValidationService.naoPodeAddEquip2Vezes(
+      let valorEquipamentoOutros = this.getInputOutros.value;
+      let valorQuandtidadeSelecionadaOutros = this.getQuantidadeSelectOutros.value;
+
+      let validacaoDoCampoOutros =
+      this.formEquipamentoValidationService.equipamentoOutrosEQuantidadeOutrosNaoPodemEstarVazios(
+        valorEquipamentoOutros,
+        valorQuandtidadeSelecionadaOutros,
+        statusInputOutroEquipamento
+      );
+
+      if (!validacaoDoCampoOutros) {
+        return;
+      } else {
+        alert('Este equipamento não será monitorado no painel de estoque. Para isso cadastre esse novo equipamentos em \"Configurações > Adicionar novo equipamento\"')
+        this.adicionarLista(this.equipamentoContId++,valorEquipamentoOutros, valorQuandtidadeSelecionadaOutros);
+        this.formValidation.get('inputOutros')!.reset();
+        this.formValidation.get('quantidadeSelectOutros')!.reset();
+      }
+
+    } else {
+      /** Sessão Adicionar nomalmente **/
+
+      const valorEquipamentoSelecionado = this.getEquipamentoSelect.value;
+      const valorQuantidadeSelecionada = this.getQuantidadeSelect.value;
+
+      /*** [Testado -  ok] ***/
+      const equipEQtdNaoPodemEstarVazios =
+        this.formEquipamentoValidationService.equipamentoEQuantidadeNaoPodemEstarVazios(
           valorEquipamentoSelecionado,
-          this.listaEquipamento
-        );
+          valorQuantidadeSelecionada,
+          statusInputOutroEquipamento
+      );
 
-    /*** [Testado - OK] ***/
-    const verificarEstoqueDisponivel = this.validacaoDeQuantidade();
+      /*** [Testado - ok] ***/
+      const naoPodeAdicionarEquipDuasVezes =
+          this.formEquipamentoValidationService.naoPodeAddEquip2Vezes(
+            valorEquipamentoSelecionado,
+            valorQuantidadeSelecionada,
+            this.listaEquipamento
+      );
 
+      const validacaoQuantidadeEmEstoqueAPI = this.validacaoDeQuantidade();
 
-
-
-
-
-    if (
-      !equipEQtdNaoPodemEstarVazios || !naoPodeAdicionarEquipDuasVezes || !verificarEstoqueDisponivel
-
-    ) {
-     return;
+      if (!equipEQtdNaoPodemEstarVazios || !naoPodeAdicionarEquipDuasVezes || !validacaoQuantidadeEmEstoqueAPI)
+        return;
+        this.adicionarLista(this.equipamentoContId++,valorEquipamentoSelecionado, valorQuantidadeSelecionada);
+        this.formValidation.get('equipamentoSelect')!.reset();
+        this.formValidation.get('quantidadeSelect')!.reset();
     }
 
 
+  }
 
 
+  /**
+   * Metodo exclusivo para receber os dados para adicionar na lista de equipamentos que vem do médoto
+   * adicionarEquipamento()
+   */
+  private adicionarLista(id: number, descricao: string, quantidade: string): boolean {
+    // event.preventDefault()
 
-
-
-
-    else {
-      console.log('Validação quantidade passou')
-      console.log('Entrado no else após validação de quantidade');
-
-      // if(inputOutroEquipamento === true) {
-
-      //   // Esse bloco vai pro utilits
-
-      //   // if (validacaoDoCampoOutros) {
-      //   //   alert('Este equipamento não será monitorado no painel de estoque. Para isso cadastre esse novo equipamentos em \"Configurações > Adicionar novo equipamento\"')
-      //   //   equipamentoEscolhido =  this.getOutros.value;
-
-      //   //   if(equipamentoEscolhido === null || equipamentoEscolhido === '') {
-      //   //     alert('Adicione um equipamento não monitorado')
-      //   //     return;
-      //   //   } else {
-      //   //     equipamentoEscolhido.toUpperCase()
-      //   //     let valorCampoOutros = this.getOutros.value;
-      //   //     equipamentoEscolhidoApresentacao = this.formatacaoDeTextoApresentacaoOutros(valorCampoOutros);
-      //   //     // console.log('Valor do campo Outros coletado: ', equipamentoEscolhido);   //{Debug}\\
-      //   //   }
-
-
-      //   // } else { return; }
-      // } else {
-      //   // equipamentoEscolhido = valorEquipamentoSelecionado;
-      //   // equipamentoEscolhidoApresentacao = this.valorDescricao;
-      //   // console.log(this.valorDescricao) //{Debug}\\
-      // }
-
-
-      equipamentoEscolhido = valorEquipamentoSelecionado;
-      equipamentoEscolhidoApresentacao = this.valorDescricao;
-
-      this.equipamentoContId++
-      const quantidade = parseInt(valorQuantidadeSelecionada, 10);
-
-
+      const quantidadeNumber = parseInt(quantidade, 10);
+      const descricaoApresentacaoFormatter = this.formatacaoDeTextoApresentacaoOutros(descricao);
 
       this.objectEquipamentos = {
-        id: this.equipamentoContId,
-        descricao: equipamentoEscolhido,
-        quantidade: quantidade
+        id: id,
+        descricao: descricao,
+        quantidade: quantidadeNumber
       }
 
-       this.objectEquipamentosApresentacao = {
-        id: this.equipamentoContId,
-        descricao: equipamentoEscolhidoApresentacao,
-        quantidade: quantidade
+      this. objectEquipamentosApresentacao = {
+        id: id,
+        descricao: descricaoApresentacaoFormatter,
+        quantidade: quantidadeNumber
       }
 
 
@@ -449,21 +438,19 @@ export class EventualComponent implements OnInit {
       this.listaEquipamentoApresentacao.push(this.objectEquipamentosApresentacao);
       this.listaEquipamento.push(this.objectEquipamentos)
 
+      this.cdr.detectChanges();
 
-      // console.log('Valor adicionado a lista original ', this.listaEquipamento);  //{Debug}\\
-
-      console.log('Caiu dentro do else')
       this.formValidation.get('equipamentoSelect')!.reset();
       this.formValidation.get('quantidadeSelect')!.reset();
-      this.formValidation.get('outros')!.reset();
 
-    }
+      console.log(
+        'Lista apresentação: ', this.listaEquipamentoApresentacao +'\n'+
+        'Lista equipamento: ', this.listaEquipamento
+      )
 
-
+      return true;
 
   }
-
-
 
 
 
@@ -495,18 +482,22 @@ export class EventualComponent implements OnInit {
    *
    */
   private formatacaoDeTextoApresentacaoOutros(texto: string): string {
-    console.log('Entrado na formatação do campo \'Outros\' com o valor passado: ',texto)
-    var espaco = texto.split(' ')
-    var mapaDoTexto = espaco.map((palavra) => {
-      var primeiraLetra = palavra.charAt(0).toUpperCase();
-      var demaisPalavras = palavra.slice(1);
-      return primeiraLetra + demaisPalavras;
+    // console.log('Entrado na formatação do campo com o valor passado: ',texto)
+    texto = texto.replace(/_/g, ' ');   // Substituir underscores por espaços
+    var palavras = texto.split(' ');
+    var textoFormatado = palavras.map((palavra) => {
+        if (palavra.length === 0) {
+            return '';
+        }
+        var primeiraLetra = palavra.charAt(0).toUpperCase();
+        var demaisLetras = palavra.slice(1).toLowerCase();
+        return primeiraLetra + demaisLetras;
     });
 
-    var juntandoTexto = mapaDoTexto.join(' ');
-    console.log(juntandoTexto)
+    var textoFinal = textoFormatado.join(' ');
+    // console.log('Resultado: ', textoFinal);
 
-    return juntandoTexto;
+    return textoFinal;
   }
 
 
@@ -694,8 +685,8 @@ get getQuantidadeSelect(): AbstractControl<string, any> {
   return this.formValidation.get('quantidadeSelect')!;
 }
 
-get getOutros(): AbstractControl<string, any> {
-  return this.formValidation.get('outros')!;
+get getInputOutros(): AbstractControl<string, any> {
+  return this.formValidation.get('inputOutros')!;
 }
 
 get getQuantidadeSelectOutros(): AbstractControl<string, any> {

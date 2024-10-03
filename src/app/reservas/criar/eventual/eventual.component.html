@@ -61,14 +61,12 @@
         </select>
       </td>
 
-
       <td>
         <label for="quantidade">Quantidade</label>
         <select #quantidadeValid formControlName="quantidadeSelect" >
           <option name="selectedOptionListaQuantidade" *ngFor="let qtd of optionQuantidade" [value]="qtd.valor">{{ qtd.descricao }}</option>
         </select>
       </td>
-
 
       <td >
         <button (click)="adicionarEquipamento($event)">Adicionar</button>
@@ -78,7 +76,7 @@
     <tr>
       <td>
         <label for="">Outros equipamentos</label>
-        <input type="text" formControlName="outros" id="">
+        <input type="text" formControlName="inputOutros">
       </td>
 
       <td>

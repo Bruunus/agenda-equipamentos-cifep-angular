@@ -12,7 +12,7 @@ export class Deletar {
 
     if (deletar) {
       const liElement = (event.target as HTMLElement).closest('li');
-      console.log(liElement)  //{debug}\\
+      // console.log(liElement)  //{debug}\\
 
       if (liElement) {
             const idLi = liElement.dataset['id'];   // get id for remove
@@ -29,8 +29,8 @@ export class Deletar {
               // console.log('Lista de equipamento após delete ',listaEquipamento)  //{Debug}\\
               // console.log('Lista de equipamento de apresentação após delete ',listaEquipamentoApresentacao)  //{Debug}\\
               liElement.parentNode?.removeChild(liElement)
-              listaEquipamento.length = 0; // Zera a lista listaEquipamento
-              listaEquipamentoApresentacao.length = 0; // Zera a lista listaEquipamentoApresentacao
+              // listaEquipamento.length = 0; // Zera a lista listaEquipamento apenas para //{Debug}\\
+              // listaEquipamentoApresentacao.length = 0; // Zera a lista listaEquipamentoApresentacao apenas para //{Debug}\\
 
               // console.log('tentativa de zerar a lista - resultado => ',listaEquipamento)   //{Debug}\\
             }
