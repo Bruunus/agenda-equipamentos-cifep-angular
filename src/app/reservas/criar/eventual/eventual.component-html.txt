@@ -1,133 +1,28 @@
-<div>
+
+
+
+
+
+
+
+<!-- <div>
   <h3>Reserva eventual</h3>
 
-  <form (ngSubmit)="processForm()" [formGroup]="formValidation" #formDir="ngForm">
+  <form [formGroup]="formValidation" #formDir="ngForm">
 
-
-  <label for="responsavel">Nome</label> &nbsp;
-  <input type="text" name="nome" formControlName="nome" required maxlength="40">
-
-  <div *ngIf="nome!.invalid && formDir.submitted" class="validation-error">
-    <p *ngIf="nome.errors?.['required']" style="font-size: 0.8rem; color: tomato;">
-      Nome obrigatório
-    </p>
-    <p *ngIf="nome.errors?.['minlength']" style="font-size: 0.8rem; color: tomato;">
-      Descrição de nome inválido
-    </p>
-    <!-- <p *ngIf="nome.errors?.['maxlength']">Até 30 caracter</p> -->
-  </div>
-
-  <br>
-
-  <label for="sobrenome">Sobrenome</label> &nbsp;
-  <input #valid type="text" name="sobrenome" formControlName="sobrenome" required maxlength="40">
-
-  <div *ngIf="sobrenome!.invalid && formDir.submitted" class="validation-error">
-    <p *ngIf="sobrenome.errors?.['required']" style="font-size: 0.8rem; color: tomato;">
-      Sobrenome obrigatório
-    </p>
-    <p *ngIf="nome.errors?.['minlength']" style="font-size: 0.8rem; color: tomato;">
-      Descrição de nome inválido
-    </p>
-
-  </div>
-
-  <br>
-
-  <label for="setor">Setor</label> &nbsp;
-  <input #valid type="text" name="setor" formControlName="setor" required maxlength="40">
-  <div *ngIf="setor!.invalid && formDir.submitted" class="validation-error">
-    <p *ngIf="setor.errors?.['required']" style="font-size: 0.8rem; color: tomato;">
-      Setor obrigatório
-    </p>
-    <!-- <p *ngIf="nome.errors?.['maxlength']">Até 30 caracter</p> -->
-  </div>
 
 
   <br><br>
 
 
 
-  <table id="table-adicionar" >
-    <tr>
-      <td>
-        <label for="equipamento">Equipamento</label>
-        <select #equipamentoValid  name="equipamento" formControlName="equipamentoSelect"
-        (change)="onDescricaoValorChange(equipamentoValid.options[equipamentoValid.selectedIndex].text)">
-          <option value=""></option>
-          <option *ngFor="let item of optionsListaEquipamento" [value]="item.valor" >
-            {{ item.descricao }}
-          </option>
-        </select>
-      </td>
-
-      <td>
-        <label for="quantidade">Quantidade</label>
-        <select #quantidadeValid formControlName="quantidadeSelect" >
-          <option name="selectedOptionListaQuantidade" *ngFor="let qtd of optionQuantidade" [value]="qtd.valor">{{ qtd.descricao }}</option>
-        </select>
-      </td>
-
-      <td >
-        <button (click)="adicionarEquipamento($event)">Adicionar</button>
-      </td>
-
-    </tr>
-    <tr>
-      <td>
-        <label for="">Outros equipamentos</label>
-        <input type="text" formControlName="inputOutros">
-      </td>
-
-      <td>
-        <label for="quantidade-outros">Quantidade</label>
-
-        <select #quantidadeValid formControlName="quantidadeSelectOutros" >
-          <option name="selectedOptionListaQuantidadeOutros" *ngFor="let qtd of optionQuantidade" [value]="qtd.valor">{{ qtd.descricao }}</option>
-        </select>
-      </td>
-
-      <td>
-        <input style="margin-left: 8pt;" name="habilitaOutros" type="checkbox" formControlName="habilitaOutros" maxlength="40">
-        <label for="habilitaOutros" style="margin-left: 8pt;">Adicionar</label>
-      </td>
-
-
-
-    </tr>
-
-  </table>
 
 
 
 
 
-      <table id="table-equipamento">
-        <thead>
-          <th>Equipamento</th>
-          <th>Quantidade</th>
-        </thead>
-        <tbody>
-          <tr>
-            <td colspan="2">
-              <ul>
-                <!-- template -->
-                <li id="template-li" class="row"
-                *ngFor="let equipamento of listaEquipamentoApresentacao; let i = index" [attr.data-id]="equipamento.id">
-                  <td class="col">{{ equipamento.descricao }}</td>
-                  <td class="col-6">
-                    <div class="row justify-content-between">
-                        <span>{{ equipamento.quantidade }}</span>
-                        <span (click)="removerEquipamento($event)" class="delete">x</span>
-                    </div>
-                  </td>
-                </li>
-                <!-- template -->
-              </ul>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+
+
 
 
     <br><br>
@@ -138,7 +33,7 @@
     <span *ngIf="dataRetirada.errors?.['required']" style="font-size: 0.8rem; color: tomato;">
       Insira a data de início da reserva
     </span>
-    <!-- <p *ngIf="nome.errors?.['maxlength']">Até 30 caracter</p> -->
+    <p *ngIf="nome.errors?.['maxlength']">Até 30 caracter</p>
   </div>
 
 
@@ -152,7 +47,7 @@
     <span *ngIf="horaInicioSelect.errors?.['required']" style="font-size: 0.8rem; color: tomato;">
       Insira o horário da retirada
     </span>
-    <!-- <p *ngIf="nome.errors?.['maxlength']">Até 30 caracter</p> -->
+    <p *ngIf="nome.errors?.['maxlength']">Até 30 caracter</p>
   </div>
 
 
@@ -166,15 +61,15 @@
         <span *ngIf="dataDevolucao.errors?.['required']" style="font-size: 0.8rem; color: tomato;">
           Insira a data de devolução da reserva
         </span>
-        <!-- <p *ngIf="nome.errors?.['maxlength']">Até 30 caracter</p> -->
+        <p *ngIf="nome.errors?.['maxlength']">Até 30 caracter</p>
       </div>
 
-      <!-- Validador de datas -->
-      <!-- <div *ngIf="formValidation.controls['dataDevolucao'].value < formValidation.controls['dataRetirada'].value">
+      Validador de datas
+      <div *ngIf="formValidation.controls['dataDevolucao'].value < formValidation.controls['dataRetirada'].value">
         <span style="font-size: 0.8rem; color: tomato;">
           A data de devolução não pode ser menor que a data de retirada
         </span>
-      </div> -->
+      </div>
 
 
       <label for="hr-agendamento">Horário devolução:</label> &nbsp;
@@ -185,7 +80,7 @@
         <span *ngIf="horaDevolucaoSelect.errors?.['required']" style="font-size: 0.8rem; color: tomato;">
           Insira o horário da devolução
         </span>
-        <!-- <p *ngIf="nome.errors?.['maxlength']">Até 30 caracter</p> -->
+        <p *ngIf="nome.errors?.['maxlength']">Até 30 caracter</p>
       </div>
 
 
@@ -203,11 +98,16 @@
 
 
 
-</div>
+</div> -->
+
+
+
+
+<!-- <span style="margin-top: 10rem;">------------------ESPAÇO------------------</span>
 
 <p>Teste</p>
 <p>EQUIPAMENTO: </p>
-<p>QUANTIDADE: </p>
+<p>QUANTIDADE: </p> -->
 
 
 <!-- criada -->
@@ -216,7 +116,7 @@
 <!-- rollback -->
 
 
-
+<!--
 <table>
   <tr><th colspan="4">Exemplo</th></tr>
   <tr>
@@ -257,7 +157,7 @@
       <td>
         Criar validação: Nenhum campo pode estar vazio
       <td>24/09/2024 - 19:00</td>
-      <td></td>
+      <td>02/11/2024 - 18:32</td>
     </tr>
 
     <tr class="rollback">
@@ -332,13 +232,12 @@
 
     <tr class="finalizada" colspan="3">
       <ul>
-        <li><s>Não pode adicionar um equipamento sem quantidade</s></li>
-        <li><s>Não pode adicionar uma quantidade sem equipamento</s></li>
-        <li><s>Não pode adicionar o mesmo equipamento 2x</s></li>
-        <li><s>
+        <li>Não pode adicionar um equipamento sem quantidade</li>
+        <li>Não pode adicionar uma quantidade sem equipamento</li>
+        <li>Não pode adicionar o mesmo equipamento 2x</li>
+        <li>
           Validade a quantidade solicitada ao adicionar com o estoque disponível, caso não tiver disponível emita o aviso
-            e não deixa passar o formulário
-        </s></li>
+            e não deixa passar o formulário</li>
       </ul>
     </tr>
 
@@ -402,4 +301,4 @@
 
   </tbody>
 </table>
-
+ -->

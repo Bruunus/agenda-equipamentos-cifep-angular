@@ -20,40 +20,6 @@
 
 
 
-/* Styles table list of equipament */
-
-#table-equipamento {
-    border: 1px solid;
-    width: 370pt;
-    height: 174px;
-    max-height: 174px;
-}
-
-
-#table-equipamento thead {
-    border-bottom: 1px solid;
-}
-
-
-#table-equipamento thead th {
-    padding: 5px;
-    background-color: #f7f5f5;
-}
-
-#table-equipamento tbody tr td {
-    padding: 0;
-}
-
-
-// <ul>
-#table-equipamento tbody tr td ul {
-    height: 138px;  // age em conjunto com a altura da table
-    max-height: 163px;
-    margin: 0 !important;
-    padding: 0;
-    overflow: auto;
-
-}
 
 
 

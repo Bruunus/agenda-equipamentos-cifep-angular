@@ -19,6 +19,10 @@ import { FinalizarComponent } from './reservas/finalizar/finalizar.component';
 import { AgendaComponent } from './reservas/agenda/agenda.component';
 import { EventualComponent } from './reservas/criar/eventual/eventual.component';
 import { RadarComponent } from './reservas/radar/radar.component';
+import { AgendaEventualComponent } from './reservas/criar/utilits/add-agenda/agenda-eventual/agenda-eventual.component';
+import { AgendaMultiplaComponent } from './reservas/criar/utilits/add-agenda/agenda-multipla/agenda-multipla.component';
+import { FormularioComponent } from './reservas/criar/utilits/add-formulario/formulario/formulario.component';
+import { AdicionarEquipamentoComponent } from './reservas/criar/utilits/add-equipamento/adicionar-equipamento/adicionar-equipamento.component';
 
 
 
@@ -36,7 +40,11 @@ import { RadarComponent } from './reservas/radar/radar.component';
     ConfiguracaoComponent,
     FinalizarComponent,
     AgendaComponent,
-    RadarComponent
+    RadarComponent,
+    AdicionarEquipamentoComponent,
+    AgendaEventualComponent,
+    AgendaMultiplaComponent,
+    FormularioComponent
 
 
 

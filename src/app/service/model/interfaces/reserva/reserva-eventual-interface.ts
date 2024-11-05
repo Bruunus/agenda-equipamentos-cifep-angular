@@ -4,7 +4,6 @@ import { EquipamentoInterface } from "../equipamento/equipamento-interface";
 export interface ReservaEventualInterface {
   setor: FormControl,
   nome: FormControl,
-  sobrenome: FormControl,
   equipamentos: Array<any>[],
   agenda: [{
     dataRetirada: FormControl,
