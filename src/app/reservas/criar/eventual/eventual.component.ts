@@ -1,8 +1,9 @@
-import { Component, OnInit, ViewChild, } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { FormularioComponent } from '../utilits/add-formulario/formulario/formulario.component';
 import { AdicionarEquipamentoComponent } from '../utilits/add-equipamento/adicionar-equipamento/adicionar-equipamento.component';
+import { invalid } from 'moment';
 
 
 @Component({
@@ -10,10 +11,17 @@ import { AdicionarEquipamentoComponent } from '../utilits/add-equipamento/adicio
   template: `
 
   <h4>Reserva Eventual</h4>
-  <app-formulario #formulario [formulario]="dadosFormulario" (updateFormulario)="atualizarFormulario($event)"></app-formulario>
-  <br>
-  <app-adicionar-equipamento #equipamento [equipamento]="dadosEquipamento"]></app-adicionar-equipamento>
-  <button (click)="formReserva()">Reservar</button>`,
+
+  <form (ngSubmit)="formReserva()">
+
+    <app-formulario #formulario [formulario]="dadosFormulario" (updateFormulario)="atualizarFormulario($event)"
+    [formSubmitted]="formSubmitted"></app-formulario>
+    <br>
+    <app-adicionar-equipamento #equipamento [equipamento]="dadosEquipamento"></app-adicionar-equipamento>
+    <button type="submit">Reservar</button>
+
+  </form>
+  `,
 
 
   styleUrls: [
@@ -32,7 +40,9 @@ export class EventualComponent  {
 
 
   dadosFormulario = { nome: '', matricula: '', setor: '', contato: '' };
-  dadosEquipamento = [{ descricao: '', quantidade: 0}]
+  dadosEquipamento = [{ descricao: '', quantidade: 0 }]
+
+  @Input() formSubmitted: boolean = false;
 
 
 
@@ -44,12 +54,12 @@ export class EventualComponent  {
 
   formReserva() {
 
-    this.formularioComponent.nome?.markAsTouched();
-    this.formularioComponent.setor?.markAsTouched();
+    this.formSubmitted = true;
+
 
     // Verificar se o formulário é válido
-    if (this.formularioComponent.formValidation.valid) {
-      // Lógica para reservar...
+    if (this.validateForm()) {
+
       console.log('Formulário válido!');
 
       // processa os dados
@@ -58,12 +68,51 @@ export class EventualComponent  {
 
       // Limpar os campos do formulário
       this.formularioComponent.limparCampos();
+      this.formSubmitted = false;
     } else {
       console.log('Formulário inválido!');
-      // Aqui você pode adicionar lógica adicional, como exibir uma mensagem de erro global
+      this.formSubmitted = false;
+      // this.formularioComponent.matricula?.markAsTouched();
+      // this.formularioComponent.setor?.markAllAsTouched();
     }
 
   }
+
+
+  /**
+   * Validação dos inputs do formulário do template filho formulário.
+   */
+  private validateForm(): boolean {
+
+    let valido = true;
+
+    if (this.formularioComponent.nome?.invalid) {
+      this.formularioComponent.nome?.markAsTouched();
+      valido = false; // Marca como inválido
+
+    }
+
+
+    if (this.formularioComponent.matricula?.invalid) {
+      this.formularioComponent.matricula?.markAsTouched();
+      valido = false; // Marca como inválido
+
+    }
+
+    if(this.formularioComponent.setor?.invalid) {
+      this.formularioComponent.setor?.markAllAsTouched();
+      valido = false;
+    }
+
+
+    return valido;
+
+
+
+
+
+  }
+
 
 
 

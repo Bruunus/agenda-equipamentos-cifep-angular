@@ -10,32 +10,50 @@ import { InterfaceFormulario } from 'src/app/model/formulario';
     <form [formGroup]="formValidation">
       <label for="responsavel">Nome</label> &nbsp;
       <input type="text" name="nome" formControlName="nome" required maxlength="40">
-      <div *ngIf="nome?.invalid && (nome?.touched || nome?.dirty)" class="validation-error">
-        <p *ngIf="nome?.errors?.['required']" style="font-size: 0.8rem; color: tomato;">
-          Nome obrigatório
-        </p>
-        <p *ngIf="nome?.errors?.['minlength']" style="font-size: 0.8rem; color: tomato;">
-          Descrição de nome inválido
-        </p>
-        <!-- <p *ngIf="nome?.errors?.['maxlength']">Até 40 caracteres</p> -->
+
+      <div *ngIf="nome?.invalid && (formSubmitted || nome?.touched)" class="validation-error">
+        <ng-container *ngIf="nome?.errors?.['required']">
+          <p style="font-size: 0.8rem; color: tomato;">
+            Nome obrigatório
+          </p>
+        </ng-container>
+        <ng-container *ngIf="nome?.errors?.['minlength']">
+          <p style="font-size: 0.8rem; color: tomato;">
+            Descrição de nome inválido
+          </p>
+        </ng-container>
       </div>
+
       <br>
+
       <label for="setor">Matrícula</label> &nbsp;
-      <input type="text" name="matricula" formControlName="matricula" required maxlength="9">
-      <div *ngIf="matricula?.invalid && (matricula?.touched || matricula?.dirty)" class="validation-error">
-        <p *ngIf="matricula?.errors?.['required']" style="font-size: 0.8rem; color: tomato;">
-          Insira a matricula obrigatório
-        </p>
-        <!-- <p *ngIf="setor?.errors?.['maxlength']">Até 40 caracteres</p> -->
+      <input type="number" name="matricula" formControlName="matricula" required maxlength="9">
+
+      <div *ngIf="matricula?.invalid && (formSubmitted || matricula?.touched)" class="validation-error">
+        <ng-container *ngIf="matricula?.errors?.['required']; else minlengthError">
+          <p style="font-size: 0.8rem; color: tomato;">
+            Insira a matricula obrigatório
+          </p>
+        </ng-container>
+        <ng-template #minlengthError>
+          <p *ngIf="matricula?.errors?.['minlength']" style="font-size: 0.8rem; color: tomato;">
+            Formato de matrícula invalidos, quantidade de digitos não aceito
+          </p>
+        </ng-template>
       </div>
+
       <br>
+
       <label for="setor">Setor</label> &nbsp;
       <input type="text" name="setor" formControlName="setor" required maxlength="40">
-      <div *ngIf="setor?.invalid && (setor?.touched || setor?.dirty)" class="validation-error">
-        <p *ngIf="setor?.errors?.['required']" style="font-size: 0.8rem; color: tomato;">
-          Setor obrigatório
-        </p>
-        <!-- <p *ngIf="setor?.errors?.['maxlength']">Até 40 caracteres</p> -->
+
+      <div *ngIf="setor?.invalid && (formSubmitted || setor?.touched)" class="validation-error">
+
+          <p *ngIf="setor?.errors?.['required']" style="font-size: 0.8rem; color: tomato;">
+            Setor obrigatório
+          </p>
+
+
       </div>
       <br>
       <label for="setor">Contato</label> &nbsp;
@@ -55,6 +73,7 @@ export class FormularioComponent implements OnInit {
   subscription!: Subscription;
 
   @Input() formulario: InterfaceFormulario = { nome: '', matricula: '', setor: '', contato: '' };
+  @Input() formSubmitted: boolean = false;
   @Output() updateFormulario = new EventEmitter<any>();
 
   constructor() {
@@ -66,7 +85,7 @@ export class FormularioComponent implements OnInit {
       ]),
       matricula: new FormControl('', [
         Validators.required,
-        Validators.maxLength(9)
+        Validators.minLength(5)
       ]),
       setor: new FormControl('TI', [
         Validators.required

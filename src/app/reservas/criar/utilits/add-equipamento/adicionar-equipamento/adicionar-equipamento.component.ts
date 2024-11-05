@@ -5,6 +5,7 @@ import { Deletar } from '../../deletar';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { InterfaceEquipamento } from 'src/app/model/interface-equipamento';
+import { OptionQtdService } from '../../optionQtdService';
 
 @Component({
   selector: 'app-adicionar-equipamento',
@@ -46,7 +47,9 @@ import { InterfaceEquipamento } from 'src/app/model/interface-equipamento';
           <label for="quantidade-outros">Quantidade</label>
 
           <select #quantidadeValid formControlName="quantidadeSelectOutros" >
-            <option name="selectedOptionListaQuantidadeOutros" *ngFor="let qtd of optionQuantidade" [value]="qtd.valor">{{ qtd.descricao }}</option>
+            <option name="selectedOptionListaQuantidadeOutros" *ngFor="let qtd of optionQuantidade" [value]="qtd.valor">
+              {{ qtd.descricao }}
+            </option>
           </select>
         </td>
 
@@ -71,7 +74,7 @@ import { InterfaceEquipamento } from 'src/app/model/interface-equipamento';
           <tr>
             <td colspan="2">
               <ul>
-                template
+                <!-- template -->
                 <li id="template-li" class="row"
                 *ngFor="let equipamento of listaEquipamentoApresentacao; let i = index" [attr.data-id]="equipamento.id">
                   <td class="col">{{ equipamento.descricao }}</td>
@@ -82,7 +85,7 @@ import { InterfaceEquipamento } from 'src/app/model/interface-equipamento';
                     </div>
                   </td>
                 </li>
-                template
+                <!-- template -->
               </ul>
             </td>
           </tr>
@@ -103,13 +106,19 @@ export class AdicionarEquipamentoComponent implements OnInit {
   @Input() equipamento: InterfaceEquipamento[] = [{ descricao: '', quantidade: 0}]
 
   valorDescricao: string = '';
+  equipamentoContId: number = 0;
   optionsListaEquipamento: EstoqueInterface[] = [{id: 0, descricao: '', valor: '', quantidade: 0}];
   optionQuantidade: { descricao: string, valor: string } [] = [] as { descricao: string, valor: string }[];
+
   listaEquipamentoApresentacao: Array<any> = [];    // Tipo any por conta da manipulação do id para ficar de acordo com a regra de negócio
   listaEquipamento: Array<any> = [];    // Tipo any por conta da manipulação do id para ficar de acordo com a regra de negócio
 
+  objectEquipamentos : {id: number, descricao: string, quantidade: number } = {id:0, descricao:'', quantidade:0}
+  objectEquipamentosApresentacao: {id: number, descricao: string, quantidade: number } = {id:0, descricao:'', quantidade:0}
 
-  constructor(private serviceApiReadEquipament: ServiceApiReadEquipament, private deletarItem: Deletar) {
+  constructor(private serviceApiReadEquipament: ServiceApiReadEquipament, private deletarItem: Deletar,
+    private optionQtdService: OptionQtdService
+  ) {
     this.formValidation = new FormGroup({
       equipamentoSelect: new FormControl(''),
       quantidadeSelect: new FormControl(''),
@@ -121,6 +130,7 @@ export class AdicionarEquipamentoComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadListEquipaments()
+    this.loadListQuantidade()
   }
 
 
@@ -138,6 +148,13 @@ export class AdicionarEquipamentoComponent implements OnInit {
     this.optionsListaEquipamento = await this.serviceApiReadEquipament.loadListEquipaments();
   }
 
+  /**
+   * Serviço de carregamento da lista de quantidade da option quantidade
+   */
+  private loadListQuantidade(): Object[]   {
+    return this.optionQuantidade = this.optionQtdService.getQuantidade();
+  }
+
 
 
   /**
@@ -152,6 +169,71 @@ export class AdicionarEquipamentoComponent implements OnInit {
   protected adicionarEquipamento(event: Event): void {
 
     event.preventDefault();
+
+    const valorEquipamentoSelecionado = this.equipamentoSelect;
+    const valorQuantidadeSelecionada = this.quantidadeSelect;
+    const quantidade = parseInt(this.quantidadeSelect?.value, 10);
+
+    this.equipamentoContId++;
+
+    console.log(
+      'Equipamento: ',valorEquipamentoSelecionado?.value+"\n"+
+      "Quantidade: ", valorQuantidadeSelecionada?.value
+
+
+    )
+
+
+    this.objectEquipamentosApresentacao = {
+      id: this.equipamentoContId,
+      descricao: this.equipamentoSelect?.value,
+      quantidade: quantidade
+    }
+
+
+    this.listaEquipamentoApresentacao.push(this.objectEquipamentosApresentacao);
+
+
+    console.log('Lista apresentação: ', this.listaEquipamentoApresentacao)
+
+
+    /*
+    this.objectEquipamentos = {
+        id: this.equipamentoContId,
+        descricao: equipamentoEscolhido,
+        quantidade: quantidade
+      }
+
+       this. objectEquipamentosApresentacao = {
+        id: this.equipamentoContId,
+        descricao: equipamentoEscolhidoApresentacao,
+        quantidade: quantidade
+      }
+
+
+      // this.formatadorDeListaParaApresentacao(this.objectEquipamentosApresentacao)
+      this.listaEquipamentoApresentacao.push(this.objectEquipamentosApresentacao);
+      this.listaEquipamento.push(this.objectEquipamentos)
+
+
+      // console.log('Valor adicionado a lista original ', this.listaEquipamento);  //{Debug}\\
+
+      this.formValidation.get('equipamentoSelect')!.reset();
+      this.formValidation.get('quantidadeSelect')!.reset();
+      this.formValidation.get('outros')!.reset();
+    */
+
+
+
+
+
+
+
+
+
+
+
+
 
     // const statusInputOutroEquipamento = this.getStatusInputHabilitado;
 
@@ -188,8 +270,7 @@ export class AdicionarEquipamentoComponent implements OnInit {
 
       /** Sessão Adicionar nomalmente **/
 
-      // const valorEquipamentoSelecionado = this.getEquipamentoSelect.value;
-      // const valorQuantidadeSelecionada = this.getQuantidadeSelect.value;
+
 
       /*** [Testado -  ok] ***/
       // const equipEQtdNaoPodemEstarVazios =
@@ -228,6 +309,18 @@ export class AdicionarEquipamentoComponent implements OnInit {
   protected removerEquipamento(event: Event): void {
     event.preventDefault();
     this.deletarItem.deletarElemento(event, this.listaEquipamento, this.listaEquipamentoApresentacao)
+  }
+
+
+
+
+
+  get equipamentoSelect() {
+    return this.formValidation.get('equipamentoSelect');
+  }
+
+  get quantidadeSelect() {
+    return this.formValidation.get('quantidadeSelect');
   }
 
 

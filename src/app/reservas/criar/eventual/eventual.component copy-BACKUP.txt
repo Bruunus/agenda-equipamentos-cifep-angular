@@ -85,7 +85,7 @@ export class EventualComponent implements OnInit {
 
 
   constructor(private horasService: HorasService, ,
-    private optionQtdService: OptionQtdService, private formValidationApp: FormValidationApp,
+    , private formValidationApp: FormValidationApp,
     private serviceApiCreateReservation: ServiceApiCreateReservation, private router: Router,
     private formEquipamentoValidationService: FormEquipamentoValidationService, private deletarData: Deletar,
     private cdr: ChangeDetectorRef
@@ -223,12 +223,7 @@ export class EventualComponent implements OnInit {
 
 
 
-  /**
-   * Serviço de carregamento da lista de quantidade da option quantidade
-   */
-  private getListQuantidade(): Object[]   {
-    return this.optionQuantidade = this.optionQtdService.getQuantidade();
-  }
+
 
 
 
