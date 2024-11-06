@@ -157,7 +157,7 @@ export class MultiplaComponent implements OnInit {
    */
   protected removerAgenda(event: Event): void {
     event.preventDefault();
-    this.deletarDataService.deletarElemento(event, this.listaAgenda, this.listaAgendaApresentacao)
+    // this.deletarDataService.deletarElemento(event, this.listaAgenda, this.listaAgendaApresentacao)
   }
 
   /**
@@ -166,7 +166,7 @@ export class MultiplaComponent implements OnInit {
    */
   protected removerEquipamento(event: Event): void {
     event.preventDefault();
-    this.deletarDataService.deletarElemento(event, this.listaEquipamento, this.listaEquipamentoApresentacao)
+    // this.deletarDataService.deletarElemento(event, this.listaEquipamento, this.listaEquipamentoApresentacao)
   }
 
 

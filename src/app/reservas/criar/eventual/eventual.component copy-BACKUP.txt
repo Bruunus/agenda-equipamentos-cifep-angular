@@ -155,7 +155,7 @@ export class EventualComponent implements OnInit {
     this.onInputValueDataDevolucao()
     this.onDataInicioChange()
     this.onDataDevolucaoChange()
-    this.onCheckboxOutrosChange()
+
 
 
     // TESTE DA FUNCIONALIDADE DE PESQUISA DA AGENDA - (TEMPORARIA AQUI)
@@ -338,50 +338,6 @@ export class EventualComponent implements OnInit {
     })
   }
 
-  /**
-   * Ativa o input do campo  "Outros Equipamentos" através do checkbox
-   * Evento do checkbox para permitir adicionar um equipamento que não esteja incluso na lista.
-   * O FormControl nos permite atribuir um evento pelo estado por um valor boleano do checkbox,
-   * dessa forma retornando verdadeiro desabilitamos o select para a lista de equipamentos e
-   * atualizamos o valor da variável de status e vice e versa no caso do valor voltar a ser false.
-   * o
-   */
-  protected onCheckboxOutrosChange(): boolean {
-
-    const habilitaOutrosControl = this.formValidation.get('inputOutros');
-    const habilitarSelectOutrosControl = this.formValidation.get('quantidadeSelectOutros');
-    const selectEquipamentos = this.formValidation.get('equipamentoSelect');
-    const selectQuantidade = this.formValidation.get('quantidadeSelect');
-
-    this.formValidation.get('habilitaOutros')?.valueChanges.subscribe((value) => {
-
-      if (value) {
-        // console.log('habilitado')  //{Debug}\\
-        selectEquipamentos?.disable();
-        selectEquipamentos?.reset();
-        selectQuantidade?.disable();
-        selectQuantidade?.reset();
-
-        habilitaOutrosControl?.enable();
-        habilitarSelectOutrosControl?.enable();
-        this.setStatusInputHabilitado = true;
-        // console.log('status do input outros ', this.getStatusInputHabilitado)  //{Debug}\\
-        return true;
-      } else {
-        // console.log('desabilitado')  //{Debug}\\
-        selectEquipamentos?.enable();
-        selectQuantidade?.enable();
-
-        habilitaOutrosControl?.reset();
-        habilitaOutrosControl?.disable();
-        habilitarSelectOutrosControl?.disable();
-        this.setStatusInputHabilitado = false;
-        // console.log('status do input outros ', this.getStatusInputHabilitado)  //{Debug}\\
-        return false;
-      }
-    })
-    return false;
-  }
 
 
 
@@ -450,27 +406,7 @@ export class EventualComponent implements OnInit {
 
 
 
-  /**
-   *
-   */
-  private formatacaoDeTextoApresentacaoOutros(texto: string): string {
-    // console.log('Entrado na formatação do campo com o valor passado: ',texto)
-    texto = texto.replace(/_/g, ' ');   // Substituir underscores por espaços
-    var palavras = texto.split(' ');
-    var textoFormatado = palavras.map((palavra) => {
-        if (palavra.length === 0) {
-            return '';
-        }
-        var primeiraLetra = palavra.charAt(0).toUpperCase();
-        var demaisLetras = palavra.slice(1).toLowerCase();
-        return primeiraLetra + demaisLetras;
-    });
 
-    var textoFinal = textoFormatado.join(' ');
-    // console.log('Resultado: ', textoFinal);
-
-    return textoFinal;
-  }
 
 
 
@@ -661,13 +597,7 @@ get getQuantidadeSelectOutros(): AbstractControl<string, any> {
 
 
 
-get getStatusInputHabilitado(): boolean {
-  return this.status_input_habilitado
-}
 
-set setStatusInputHabilitado(status: boolean) {
-  this.status_input_habilitado = status;
-}
 
 
 

@@ -38,7 +38,7 @@ export class ServiceApiReadEquipament {
 
       const subscription: Subscription = this.http.get<EstoqueInterface[]>(this.GET_EQUIPAMENTO_LIST_URL).subscribe({
         next: (listaDeEquipamentos: EstoqueInterface[]) => {
-          // console.log(listaDeEquipamentos)  //{Debug}\\
+          console.log(listaDeEquipamentos)  //{Debug}\\
           listaDeEquipamentos.sort((a, b) => {
             const descricaoA = a.descricao.toUpperCase();
             const descricaoB = b.descricao.toUpperCase();

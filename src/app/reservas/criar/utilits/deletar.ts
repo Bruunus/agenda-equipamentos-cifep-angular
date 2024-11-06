@@ -5,7 +5,7 @@ export class Deletar {
    * Método para remover um equipamento pelo botão fechar. Remove tanto do DOM
    * quanto da lista
    */
-  public deletarElemento(event: Event, listaEquipamento: Array<any>, listaEquipamentoApresentacao: Array<any>):void {
+  public deletarElemento(event: Event, listaEquipamento: Array<any>/*, listaEquipamentoApresentacao: Array<any>*/):void {
     // alert('remover item')    //{debug}\\
     const deletar = (event.target as HTMLElement).classList.contains('delete');
     // console.log('Contém algum id? ',deletar)   //{debug}\\
@@ -22,7 +22,7 @@ export class Deletar {
               listaEquipamento.forEach((objectElements, item) => {
                 if (objectElements.id === id) {
                     listaEquipamento.splice(item, 1);
-                    listaEquipamentoApresentacao.splice(item, 1);
+                    // listaEquipamentoApresentacao.splice(item, 1);  // para remoção de lista de apresentação
 
                 }
               })
@@ -33,6 +33,7 @@ export class Deletar {
               // listaEquipamentoApresentacao.length = 0; // Zera a lista listaEquipamentoApresentacao apenas para //{Debug}\\
 
               // console.log('tentativa de zerar a lista - resultado => ',listaEquipamento)   //{Debug}\\
+              console.log("Status da lista após o delete: ", listaEquipamento)
             }
         }
     }

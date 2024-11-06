@@ -40,7 +40,7 @@ import { OptionQtdService } from '../../optionQtdService';
       <tr>
         <td>
           <label for="">Outros equipamentos</label>
-          <input type="text" formControlName="inputOutros">
+          <input type="text" formControlName="equipamentoSelectOutros">
         </td>
 
         <td>
@@ -76,9 +76,10 @@ import { OptionQtdService } from '../../optionQtdService';
               <ul>
                 <!-- template -->
                 <li id="template-li" class="row"
-                *ngFor="let equipamento of listaEquipamentoApresentacao; let i = index" [attr.data-id]="equipamento.id">
+                *ngFor="let equipamento of listaEquipamento; let i = index" [attr.data-id]="equipamento.id">
                   <td class="col">{{ equipamento.descricao }}</td>
                   <td class="col-6">
+
                     <div class="row justify-content-between">
                         <span>{{ equipamento.quantidade }}</span>
                         <span (click)="removerEquipamento($event)" class="delete">x</span>
@@ -107,6 +108,9 @@ export class AdicionarEquipamentoComponent implements OnInit {
 
   valorDescricao: string = '';
   equipamentoContId: number = 0;
+  status_input_habilitado: boolean = false;
+
+  // lista dos equipamentos da api
   optionsListaEquipamento: EstoqueInterface[] = [{id: 0, descricao: '', valor: '', quantidade: 0}];
   optionQuantidade: { descricao: string, valor: string } [] = [] as { descricao: string, valor: string }[];
 
@@ -122,7 +126,7 @@ export class AdicionarEquipamentoComponent implements OnInit {
     this.formValidation = new FormGroup({
       equipamentoSelect: new FormControl(''),
       quantidadeSelect: new FormControl(''),
-      inputOutros: new FormControl({value: '', disabled: true}, Validators.maxLength(40)),
+      equipamentoSelectOutros: new FormControl({value: '', disabled: true}, Validators.maxLength(40)),
       quantidadeSelectOutros: new FormControl({value: '', disabled: true}),
       habilitaOutros: new FormControl('')
     })
@@ -131,6 +135,7 @@ export class AdicionarEquipamentoComponent implements OnInit {
   ngOnInit(): void {
     this.loadListEquipaments()
     this.loadListQuantidade()
+    this.onCheckboxOutrosChange()
   }
 
 
@@ -145,7 +150,7 @@ export class AdicionarEquipamentoComponent implements OnInit {
    * a lista do servidor.
    */
   private async loadListEquipaments(): Promise<void> {
-    this.optionsListaEquipamento = await this.serviceApiReadEquipament.loadListEquipaments();
+    this.optionsListaEquipamento = await this.serviceApiReadEquipament.getListEquipaments();
   }
 
   /**
@@ -170,31 +175,26 @@ export class AdicionarEquipamentoComponent implements OnInit {
 
     event.preventDefault();
 
-    const valorEquipamentoSelecionado = this.equipamentoSelect;
-    const valorQuantidadeSelecionada = this.quantidadeSelect;
-    const quantidade = parseInt(this.quantidadeSelect?.value, 10);
+    if(this.statusInputHabilitado) {
+      // equipamento outros
 
-    this.equipamentoContId++;
-
-    console.log(
-      'Equipamento: ',valorEquipamentoSelecionado?.value+"\n"+
-      "Quantidade: ", valorQuantidadeSelecionada?.value
-
-
-    )
-
-
-    this.objectEquipamentosApresentacao = {
-      id: this.equipamentoContId,
-      descricao: this.equipamentoSelect?.value,
-      quantidade: quantidade
+      this.adicionarEquipamentoAsListas(this.equipamentoSelectOutros?.value, this.quantidadeSelectOutros?.value);
+    } else {
+      // fluxo normal
+      this.adicionarEquipamentoAsListas(this.equipamentoSelect?.value, this.quantidadeSelect?.value);
     }
 
 
-    this.listaEquipamentoApresentacao.push(this.objectEquipamentosApresentacao);
 
 
-    console.log('Lista apresentação: ', this.listaEquipamentoApresentacao)
+
+
+
+
+
+
+
+
 
 
     /*
@@ -300,6 +300,20 @@ export class AdicionarEquipamentoComponent implements OnInit {
 
   }
 
+  private adicionarEquipamentoAsListas(equipamentoSelect: string, quantidadeSelect: string): void {
+    this.equipamentoContId++;
+    const quantidadeFormatter = parseInt(quantidadeSelect, 10);
+
+    this.objectEquipamentos = {
+      id: this.equipamentoContId,
+      descricao: equipamentoSelect,
+      quantidade: quantidadeFormatter
+    }
+
+    this.listaEquipamento.push(this.objectEquipamentos);
+    console.log('Lista de equipamentos: ', this.listaEquipamento);
+  }
+
 
 
   /**
@@ -308,8 +322,56 @@ export class AdicionarEquipamentoComponent implements OnInit {
    */
   protected removerEquipamento(event: Event): void {
     event.preventDefault();
-    this.deletarItem.deletarElemento(event, this.listaEquipamento, this.listaEquipamentoApresentacao)
+    this.deletarItem.deletarElemento(event, this.listaEquipamento/*, this.listaEquipamentoApresentacao*/);
   }
+
+
+  /**
+   * Ativa o input do campo  "Outros Equipamentos" através do checkbox
+   * Evento do checkbox para permitir adicionar um equipamento que não esteja incluso na lista.
+   * O FormControl nos permite atribuir um evento pelo estado por um valor boleano do checkbox,
+   * dessa forma retornando verdadeiro desabilitamos o select para a lista de equipamentos e
+   * atualizamos o valor da variável de status e vice e versa no caso do valor voltar a ser false.
+   * o
+   */
+  protected onCheckboxOutrosChange(): boolean {
+
+    const habilitaOutrosControl = this.formValidation.get('equipamentoSelectOutros');
+    const habilitarSelectOutrosControl = this.formValidation.get('quantidadeSelectOutros');
+    const selectEquipamentos = this.formValidation.get('equipamentoSelect');
+    const selectQuantidade = this.formValidation.get('quantidadeSelect');
+
+    this.formValidation.get('habilitaOutros')?.valueChanges.subscribe((value) => {
+
+      if (value) {
+        // console.log('habilitado')  //{Debug}\\
+        selectEquipamentos?.disable();
+        selectEquipamentos?.reset();
+        selectQuantidade?.disable();
+        selectQuantidade?.reset();
+
+        habilitaOutrosControl?.enable();
+        habilitarSelectOutrosControl?.enable();
+        this.statusInputHabilitado = true;
+        // console.log('status do input outros ', this.getStatusInputHabilitado)  //{Debug}\\
+        return true;
+      } else {
+        // console.log('desabilitado')  //{Debug}\\
+        selectEquipamentos?.enable();
+        selectQuantidade?.enable();
+
+        habilitaOutrosControl?.reset();
+        habilitaOutrosControl?.disable();
+        habilitarSelectOutrosControl?.disable();
+        this.statusInputHabilitado = false;
+        // console.log('status do input outros ', this.getStatusInputHabilitado)  //{Debug}\\
+        return false;
+      }
+    })
+
+    return false;
+  }
+
 
 
 
@@ -321,6 +383,22 @@ export class AdicionarEquipamentoComponent implements OnInit {
 
   get quantidadeSelect() {
     return this.formValidation.get('quantidadeSelect');
+  }
+
+  get equipamentoSelectOutros() {
+    return this.formValidation.get('equipamentoSelectOutros');
+  }
+
+  get quantidadeSelectOutros() {
+    return this.formValidation.get('quantidadeSelectOutros');
+  }
+
+  get statusInputHabilitado(): boolean {
+    return this.status_input_habilitado;
+  }
+
+  set statusInputHabilitado(status: boolean) {
+    this.status_input_habilitado = status;
   }
 
 
