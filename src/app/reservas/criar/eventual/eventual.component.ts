@@ -17,7 +17,8 @@ import { invalid } from 'moment';
     <app-formulario #formulario [formulario]="dadosFormulario" (updateFormulario)="atualizarFormulario($event)"
     [formSubmitted]="formSubmitted"></app-formulario>
     <br>
-    <app-adicionar-equipamento #equipamento [equipamento]="dadosEquipamento"></app-adicionar-equipamento>
+    <app-adicionar-equipamento #equipamento
+    (listaAtualizada)="atualizarEquipamento($event)"></app-adicionar-equipamento>
     <button type="submit">Reservar</button>
 
   </form>
@@ -48,8 +49,12 @@ export class EventualComponent  {
 
   atualizarFormulario(dados: any) {
     this.dadosFormulario = dados;
-    // Aqui você pode enviar os dados via API, se necessário
     console.log(this.dadosFormulario)
+  }
+
+  atualizarEquipamento(dados: { descricao: string; quantidade: number }[]) {
+    this.dadosEquipamento = dados;
+    console.log(this.dadosEquipamento);
   }
 
   formReserva() {
@@ -63,8 +68,13 @@ export class EventualComponent  {
       console.log('Formulário válido!');
 
       // processa os dados
-      const formValues = this.formularioComponent.formValidation.value;
-      console.log('Dados do formulário:', formValues);
+      const formularioViewChild = this.formularioComponent.formValidation.value;
+      console.log('Dados do formulário:', formularioViewChild);
+
+
+      const equipamentoViewChild = this.adicionarEquipamentoComponent.listaEquipamento;
+      console.log('Dados dos equipamentos: ', equipamentoViewChild)
+
 
       // Limpar os campos do formulário
       this.formularioComponent.limparCampos();

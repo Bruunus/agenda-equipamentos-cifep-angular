@@ -22,7 +22,7 @@ export class MultiplaComponent implements OnInit {
   formValidationGroup!: FormGroup;
 
   // vars API's
-  optionsListaEquipamento: EstoqueInterface[] = [{id: 0, descricao: '', valor: '', quantidade: 0}];
+  optionsListaEquipamento: EstoqueInterface[] = [{id: 0, descricao: '', quantidade: 0}];
 
   //  model
   optionsHours: { descricao: string, valor: string }[] = [] as { descricao: string, valor: string }[];

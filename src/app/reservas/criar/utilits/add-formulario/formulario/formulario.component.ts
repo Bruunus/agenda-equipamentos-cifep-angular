@@ -83,14 +83,14 @@ export class FormularioComponent implements OnInit {
         Validators.minLength(4),
         Validators.maxLength(40)
       ]),
-      matricula: new FormControl('', [
+      matricula: new FormControl('1032556', [
         Validators.required,
         Validators.minLength(5)
       ]),
       setor: new FormControl('TI', [
         Validators.required
       ]),
-      contato: new FormControl('', [
+      contato: new FormControl('6238', [
         Validators.required
       ])
     });

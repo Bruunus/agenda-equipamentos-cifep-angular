@@ -57,7 +57,7 @@
                 <select #equipamentoValid  name="equipamento" formControlName="equipamentoSelect"
                 (change)="onDescricaoValorChange(equipamentoValid.options[equipamentoValid.selectedIndex].text)">
                   <option value=""></option>
-                  <option *ngFor="let item of optionsListaEquipamento" [value]="item.valor" >
+                  <option *ngFor="let item of optionsListaEquipamento" [value]="item.descricao" >
                     {{ item.descricao }}
                   </option>
                 </select>

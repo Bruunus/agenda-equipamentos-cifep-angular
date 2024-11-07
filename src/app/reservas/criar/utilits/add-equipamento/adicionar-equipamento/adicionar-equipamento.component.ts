@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ServiceApiReadEquipament } from 'src/app/service/api/equipamentos/service-api-read-equipament';
 import { EstoqueInterface } from 'src/app/service/model/interfaces/equipamento/estoque-interface';
 import { Deletar } from '../../deletar';
@@ -19,7 +19,7 @@ import { OptionQtdService } from '../../optionQtdService';
           <select #equipamentoValid  name="equipamento" formControlName="equipamentoSelect"
           (change)="onDescricaoValorChange(equipamentoValid.options[equipamentoValid.selectedIndex].text)">
             <option value=""></option>
-            <option *ngFor="let item of optionsListaEquipamento" [value]="item.valor" >
+            <option *ngFor="let item of optionsListaEquipamento" [value]="item.descricao" >
               {{ item.descricao }}
             </option>
           </select>
@@ -104,18 +104,19 @@ export class AdicionarEquipamentoComponent implements OnInit {
   formValidation: FormGroup;
   subscription!: Subscription;
 
-  @Input() equipamento: InterfaceEquipamento[] = [{ descricao: '', quantidade: 0}]
+  // @Input() equipamento: InterfaceEquipamento[] = [{ descricao: '', quantidade: 0}]
 
   valorDescricao: string = '';
   equipamentoContId: number = 0;
   status_input_habilitado: boolean = false;
 
   // lista dos equipamentos da api
-  optionsListaEquipamento: EstoqueInterface[] = [{id: 0, descricao: '', valor: '', quantidade: 0}];
+  optionsListaEquipamento: EstoqueInterface[] = [{id: 0, descricao: '', quantidade: 0}];
   optionQuantidade: { descricao: string, valor: string } [] = [] as { descricao: string, valor: string }[];
 
   listaEquipamentoApresentacao: Array<any> = [];    // Tipo any por conta da manipulação do id para ficar de acordo com a regra de negócio
-  listaEquipamento: Array<any> = [];    // Tipo any por conta da manipulação do id para ficar de acordo com a regra de negócio
+   listaEquipamento: Array<any> = [];    // Tipo any por conta da manipulação do id para ficar de acordo com a regra de negócio
+  @Output() listaAtualizada  = new EventEmitter<Array<{ descricao: string; quantidade: number }>>();
 
   objectEquipamentos : {id: number, descricao: string, quantidade: number } = {id:0, descricao:'', quantidade:0}
   objectEquipamentosApresentacao: {id: number, descricao: string, quantidade: number } = {id:0, descricao:'', quantidade:0}
@@ -174,6 +175,7 @@ export class AdicionarEquipamentoComponent implements OnInit {
   protected adicionarEquipamento(event: Event): void {
 
     event.preventDefault();
+    console.log(this.equipamentoSelect?.value)
 
     if(this.statusInputHabilitado) {
       // equipamento outros
@@ -312,6 +314,8 @@ export class AdicionarEquipamentoComponent implements OnInit {
 
     this.listaEquipamento.push(this.objectEquipamentos);
     console.log('Lista de equipamentos: ', this.listaEquipamento);
+    this.listaAtualizada.emit(this.listaEquipamento);
+
   }
 
 
